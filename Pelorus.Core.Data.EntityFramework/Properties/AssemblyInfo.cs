@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Pelorus.Core.EntityFramework")]
+[assembly: AssemblyTitle("Pelorus.Core.Data.EntityFramework")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Pelorus.Core.EntityFramework")]
+[assembly: AssemblyProduct("Pelorus.Core.Data.EntityFramework")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("23a0ba07-bde6-4eba-b67f-5e26293d7512")]
+[assembly: Guid("87201978-20aa-4ab3-8260-c8b8c73751bd")]
 
 // Version information for an assembly consists of the following four values:
 //

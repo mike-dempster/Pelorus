@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pelorus.Core.EntityFramework
+namespace Pelorus.Core.Data.EntityFramework
 {
     /// <summary>
     /// Base functionality for repository classes.

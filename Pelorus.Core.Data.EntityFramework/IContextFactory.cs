@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 
-namespace Pelorus.Core.EntityFramework
+namespace Pelorus.Core.Data.EntityFramework
 {
     /// <summary>
     /// A factory for creating an Entity Framework data context.

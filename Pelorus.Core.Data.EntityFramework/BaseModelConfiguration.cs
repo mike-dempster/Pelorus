@@ -1,7 +1,7 @@
 ﻿using Pelorus.Core.Entities;
 using System.Data.Entity.ModelConfiguration;
 
-namespace Pelorus.Core.Data
+namespace Pelorus.Core.Data.EntityFramework
 {
     /// <summary>
     /// Base class for Entity Framework entity configuration classes.

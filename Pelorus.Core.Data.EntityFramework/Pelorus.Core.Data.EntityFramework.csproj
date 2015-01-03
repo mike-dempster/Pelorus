@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B960E2F5-B98C-482B-ABCE-6FFE68512ED2}</ProjectGuid>
+    <ProjectGuid>{9CFBF809-4668-4849-B3C8-15B2DFF4C41D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pelorus.Core.EntityFramework</RootNamespace>
-    <AssemblyName>Pelorus.Core.EntityFramework</AssemblyName>
+    <RootNamespace>Pelorus.Core.Data.EntityFramework</RootNamespace>
+    <AssemblyName>Pelorus.Core.Data.EntityFramework</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -53,14 +53,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Pelorus.Core\Pelorus.Core.csproj">
       <Project>{9915f15d-7a6b-481d-9960-1ecf3ffec771}</Project>
       <Name>Pelorus.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
