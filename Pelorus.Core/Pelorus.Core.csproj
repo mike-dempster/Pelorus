@@ -40,15 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\AddTraceSourceConfigurationElement.cs" />
     <Compile Include="Configuration\BaseConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\CoreConfiguration.cs" />
+    <Compile Include="Configuration\CoreConfigurationSection.cs" />
+    <Compile Include="Configuration\DiagnosticsConfigurationElement.cs" />
+    <Compile Include="Configuration\TraceSourceConfigurationCollection.cs" />
     <Compile Include="Data\IBaseReadOnlyRepository.cs" />
     <Compile Include="Data\IBaseRepository.cs" />
     <Compile Include="Diagnostics\ExceptionInfoFormatter.cs" />
     <Compile Include="Diagnostics\Logging.cs" />
+    <Compile Include="Diagnostics\SqlServerTraceListener.cs" />
     <Compile Include="Entities\AuditedEntityDao.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityDao.cs" />
     <Compile Include="Entities\EntityDto.cs" />
+    <Compile Include="Linq\EnumerableExtensions.cs" />
     <Compile Include="Localization\LocalizeCore.cs" />
     <Compile Include="Localization\LocalizeProxy.cs" />
     <Compile Include="Localization\LocalizerDelegate.cs" />
@@ -61,7 +68,9 @@
     <Compile Include="Types.cs" />
     <Compile Include="Validation\CommonValidators.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Diagnostics\SqlScripts\CreateDiagnosticsObjects.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

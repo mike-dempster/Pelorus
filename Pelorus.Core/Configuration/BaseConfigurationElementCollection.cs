@@ -5,24 +5,44 @@ namespace Pelorus.Core.Configuration
     /// <summary>
     /// Base class for configuration collections.
     /// </summary>
-    /// <typeparam name="T">Type of the child elements of the collection.</typeparam>
-    public abstract class BaseConfigurationElementCollection<T> : ConfigurationElementCollection
-        where T : ConfigurationElement, new()
+    /// <typeparam name="TElement">Type of the child elements of the collection.</typeparam>
+    public abstract class BaseConfigurationElementCollection<TElement> : ConfigurationElementCollection
+        where TElement : ConfigurationElement, new()
     {
         /// <summary>
         /// Name of the child elements.
         /// </summary>
-        protected abstract string _childElementName { get; }
+        private readonly string _childElementName;
 
         /// <summary>
         /// Type of the collection type object.
         /// </summary>
-        protected abstract ConfigurationElementCollectionType _collectionType { get; }
+        private readonly ConfigurationElementCollectionType _collectionType;
 
         /// <summary>
         /// Indicates if the collection is readonly.
         /// </summary>
-        protected abstract bool _isReadonly { get; }
+        private readonly bool _isReadonly;
+
+        /// <summary>
+        /// Create a new instance of the configuration collection and initialize the internal properties.
+        /// </summary>
+        /// <param name="elementName">Name of the child elements.</param>
+        protected BaseConfigurationElementCollection(string elementName) : this(elementName, true)
+        {
+        }
+
+        /// <summary>
+        /// Create a new instance of the configuration collection and initialize the internal properties.
+        /// </summary>
+        /// <param name="elementName">Name of the child elements.</param>
+        /// <param name="isReadonly">Indicates if the collection is read only.</param>
+        protected BaseConfigurationElementCollection(string elementName, bool isReadonly)
+        {
+            this._childElementName = elementName;
+            this._isReadonly = isReadonly;
+            this._collectionType = ConfigurationElementCollectionType.AddRemoveClearMap;
+        }
 
         /// <summary>
         /// Returns the key of an element of the array.
@@ -66,7 +86,7 @@ namespace Pelorus.Core.Configuration
         /// <returns>New instance of the child element type.</returns>
         protected override ConfigurationElement CreateNewElement()
         {
-            return new T();
+            return new TElement();
         }
 
         /// <summary>
@@ -74,6 +94,6 @@ namespace Pelorus.Core.Configuration
         /// </summary>
         /// <param name="index">Index of the element to return.</param>
         /// <returns>Element at the given index of the collection.</returns>
-        public T this[int index] { get { return (T) BaseGet(index); } }
+        public TElement this[int index] { get { return (TElement) BaseGet(index); } }
     }
 }
