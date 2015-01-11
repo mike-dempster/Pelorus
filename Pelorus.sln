@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Data.EntityFra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Web", "Pelorus.Core.Web\Pelorus.Core.Web.csproj", "{F021EB22-1BD2-49D4-A0B3-F0617FC68381}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Test.Integration", "Pelorus.Core.Test.Integration\Pelorus.Core.Test.Integration.csproj", "{2B81B169-2D5C-462F-9AA9-CDFFFF23B116}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F021EB22-1BD2-49D4-A0B3-F0617FC68381}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F021EB22-1BD2-49D4-A0B3-F0617FC68381}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F021EB22-1BD2-49D4-A0B3-F0617FC68381}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B81B169-2D5C-462F-9AA9-CDFFFF23B116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B81B169-2D5C-462F-9AA9-CDFFFF23B116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B81B169-2D5C-462F-9AA9-CDFFFF23B116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B81B169-2D5C-462F-9AA9-CDFFFF23B116}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

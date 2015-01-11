@@ -48,13 +48,16 @@
     <Compile Include="Configuration\TraceSourceConfigurationCollection.cs" />
     <Compile Include="Data\IBaseReadOnlyRepository.cs" />
     <Compile Include="Data\IBaseRepository.cs" />
-    <Compile Include="Diagnostics\ExceptionInfoFormatter.cs" />
+    <Compile Include="Diagnostics\BaseTraceListener.cs" />
     <Compile Include="Diagnostics\Logging.cs" />
     <Compile Include="Diagnostics\SqlServerTraceListener.cs" />
+    <Compile Include="Diagnostics\TraceMessageData.cs" />
+    <Compile Include="Diagnostics\TraceMessageSections.cs" />
     <Compile Include="Entities\AuditedEntityDao.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityDao.cs" />
     <Compile Include="Entities\EntityDto.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Linq\EnumerableExtensions.cs" />
     <Compile Include="Localization\LocalizeCore.cs" />
     <Compile Include="Localization\LocalizeProxy.cs" />
@@ -65,6 +68,7 @@
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
     <Compile Include="Reflection\PropertyInfoExtensions.cs" />
     <Compile Include="Reflection\TypeExtensions.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Validation\CommonValidators.cs" />
   </ItemGroup>
