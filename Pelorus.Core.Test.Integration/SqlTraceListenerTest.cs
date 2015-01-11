@@ -2,12 +2,85 @@
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pelorus.Core.Diagnostics;
+using Pelorus.Core.Rss;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace Pelorus.Core.Test.Integration
 {
     [TestClass]
     public class SqlTraceListenerTest
     {
+        [TestMethod]
+        public void TestXmlSerialization()
+        {
+            var rss = new RssFeed
+            {
+                Channel = new RssChannel
+                {
+                    Categories = new[]
+                    {
+                        new RssCategory
+                        {
+                            Domain = "http://pelorus.com/",
+                            Value = "TestCategory"
+                        }
+                    },
+                    Cloud = new RssCloud
+                    {
+                        Domain = "http://pelorus.com/",
+                        Path = "/subscribe",
+                        Port = 80,
+                        Protocol = "soap",
+                        RegisterProcedure = "register"
+                    },
+                    Copyright = "(C) Mike Dempster",
+                    Description = "Test RSS feed",
+                    Generator = "Pelorus",
+                    Image = new RssImage
+                    {
+                        Description = "Test image",
+                        Height = 100,
+                        Link = "http://pelorus.com/",
+                        Title = "Test",
+                        Url = "http://pelorus.com/image.png",
+                        Width = 100
+                    },
+                    Items = new[]
+                    {
+                        new RssItem
+                        {
+                            Author = "Mike Dempster",
+                            Categories = new[]
+                            {
+                                new RssCategory
+                                {
+                                    Domain = "http://pelorus.com/",
+                                    Value = "Item Category"
+                                }
+                            }
+                        }
+                    },
+                    Language = "en-us",
+                    SkipHours = new[]
+                    {
+                        RssHourOfDay.Midnight,
+                        RssHourOfDay.OneAm
+                    },
+                    SkipDays = new []
+                    {
+                        RssDayOfWeek.Sunday,
+                        RssDayOfWeek.Wednesday,
+                        RssDayOfWeek.Friday
+                    }
+                }
+            };
+
+            var rssDocument = RssSerializer.Serialize(rss);
+            File.WriteAllText("C:\\Temp\\PelorusFeed.xml", rssDocument.InnerXml);
+            var rssFeed = RssSerializer.Deserialize(rssDocument);
+        }
+
         [TestMethod]
         public void TestLogMessage()
         {
