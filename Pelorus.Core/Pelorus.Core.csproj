@@ -51,6 +51,7 @@
     <Compile Include="Diagnostics\BaseTraceListener.cs" />
     <Compile Include="Diagnostics\Logging.cs" />
     <Compile Include="Diagnostics\SqlServerTraceListener.cs" />
+    <Compile Include="Diagnostics\TraceEventData.cs" />
     <Compile Include="Diagnostics\TraceMessageData.cs" />
     <Compile Include="Diagnostics\TraceMessageSections.cs" />
     <Compile Include="Entities\AuditedEntityDao.cs" />

@@ -16,9 +16,9 @@ namespace Pelorus.Core.Rss
         public static XmlDocument Serialize(RssFeed feed)
         {
             var rssDocument = new XmlDocument();
-            var nav = rssDocument.CreateNavigator();
+            var xmlNavigator = rssDocument.CreateNavigator();
 
-            using (var writer = nav.AppendChild())
+            using (var writer = xmlNavigator.AppendChild())
             {
                 var serializer = new XmlSerializer(typeof(RssFeed));
                 var namespaces = new XmlSerializerNamespaces();
@@ -36,9 +36,9 @@ namespace Pelorus.Core.Rss
         /// <returns>RssFeed object representing the XML document.</returns>
         public static RssFeed Deserialize(XmlDocument rssDocument)
         {
-            var nav = rssDocument.CreateNavigator();
+            var xmlNavigator = rssDocument.CreateNavigator();
 
-            using (var reader = nav.ReadSubtree())
+            using (var reader = xmlNavigator.ReadSubtree())
             {
                 var serializer = new XmlSerializer(typeof(RssFeed));
                 var deserializedObject = serializer.Deserialize(reader);

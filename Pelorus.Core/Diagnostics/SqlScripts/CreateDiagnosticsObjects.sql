@@ -71,7 +71,7 @@ CREATE TABLE [Pelorus.Core].[tblMessageLog] (
 	CONSTRAINT [PK_ApplicationLogId] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_ApplicationLogTraceId_TraceDimensionId] FOREIGN KEY ([TraceId]) REFERENCES [Pelorus.Core].[tblTraceDimension]([Id]),
 	CONSTRAINT [FK_ApplicationLogAssemblyId_AssemblyId] FOREIGN KEY ([AssemblyId]) REFERENCES [Pelorus.Core].[tblAssembly]([Id]),
-	CONSTRAINT [CK_CorrelationIdIndexMatch] CHECK (([CorrelationId] IS NULL AND [CorrelationIndex] IS NULL) OR ([CorrelationId] IS NOT NULL AND [CorrelationIndex] IS NOT NULL))
+	CONSTRAINT [CK_CorrelationIdIndexMatch] CHECK ([CorrelationIndex] IS NULL OR [CorrelationId] IS NOT NULL)
 )
 GO
 
