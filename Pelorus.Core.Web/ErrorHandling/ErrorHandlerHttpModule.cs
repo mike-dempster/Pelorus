@@ -2,7 +2,7 @@
 using System;
 using System.Web;
 
-namespace Pelorus.Core.Web
+namespace Pelorus.Core.Web.ErrorHandling
 {
     /// <summary>
     /// Catches unhandled exceptions and logs them with the trace listeners.

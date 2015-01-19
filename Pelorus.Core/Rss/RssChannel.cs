@@ -144,8 +144,7 @@ namespace Pelorus.Core.Rss
         /// <summary>
         /// Collection of items being served by the RSS channel.
         /// </summary>
-        [XmlArray]
-        [XmlArrayItem("item")]
+        [XmlElement("item")]
         public RssItem[] Items { get; set; }
     }
 }

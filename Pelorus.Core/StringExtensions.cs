@@ -1,4 +1,7 @@
-﻿namespace Pelorus.Core
+﻿using Pelorus.Core.Linq;
+using System;
+
+namespace Pelorus.Core
 {
     /// <summary>
     /// Extension methods for working with strings.
@@ -17,6 +20,29 @@
             string trimmed = subject.Substring(concat.Length);
 
             return trimmed;
+        }
+
+        /// <summary>
+        /// Convert a string to a Base64 representation.
+        /// </summary>
+        /// <param name="source">String to convert to Base64.</param>
+        /// <returns>Base64 string of the source string.</returns>
+        public static string ToBase64String(this string source)
+        {
+            if (null == source)
+            {
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(source))
+            {
+                return "====";
+            }
+
+            var base64Bytes = source.CastToArray<byte>();
+            string base64String = Convert.ToBase64String(base64Bytes);
+
+            return base64String;
         }
     }
 }

@@ -45,6 +45,8 @@
     <Compile Include="Configuration\CoreConfiguration.cs" />
     <Compile Include="Configuration\CoreConfigurationSection.cs" />
     <Compile Include="Configuration\DiagnosticsConfigurationElement.cs" />
+    <Compile Include="Configuration\EmptyConfigurationElement.cs" />
+    <Compile Include="Configuration\SimpleValueConfigurationElement.cs" />
     <Compile Include="Configuration\TraceSourceConfigurationCollection.cs" />
     <Compile Include="Data\IBaseReadOnlyRepository.cs" />
     <Compile Include="Data\IBaseRepository.cs" />
@@ -52,8 +54,6 @@
     <Compile Include="Diagnostics\Logging.cs" />
     <Compile Include="Diagnostics\SqlServerTraceListener.cs" />
     <Compile Include="Diagnostics\TraceEventData.cs" />
-    <Compile Include="Diagnostics\TraceMessageData.cs" />
-    <Compile Include="Diagnostics\TraceMessageSections.cs" />
     <Compile Include="Entities\AuditedEntityDao.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityDao.cs" />

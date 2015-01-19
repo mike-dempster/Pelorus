@@ -106,7 +106,14 @@ namespace Pelorus.Core.Diagnostics
 
             foreach (var traceSource in allTraceSources)
             {
-                traceExpression(traceSource);
+                try
+                {
+                    traceExpression(traceSource);
+                }
+                catch
+                {
+                    // Do not allow exceptions originating from the trace listeners to bubble up to the application.
+                }
             }
         }
     }

@@ -11,7 +11,7 @@
         ThreeAm = 3,
         FourAm = 4,
         FiveAm = 5,
-        SizAm = 6,
+        SixAm = 6,
         SevenAm = 7,
         EightAm = 8,
         NineAm = 9,

@@ -28,7 +28,7 @@ namespace Pelorus.Core.Configuration
         /// Create a new instance of the configuration collection and initialize the internal properties.
         /// </summary>
         /// <param name="elementName">Name of the child elements.</param>
-        protected BaseConfigurationElementCollection(string elementName) : this(elementName, true)
+        protected BaseConfigurationElementCollection(string elementName) : this(elementName, false)
         {
         }
 

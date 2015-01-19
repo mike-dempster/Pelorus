@@ -148,5 +148,168 @@ namespace Pelorus.Core.Linq
 
             return result;
         }
+
+        public static IEnumerable Where(this IEnumerable source, Func<object, bool> filterPredicate)
+        {
+            if (null == source)
+            {
+                yield break;
+            }
+
+            var enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                var filterResult = filterPredicate.Invoke(enumerator.Current);
+
+                if (false == filterResult)
+                {
+                    continue;
+                }
+
+                yield return enumerator.Current;
+            }
+
+            yield break;
+        }
+
+        public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> filterPredicate)
+        {
+            if(null == source)
+            {
+                yield break;
+            }
+
+            var enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                var filterResult = filterPredicate.Invoke(enumerator.Current);
+
+                if (false == filterResult)
+                {
+                    continue;
+                }
+
+                yield return enumerator.Current;
+            }
+
+            yield break;
+        }
+
+        public static TSource[] ToArray<TSource>(this IEnumerable<TSource> source)
+        {
+            int i = 0;
+            var enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                i++;
+            }
+
+            var array = new TSource[i];
+
+            enumerator = source.GetEnumerator();
+            i = 0;
+
+            while (enumerator.MoveNext())
+            {
+                array[i] = enumerator.Current;
+            }
+
+            return array;
+        }
+
+        public static object[] ToArray(this IEnumerable source)
+        {
+            int i = 0;
+            var enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                i++;
+            }
+
+            var array = new object[i];
+
+            enumerator = source.GetEnumerator();
+            i = 0;
+
+            while (enumerator.MoveNext())
+            {
+                array[i] = enumerator.Current;
+            }
+
+            return array;
+        }
+
+        public static TSource[] ToArray<TSource>(this IEnumerable source)
+        {
+            int i = 0;
+            var enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                i++;
+            }
+
+            var array = new TSource[i];
+
+            enumerator = source.GetEnumerator();
+            i = 0;
+
+            while (enumerator.MoveNext())
+            {
+                if (enumerator.Current is TSource)
+                {
+                    array[i] = (TSource)enumerator.Current;
+                    continue;
+                }
+
+                string exMsg = string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Element of type '{0}' cannot be cast to type '{1}'.",
+                        enumerator.Current.GetType().FullName,
+                        typeof(TSource).FullName);
+                throw new InvalidCastException(exMsg);
+            }
+
+            return array;
+        }
+
+        public static TSource[] CastToArray<TSource>(this IEnumerable source)
+        {
+            int i = 0;
+            var enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                i++;
+            }
+
+            var array = new TSource[i];
+
+            enumerator = source.GetEnumerator();
+            i = 0;
+
+            while (enumerator.MoveNext())
+            {
+                try
+                {
+                    array[i] = (TSource)enumerator.Current;
+                }
+                catch (InvalidCastException)
+                {
+                    string exMsg = string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Element of type '{0}' cannot be cast to type '{1}'.",
+                        enumerator.Current.GetType().FullName,
+                        typeof(TSource).FullName);
+                    throw new InvalidCastException(exMsg);
+                }
+            }
+
+            return array;
+        }
     }
 }

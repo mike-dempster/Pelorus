@@ -1,5 +1,4 @@
-﻿using Pelorus.Core.Data;
-using Pelorus.Core.Entities;
+﻿using Pelorus.Core.Entities;
 using Pelorus.Core.Reflection;
 using System;
 using System.Collections.Generic;

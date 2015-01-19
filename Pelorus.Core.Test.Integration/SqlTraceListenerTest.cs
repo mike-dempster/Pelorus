@@ -1,9 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Pelorus.Core.Diagnostics;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Pelorus.Core.Rss;
-using System.Xml.Serialization;
+using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace Pelorus.Core.Test.Integration

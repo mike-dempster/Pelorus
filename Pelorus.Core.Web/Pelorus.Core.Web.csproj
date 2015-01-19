@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -40,7 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ErrorHandlerHttpModule.cs" />
+    <Compile Include="Configuration\ApplicationLogRssFeedConfigurationElement.cs" />
+    <Compile Include="Configuration\ConnectionStringConfigurationElement.cs" />
+    <Compile Include="Configuration\CoreWebConfiguration.cs" />
+    <Compile Include="Configuration\CoreWebConfigurationSection.cs" />
+    <Compile Include="Configuration\RssCategoriesConfigurationCollection.cs" />
+    <Compile Include="Configuration\RssCategoryConfigurationElement.cs" />
+    <Compile Include="Configuration\RssChannelConfigurationElement.cs" />
+    <Compile Include="Configuration\RssCloudConfigurationElement.cs" />
+    <Compile Include="Configuration\RssImageConfigurationElement.cs" />
+    <Compile Include="Configuration\RssSkipDaysConfigurationElement.cs" />
+    <Compile Include="Configuration\RssSkipHoursConfigurationElement.cs" />
+    <Compile Include="Configuration\RssTextInputConfigurationElement.cs" />
+    <Compile Include="ErrorHandling\ApplicationLogDao.cs" />
+    <Compile Include="ErrorHandling\AssemblyDao.cs" />
+    <Compile Include="ErrorHandling\ErrorHandlerHttpModule.cs" />
+    <Compile Include="ErrorHandling\ErrorRssFeedHttpHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +65,7 @@
       <Name>Pelorus.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
