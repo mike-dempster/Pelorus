@@ -1,5 +1,5 @@
-﻿using Pelorus.Core.Linq;
-using System;
+﻿using System;
+using System.Linq;
 
 namespace Pelorus.Core
 {
@@ -39,10 +39,36 @@ namespace Pelorus.Core
                 return "====";
             }
 
-            var base64Bytes = source.CastToArray<byte>();
+            var base64Bytes = source.Select(e => (byte)e)
+                                    .ToArray();
             string base64String = Convert.ToBase64String(base64Bytes);
 
             return base64String;
+        }
+
+        /// <summary>
+        /// Convert a Base64 string to the original string.
+        /// </summary>
+        /// <param name="source">Base64 string to convert to clear text.</param>
+        /// <returns>Clear text string represented by the given Baes64 string.</returns>
+        public static string FromBase64String(this string source)
+        {
+            if (null == source)
+            {
+                return null;
+            }
+
+            if ("====" == source)
+            {
+                return string.Empty;
+            }
+
+            var clearTextBytes = Convert.FromBase64String(source);
+            var clearTextChars = clearTextBytes.Select(e => (char)e)
+                                               .ToArray();
+            string clearTextString = new string(clearTextChars);
+
+            return clearTextString;
         }
     }
 }

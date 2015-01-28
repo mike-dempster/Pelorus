@@ -1,8 +1,8 @@
 ﻿using Pelorus.Core.Configuration;
-using Pelorus.Core.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Pelorus.Core.Diagnostics
 {
@@ -80,7 +80,8 @@ namespace Pelorus.Core.Diagnostics
         {
             try
             {
-                var traceSourceNames = CoreConfiguration.Data.Diagnostics.TraceSources.Select((AddTraceSourceConfigurationElement e) => e.Name);
+                var traceSourceNames = CoreConfiguration.Data.Diagnostics.TraceSources.OfType<AddTraceSourceConfigurationElement>()
+                                                                                      .Select(e => e.Name);
                 var traceSources = traceSourceNames.Select(e => new TraceSource(e));
 
                 return traceSources;

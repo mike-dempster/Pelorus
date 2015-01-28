@@ -1,16 +1,16 @@
-﻿using Pelorus.Core.Linq;
+﻿using Pelorus.Core.Diagnostics.Repositories;
 using Pelorus.Core.Rss;
 using Pelorus.Core.Web.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Web;
 
-namespace Pelorus.Core.Web.ErrorHandling
+namespace Pelorus.Core.Web.ExceptionLogging
 {
     public class ErrorRssFeedHttpHandler : IHttpHandler
     {
@@ -19,11 +19,67 @@ namespace Pelorus.Core.Web.ErrorHandling
 
         public void ProcessRequest(HttpContext context)
         {
+            var queryArguments = context.Request.Url.GetQueryArguments();
 
+            if ((null != queryArguments) && (queryArguments.Any()))
+            {
+                var itemArgument = queryArguments.SingleOrDefault(e => e.Key == "item");
+
+                if (false == string.IsNullOrWhiteSpace(itemArgument.Key))
+                {
+                    string number = itemArgument.Value.FromBase64String();
+                    int itemId = int.Parse(number);
+                    this.ReturnApplicationLogItem(context, itemId);
+                    return;
+                }
+            }
+
+            this.ReturnFeedContent(context);
+        }
+
+        private void ReturnFeedContent(HttpContext context)
+        {
             var feed = this.CreateRssFeedObject(context.Request.Url.OriginalString);
             var rss = RssSerializer.Serialize(feed);
             context.Response.ContentType = "text/xml";
             context.Response.Output.Write(rss.InnerXml);
+            context.Response.StatusCode = 200;
+            context.Response.Flush();
+        }
+
+        private void ReturnApplicationLogItem(HttpContext context, int itemId)
+        {
+            var config = CoreWebConfiguration.Configuration.ApplicationLogRssFeed;
+            var connectionStringName = config.ConnectionString.Name;
+
+            if (string.IsNullOrWhiteSpace(connectionStringName))
+            {
+                connectionStringName = DefaultConnectionStringName;
+            }
+
+            var connectionString = ConfigurationManager.ConnectionStrings[connectionStringName];
+            var applicationLogRepository = new ApplicationLogRepository(connectionString.ConnectionString);
+            var log = applicationLogRepository.GetById(itemId);
+
+            var xmlDocument = new System.Xml.XmlDocument();
+            var xmlNavigator = xmlDocument.CreateNavigator();
+
+            using (var writer = xmlNavigator.AppendChild())
+            {
+                var serializer = new DataContractSerializer(typeof(ApplicationLogDao));
+                serializer.WriteObject(writer, log);
+            }
+
+            if (null != log.Data.FirstChild)
+            {
+                var dataElement = xmlDocument.CreateElement("Data", xmlDocument.FirstChild.NamespaceURI);
+                var importedElement = xmlDocument.ImportNode(log.Data.FirstChild, true);
+                dataElement.AppendChild(importedElement);
+                xmlDocument.FirstChild.AppendChild(dataElement);
+            }
+
+            context.Response.ContentType = "text/xml";
+            context.Response.Output.Write(xmlDocument.InnerXml);
             context.Response.StatusCode = 200;
             context.Response.Flush();
         }
@@ -75,7 +131,7 @@ namespace Pelorus.Core.Web.ErrorHandling
                 }
             };
 
-            var categories = new List<RssCategory>();
+            var categories = new Collection<RssCategory>();
 
             foreach(RssCategoryConfigurationElement category in config.Categories)
             {
@@ -176,51 +232,47 @@ namespace Pelorus.Core.Web.ErrorHandling
             }
 
             var connectionString = ConfigurationManager.ConnectionStrings[connectionStringName];
-            using(var connection = new SqlConnection(connectionString.ConnectionString))
-            using (var command = connection.CreateCommand())
+
+            if (null == connectionString)
             {
-                command.CommandType = CommandType.Text;
-                command.CommandText = "SELECT * FROM [Pelorus.Core].[tblMessageLog];";
-                connection.Open();
-
-                using (var reader = command.ExecuteReader())
-                {
-                    var items = new List<RssItem>();
-                    int idColumnOrdinal = reader.GetOrdinal("Id");
-                    int messageColumnOrdinal = reader.GetOrdinal("Message");
-                    int traceListenerNameOrdinal = reader.GetOrdinal("TraceListenerName");
-                    int traceEventTypeOrdinal = reader.GetOrdinal("TraceEventType");
-                    int createdOnOrdinal = reader.GetOrdinal("CreatedOn");
-
-                    while (reader.Read())
-                    {
-                        long id = reader.GetInt64(idColumnOrdinal);
-                        string message = reader.GetString(messageColumnOrdinal);
-                        string traceListenerName = reader.GetString(traceListenerNameOrdinal);
-                        int traceEventTypeInt = reader.GetInt32(traceEventTypeOrdinal);
-                        var traceEventType = (TraceEventType)traceEventTypeInt;
-                        var traceDateTime = reader.GetDateTime(createdOnOrdinal);
-                        string uniqueId = id.ToString().ToBase64String();
-                        var newItem = new RssItem
-                        {
-                            GloballyUniqueIdentifier = uniqueId,
-                            Description = message,
-                            Link = string.Format(CultureInfo.InvariantCulture, "{0}?item={1}", thisUrl, uniqueId),
-                            PublishDate = traceDateTime,
-                            Source = new RssSource
-                            {
-                                Url = thisUrl,
-                                Value = channelName
-                            },
-                            Title = string.Format(CultureInfo.InvariantCulture, "{0}: {1}", traceListenerName, traceEventType)
-                        };
-
-                        items.Add(newItem);
-                    }
-
-                    return items.ToArray();
-                }
+                string exMsg = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Connection string '{0}' was not found.",
+                    connectionStringName);
+                throw new ConfigurationErrorsException(exMsg);
             }
+
+            var applicationLogRepository = new ApplicationLogRepository(connectionString.ConnectionString);
+            var sixMonths = new TimeSpan(180, 0, 0, 0);
+            var logs = applicationLogRepository.GetSinceDate(DateTime.UtcNow.Subtract(sixMonths));
+            var items = new Collection<RssItem>();
+
+            foreach(var l in logs)
+            {
+                string uniqueId = l.Id.ToString().ToBase64String();
+                string link = string.Format(CultureInfo.InvariantCulture, "{0}?item={1}", thisUrl, uniqueId);
+                string title = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "{0}: {1} - {2}",
+                    l.TraceListenerName,
+                    l.TraceEventType,
+                    l.Message);
+                items.Add(new RssItem
+                {
+                    GloballyUniqueIdentifier = uniqueId,
+                    Description = l.Message,
+                    Link = link,
+                    PublishDate = l.CreatedOn,
+                    Source = new RssSource
+                    {
+                        Url = thisUrl,
+                        Value = channelName
+                    },
+                    Title = title
+                });
+            }
+
+            return items.ToArray();
         }
     }
 }

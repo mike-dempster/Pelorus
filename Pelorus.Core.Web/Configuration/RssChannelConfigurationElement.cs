@@ -112,14 +112,14 @@ namespace Pelorus.Core.Web.Configuration
         /// <summary>
         /// Optional. Text input area configuration.
         /// </summary>
-        [ConfigurationProperty(SkipHoursKey, IsRequired = false)]
-        public RssTextInputConfigurationElement TextInput { get { return this[SkipDaysKey] as RssTextInputConfigurationElement; } }
+        [ConfigurationProperty(TextInputKey, IsRequired = false)]
+        public RssTextInputConfigurationElement TextInput { get { return this[TextInputKey] as RssTextInputConfigurationElement; } }
 
         /// <summary>
         /// Optional. Represents the hours of the day that aggregators can skip.
         /// </summary>
         [ConfigurationProperty(SkipHoursKey, IsRequired = false)]
-        public RssSkipHoursConfigurationElement SkipHours { get { return this[SkipDaysKey] as RssSkipHoursConfigurationElement; } }
+        public RssSkipHoursConfigurationElement SkipHours { get { return this[SkipHoursKey] as RssSkipHoursConfigurationElement; } }
 
         /// <summary>
         /// Optional. Represents the days that aggregators can skip.

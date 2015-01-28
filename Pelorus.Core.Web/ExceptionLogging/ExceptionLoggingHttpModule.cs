@@ -2,12 +2,12 @@
 using System;
 using System.Web;
 
-namespace Pelorus.Core.Web.ErrorHandling
+namespace Pelorus.Core.Web.ExceptionLogging
 {
     /// <summary>
     /// Catches unhandled exceptions and logs them with the trace listeners.
     /// </summary>
-    public class ErrorHandlerHttpModule : IHttpModule
+    public class ExceptionLoggingHttpModule : IHttpModule
     {
         /// <summary>
         /// Initialize the HTTP module to respond to unhandled exceptions.
@@ -18,7 +18,7 @@ namespace Pelorus.Core.Web.ErrorHandling
         /// </param>
         public void Init(HttpApplication context)
         {
-            context.Error += this.ErrorHandler;
+            context.Error += this.LogException;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Pelorus.Core.Web.ErrorHandling
         /// </summary>
         /// <param name="sender">Object that triggered the event.</param>
         /// <param name="e">Event arguments.</param>
-        private void ErrorHandler(object sender, EventArgs e)
+        private void LogException(object sender, EventArgs e)
         {
             var context = sender as HttpApplication;
 

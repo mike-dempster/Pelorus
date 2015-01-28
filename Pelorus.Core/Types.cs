@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace Pelorus.Core
 {
@@ -20,22 +21,69 @@ namespace Pelorus.Core
                 return default(T);
             }
 
-            var subjectType = typeof(T);
+            var subjectType = subject.GetType();
             var converter = TypeDescriptor.GetConverter(subjectType);
 
             if (converter.CanConvertFrom(subjectType))
             {
                 return (T)converter.ConvertFrom(subject);
             }
+            else if (converter.CanConvertTo(typeof(T)))
+            {
+                return (T)converter.ConvertTo(subject, typeof(T));
+            }
 
-            converter = TypeDescriptor.GetConverter(subject);
+            converter = TypeDescriptor.GetConverter(typeof(T));
 
             if (converter.CanConvertTo(subjectType))
             {
                 return (T)converter.ConvertTo(subject, subjectType);
             }
+            else if (converter.CanConvertFrom(subjectType))
+            {
+                return (T)converter.ConvertFrom(subject);
+            }
 
             return default(T);
+        }
+
+        /// <summary>
+        /// Convert the given object to type targetType.  If the object cannot be cast to type targetType then return null.
+        /// </summary>
+        /// <param name="subject">Object to cast.</param>
+        /// <param name="targetType">Type to convert the given object to.</param>
+        /// <returns>Subject cast to type targetType or null if a converter does not exist.</returns>
+        public static object Cast(object subject, Type targetType)
+        {
+            if (null == subject)
+            {
+                return null;
+            }
+
+            var subjectType = subject.GetType();
+            var converter = TypeDescriptor.GetConverter(subjectType);
+
+            if (converter.CanConvertFrom(subjectType))
+            {
+                return converter.ConvertFrom(subject);
+            }
+            else if (converter.CanConvertTo(targetType))
+            {
+                return converter.ConvertTo(subject, targetType);
+            }
+
+            converter = TypeDescriptor.GetConverter(targetType);
+
+            if (converter.CanConvertTo(subjectType))
+            {
+                return converter.ConvertTo(subject, subjectType);
+            }
+            else if (converter.CanConvertFrom(subjectType))
+            {
+                return converter.ConvertFrom(subject);
+            }
+
+            return null;
         }
     }
 }

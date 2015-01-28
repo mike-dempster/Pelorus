@@ -220,8 +220,10 @@ namespace Pelorus.Core.Data.EntityFramework
             var entry = this.Entry(contextEntity);
             entry.CurrentValues.SetValues(entity);
             entry.State = EntityState.Modified;
-            string idPropertyName = this.GetPropertyName(e => e.Id);
-            var modifiedPropertyNames = modifiedProperties.Select(this.GetPropertyName)
+            var idPropertyInfo = PropertyInfoExtensions.Property<TEntity, TKey>(e => e.Id);
+            string idPropertyName = idPropertyInfo.Name;
+            var modifiedPropertyNames = modifiedProperties.Select(PropertyInfoExtensions.Property)
+                                                          .Select(e => e.Name)
                                                           .Where(e => null != e)
                                                           .ToList();
 
@@ -273,8 +275,10 @@ namespace Pelorus.Core.Data.EntityFramework
             var entry = this.Entry(contextEntity);
             entry.CurrentValues.SetValues(entity);
             entry.State = EntityState.Modified;
-            string idPropertyName = this.GetPropertyName(e => e.Id);
-            var modifiedPropertyNames = modifiedProperties.Select(this.GetPropertyName)
+            var idPropertyInfo = PropertyInfoExtensions.Property<TEntity, TKey>(e => e.Id);
+            string idPropertyName = idPropertyInfo.Name;
+            var modifiedPropertyNames = modifiedProperties.Select(PropertyInfoExtensions.Property)
+                                                          .Select(e => e.Name)
                                                           .Where(e => null != e)
                                                           .ToList();
 
@@ -385,28 +389,6 @@ namespace Pelorus.Core.Data.EntityFramework
         }
 
         // ReSharper restore RedundantOverridenMember
-
-        /// <summary>
-        /// Get the name of a property defined in type TEntity.
-        /// </summary>
-        /// <param name="propertyExpression">Expression identifying the property to get the name of.</param>
-        /// <returns>Name of the property or null if the expression is null or the property expression type is not supported.</returns>
-        private string GetPropertyName(Expression<Func<TEntity, object>> propertyExpression)
-        {
-            if (null == propertyExpression)
-            {
-                throw new ArgumentNullException("propertyExpression");
-            }
-
-            var propertyInfo = PropertyInfoExtensions.Property(propertyExpression);
-
-            if (null == propertyInfo)
-            {
-                return null;
-            }
-
-            return propertyInfo.Name;
-        }
     }
 
     /// <summary>

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using Pelorus.Core.Diagnostics.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Globalization;
 using System.Reflection;
-using System.Threading;
 using System.Xml;
 
 namespace Pelorus.Core.Diagnostics
@@ -57,7 +53,7 @@ namespace Pelorus.Core.Diagnostics
         protected override void LogMessage(TraceEventData traceData)
         {
             object helpLink;
-            
+
             traceData.Context.TryGetValue("exceptionHelpLink", out helpLink);
 
             this.InsertMessage(
@@ -127,175 +123,38 @@ namespace Pelorus.Core.Diagnostics
             string threadId)
         {
             string connectionString = this.GetConnectionString();
-            using (var connection = new SqlConnection(connectionString))
-            using (var command = connection.CreateCommand())
+            var assembly = Assembly.GetExecutingAssembly();
+            var assemblyName = assembly.GetName();
+            var repository = new ApplicationLogRepository(connectionString);
+            var applicationLog = new ApplicationLogDao
             {
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "[Pelorus.Core].[sp_InsertMessage]";
-                var assembly = Assembly.GetExecutingAssembly();
-                var assemblyName = assembly.GetName();
-                string traceDataXmlString = null;
+                AppDomainName = AppDomain.CurrentDomain.FriendlyName,
+                Assembly = new AssemblyDao
+                {
+                    AssemblyFullName = assemblyName.FullName,
+                    AssemblyName = assemblyName.Name,
+                    VersionBuild = assemblyName.Version.Build,
+                    VersionMajor = assemblyName.Version.Major,
+                    VersionMinor = assemblyName.Version.Minor,
+                    VersionRevision = assemblyName.Version.Revision
+                },
+                CorrelationId = correlationId,
+                CorrelationIndex = correlationIndex,
+                Data = traceData,
+                HelpLink = helpLink,
+                MachineName = Environment.MachineName,
+                Message = message,
+                ProcessId = processId,
+                Source = source,
+                StackTrace = stackTrace,
+                ThreadId = threadId,
+                TraceEventType = traceEventType,
+                TraceId = traceId,
+                TraceListenerName = this.Name
+            };
+            long applicationLogId = repository.Create(applicationLog);
 
-                if (null != traceData)
-                {
-                    traceDataXmlString = traceData.InnerXml;
-                }
-
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inMessage",
-                    DbType = DbType.String,
-                    Value = this.ValueOrDbNull(message)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inHelpLink",
-                    DbType = DbType.String,
-                    Size = 2083,
-                    Value = this.ValueOrDbNull(helpLink)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inSource",
-                    DbType = DbType.String,
-                    Value = this.ValueOrDbNull(source)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inStackTrace",
-                    DbType = DbType.String,
-                    Value = this.ValueOrDbNull(stackTrace)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inTraceData",
-                    DbType = DbType.Xml,
-                    Value = this.ValueOrDbNull(traceDataXmlString)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inTraceId",
-                    DbType = DbType.Int32,
-                    Value = this.ValueOrDbNull(traceId)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inCorrelationId",
-                    DbType = DbType.Guid,
-                    Value = this.ValueOrDbNull(correlationId)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inCorrelationIndex",
-                    DbType = DbType.Int32,
-                    Value = this.ValueOrDbNull(correlationIndex)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inAssemblyName",
-                    DbType = DbType.String,
-                    Value = assemblyName.Name
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inAssemblyFullName",
-                    DbType = DbType.String,
-                    Value = assemblyName.FullName
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inAssemblyVersionMajor",
-                    DbType = DbType.Int32,
-                    Value = assemblyName.Version.Major
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inAssemblyVersionMinor",
-                    DbType = DbType.Int32,
-                    Value = assemblyName.Version.Minor
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inAssemblyVersionBuild",
-                    DbType = DbType.Int32,
-                    Value = assemblyName.Version.Build
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inAssemblyVersionRevision",
-                    DbType = DbType.Int32,
-                    Value = assemblyName.Version.Revision
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inMachineName",
-                    DbType = DbType.String,
-                    Value = Environment.MachineName
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inAppDomainName",
-                    DbType = DbType.String,
-                    Value = AppDomain.CurrentDomain.FriendlyName
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inProcessId",
-                    DbType = DbType.Int32,
-                    Value = this.ValueOrDbNull(processId)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inThreadId",
-                    DbType = DbType.String,
-                    Size = 255,
-                    Value = this.ValueOrDbNull(threadId)
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inTraceEventType",
-                    DbType = DbType.Int32,
-                    Value = (int)traceEventType
-                });
-                command.Parameters.Add(new SqlParameter
-                {
-                    ParameterName = "inTraceListenerName",
-                    DbType = DbType.String,
-                    Value = this.ValueOrDbNull(this.Name)
-                });
-                var recordId = new SqlParameter
-                {
-                    ParameterName = "outMessageLogId",
-                    DbType = DbType.Int64,
-                    Direction = ParameterDirection.Output
-                };
-                command.Parameters.Add(recordId);
-
-                if (ConnectionState.Open != connection.State)
-                {
-                    connection.Open();
-                }
-
-                command.ExecuteNonQuery();
-                long messageId = (long)recordId.Value;
-
-                return messageId;
-            }
-        }
-
-        /// <summary>
-        /// Return the given value if it is not null otherwise return DBNull.Value.
-        /// </summary>
-        /// <param name="value">Value to return if not null.</param>
-        /// <returns>Given value or DBNull.Value if the given value is null.</returns>
-        private object ValueOrDbNull(object value)
-        {
-            if (null == value)
-            {
-                return DBNull.Value;
-            }
-
-            return value;
+            return applicationLogId;
         }
     }
 }

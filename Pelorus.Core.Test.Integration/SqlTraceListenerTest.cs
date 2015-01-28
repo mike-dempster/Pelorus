@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Pelorus.Core.Diagnostics.Repositories;
 using Pelorus.Core.Rss;
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 
@@ -114,5 +116,32 @@ namespace Pelorus.Core.Test.Integration
                 }
             }
         }
+
+        [TestMethod]
+        public void TestRepository()
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["PelorusTraceConnection"];
+            var repository = new ApplicationLogRepository(connectionString.ConnectionString);
+            var log = repository.GetById(18);
+        }
+
+        // [TestMethod]
+        // public void TestSerialization()
+        // {
+        //     var log = new ApplicationLogDao
+        //     {
+        //         AppDomainName = "AppDomain",
+        //         Id = 1,
+        //         TraceEventType = TraceEventType.Verbose
+        //     };
+        //     var serializer = new Pelorus.Core.Xml.XmlSerializer();
+        //     var xmlDocument = new System.Xml.XmlDocument();
+        //     var xmlNavigator = xmlDocument.CreateNavigator();
+
+        //     using (var writer = xmlNavigator.AppendChild())
+        //     {
+        //         serializer.Serialize(log, writer);
+        //     }
+        // }
     }
 }

@@ -1,0 +1,198 @@
+﻿<#@ template language="C#" debug="true" hostspecific="true" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ output extension=".cs" #>
+<#
+    // Set this variable to true to make the template search all sub folders for SQL files or false to only get SQL files
+    // form the directory that the template lives in and not any sub folders.
+    const bool includeFilesInSubFolders = true;
+
+    // Declare and bootstrap the global variables
+    var dte = GetDte();
+    string templateFilename = this.Host.TemplateFile;
+    string templatePath = Path.GetDirectoryName(templateFilename);
+    string className = Path.GetFileNameWithoutExtension(templateFilename);
+    var project = GetCurrentProject();
+    string projectNamespace = GetProjectNamespace(project);
+    string projectPath = GetProjectPath(project);
+    string templateNamespace = GetTemplateNamespace(templatePath, projectPath, projectNamespace);
+#>
+namespace <#= templateNamespace #>
+{
+	internal class <#= className #>
+	{
+<#
+    // Get all of the files in the directory that the T4 template lives in that have the ".sql" file extension.
+    var searchOption = SearchOption.TopDirectoryOnly;
+
+    if(includeFilesInSubFolders)
+    {
+        searchOption = SearchOption.AllDirectories;
+    }
+
+    var sqlFiles = Directory.GetFiles(templatePath, "*.sql", searchOption);
+    PushIndent("        ");
+
+    foreach(var file in sqlFiles)
+    {
+        var sqlStatement = File.ReadAllText(file);
+        string cleanSql = CleanSqlStatement(sqlStatement);
+        string minifiedSql = MinifySqlStatement(cleanSql);
+        string escapedSql = EscapeSqlStatement(minifiedSql);
+        string filename = Path.GetFileNameWithoutExtension(file);
+        string line = string.Format("public const string {0} = \"{1}\";", filename, escapedSql);
+        WriteLine(line);
+    }
+
+    ClearIndent();
+#>
+	}
+}
+<#+
+    /// <summary>
+    /// Cleans up the SQL statement by making all possible new line sequences into the standard '\n' sequence.
+    /// </summary>
+    /// <param name="sql">SQL statement to clean.</param>
+    /// <returns>Clean SQL statement with a single new line sequence.</returns>
+    string CleanSqlStatement(string sql)
+    {
+        return sql.Replace("\r\n", "\n") // Replace the CR+LF sequence that is standard on Windows systems with the LF sequence.
+                  .Replace("\r", "\n") // Replace the CR sequence that is standard on Mac systems with the LF sequence.
+                  .Trim(); // Trim the unnecessary leading and trailing spaces from the string.
+    }
+
+    /// <summary>
+    /// Escapes any special characters on the SQL statement that will cause problems when the statement is converted to a
+    /// C# string.
+    /// </summary>
+    /// <param name="sql">SQL statement to escape the special characters.</param>
+    /// <returns>SQL statement with special characters escaped.</returns>
+    string EscapeSqlStatement(string sql)
+    {
+        return sql.Replace("\\", "\\\\") // Escape the backslash (\) character.
+                  .Replace("\"", "\\\""); // Escape the double quote (") character.
+    }
+
+    /// <summary>
+    /// Minifies the given SQL statement by removing all comments, removing duplicate white spaces, and removing all new lines.
+    /// </summary>
+    /// <param name="sql">SQL statement to minify.</param>
+    /// <returns>Minified SQL statement.</returns>
+    string MinifySqlStatement(string sql)
+    {
+        // Replace all single line comments (-- ...) and multiline comments (/* ... */) with an empty string.
+        const string commentSearchPattern = @"(--.*?(?=\n))|((?<=\/\*).*?(?=\*\/))|(\/\*)|(\*\/)";
+        sql = Regex.Replace(sql, commentSearchPattern, string.Empty, RegexOptions.Singleline);
+
+        // Replace and double spaces with a single space.
+        const string extraSpaceSearchPattern = @"\s{1,}";
+        sql = Regex.Replace(sql, extraSpaceSearchPattern, " ", RegexOptions.Singleline);
+
+        // Split all lines of the sql statement and join them together into a single line.
+        var lines = sql.Split('\n')
+                       .Select(e => e.Trim());
+		string minifiedSql = string.Join(" ", lines);
+
+        return minifiedSql;
+    }
+#><#+
+    /// <summary>
+    /// Gets the root object of the Visual Studio automation object model.
+    /// </summary>
+    /// <returns>Root object of the automation model.</returns>
+    DTE GetDte()
+    {
+        var serviceProvider = (IServiceProvider)this.Host;
+        var dte = serviceProvider.GetService(typeof(DTE)) as DTE;
+
+        if(null == dte)
+        {
+            Error("Failed to get DTE service.");
+        }
+
+        return dte;
+    }
+
+    /// <summary>
+    /// Gets the project that the template is a member of.
+    /// </summary>
+    /// <returns>Project data for the project that the template is a member of.</returns>
+    Project GetCurrentProject()
+    {
+        var dte = GetDte();
+
+        foreach(Project project in dte.Solution.Projects)
+        {
+            string projectDirectory = string.Format("{0}{1}",
+                Path.GetDirectoryName(project.FileName),
+                Path.DirectorySeparatorChar);
+
+            if(this.Host.TemplateFile.StartsWith(projectDirectory))
+            {
+                return project;
+            }
+        }
+
+        Error("Failed to locate the project.");
+        return null;
+    }
+
+    /// <summary>
+    /// Gets the root namespace of the project that the template is a member of.
+    /// </summary>
+    /// <param name="project">Project data to get the root namespace from.</param>
+    /// <returns>Root namespace of the project that the template is a member of.</returns>
+    string GetProjectNamespace(Project project)
+    {
+        var rootNamespaceProperty = project.Properties.OfType<Property>()
+                                           .SingleOrDefault(e => e.Name == "RootNamespace");
+
+        if(null != rootNamespaceProperty)
+        {
+            return rootNamespaceProperty.Value as string;
+        }
+
+        Error("Failed to locate the 'RootNamespace' property in the project properties.");
+        return null;
+    }
+
+    /// <summary>
+    /// Gets the file path to the project that the template is a member of.
+    /// </summary>
+    /// <param name="project">Project data to get the path from.</param>
+    /// <returns>Path to the project.</returns>
+    string GetProjectPath(Project project)
+    {
+        var projectPathProperty = project.Properties.OfType<Property>()
+                                         .SingleOrDefault(e => e.Name == "FullPath");
+
+        if(null != projectPathProperty)
+        {
+            return projectPathProperty.Value as string;
+        }
+
+        Error("Failed to locate the 'FullPath' property in the project properties.");
+        return null;
+    }
+
+    /// <summary>
+    /// Gets the full namespace for the location of the template within the project.
+    /// </summary>
+    /// <param name="templatePath">Path to the template file.</param>
+    /// <param name="projectPath">Path of the project that the template is a member of.</param>
+    /// <param name="projectNamespace">Root namespace of the project that the tempalte is a member of.</param>
+    /// <returns>Full namespace of the template's location within the project.</returns>
+    string GetTemplateNamespace(string templatePath, string projectPath, string projectNamespace)
+    {
+        string templateSubpath = templatePath.Substring(projectPath.Length)
+                                             .Replace(" ", string.Empty);
+        string subNamespace = templateSubpath.Replace(Path.DirectorySeparatorChar, '.');
+        string templateNamespace = string.Format("{0}.{1}", projectNamespace, subNamespace);
+
+        return templateNamespace;
+    }
+#>

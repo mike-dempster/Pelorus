@@ -33,6 +33,8 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,10 +55,11 @@
     <Compile Include="Configuration\RssSkipDaysConfigurationElement.cs" />
     <Compile Include="Configuration\RssSkipHoursConfigurationElement.cs" />
     <Compile Include="Configuration\RssTextInputConfigurationElement.cs" />
-    <Compile Include="ErrorHandling\ApplicationLogDao.cs" />
-    <Compile Include="ErrorHandling\AssemblyDao.cs" />
-    <Compile Include="ErrorHandling\ErrorHandlerHttpModule.cs" />
-    <Compile Include="ErrorHandling\ErrorRssFeedHttpHandler.cs" />
+    <Compile Include="ExceptionLogging\ExceptionLoggingBehavior.cs" />
+    <Compile Include="ExceptionLogging\ExceptionLoggingBehaviorElement.cs" />
+    <Compile Include="ExceptionLogging\ExceptionLoggingErrorHandler.cs" />
+    <Compile Include="ExceptionLogging\ExceptionLoggingHttpModule.cs" />
+    <Compile Include="ExceptionLogging\ErrorRssFeedHttpHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +68,6 @@
       <Name>Pelorus.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

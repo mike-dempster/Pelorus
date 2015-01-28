@@ -33,6 +33,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,10 +49,19 @@
     <Compile Include="Configuration\EmptyConfigurationElement.cs" />
     <Compile Include="Configuration\SimpleValueConfigurationElement.cs" />
     <Compile Include="Configuration\TraceSourceConfigurationCollection.cs" />
+    <Compile Include="Data\IDataRecordExtensions.cs" />
     <Compile Include="Data\IBaseReadOnlyRepository.cs" />
     <Compile Include="Data\IBaseRepository.cs" />
+    <Compile Include="Diagnostics\Repositories\ApplicationLogDao.cs" />
+    <Compile Include="Diagnostics\Repositories\ApplicationLogRepository.cs" />
     <Compile Include="Diagnostics\BaseTraceListener.cs" />
     <Compile Include="Diagnostics\Logging.cs" />
+    <Compile Include="Diagnostics\Repositories\AssemblyDao.cs" />
+    <Compile Include="Diagnostics\Repositories\Sql\SqlQueries.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SqlQueries.tt</DependentUpon>
+    </Compile>
     <Compile Include="Diagnostics\SqlServerTraceListener.cs" />
     <Compile Include="Diagnostics\TraceEventData.cs" />
     <Compile Include="Entities\AuditedEntityDao.cs" />
@@ -59,7 +69,6 @@
     <Compile Include="Entities\EntityDao.cs" />
     <Compile Include="Entities\EntityDto.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Linq\EnumerableExtensions.cs" />
     <Compile Include="Localization\LocalizeCore.cs" />
     <Compile Include="Localization\LocalizeProxy.cs" />
     <Compile Include="Localization\LocalizerDelegate.cs" />
@@ -83,11 +92,28 @@
     <Compile Include="Rss\RssTextInput.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Types.cs" />
+    <Compile Include="UriExtensions.cs" />
     <Compile Include="Validation\CommonValidators.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Diagnostics\Repositories\Sql\GetApplicationLogsByEventTypeSinceDate.sql" />
+    <Content Include="Diagnostics\Repositories\Sql\GetApplicationLogsByEventType.sql" />
+    <Content Include="Diagnostics\Repositories\Sql\GetApplicationLogsSinceDate.sql" />
+    <Content Include="Diagnostics\Repositories\Sql\GetApplicationLogsByCorrelationId.sql" />
+    <Content Include="Diagnostics\Repositories\Sql\GetApplicationLogById.sql" />
+    <Content Include="Diagnostics\Repositories\Sql\InsertApplicationLog.sql" />
     <Content Include="Diagnostics\SqlScripts\CreateDiagnosticsObjects.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagnostics\Repositories\Sql\SqlQueries.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SqlQueries.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
