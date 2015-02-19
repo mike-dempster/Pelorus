@@ -12,6 +12,9 @@ using System.Web;
 
 namespace Pelorus.Core.Web.ExceptionLogging
 {
+    /// <summary>
+    /// Serves the entries in the application log as an RSS feed.
+    /// </summary>
     public class ErrorRssFeedHttpHandler : IHttpHandler
     {
         private const string DefaultConnectionStringName = "RssApplicationLog";
