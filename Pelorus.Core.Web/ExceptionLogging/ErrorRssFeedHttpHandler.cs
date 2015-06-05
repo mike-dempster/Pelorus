@@ -17,29 +17,52 @@ namespace Pelorus.Core.Web.ExceptionLogging
     /// </summary>
     public class ErrorRssFeedHttpHandler : IHttpHandler
     {
+        /// <summary>
+        /// Default connection string name to use if a connection string is not specified in the configuration.
+        /// </summary>
         private const string DefaultConnectionStringName = "RssApplicationLog";
+
+        /// <summary>
+        /// This module can be reused across multiple requests.
+        /// </summary>
         public bool IsReusable { get { return true; } }
 
+        /// <summary>
+        /// Process the HTTP request.
+        /// </summary>
+        /// <param name="context">
+        /// An System.Web.HttpContext object that provides references to the intrinsic server objects (for example, Request, Response, Session, and 
+        /// Server) used to service HTTP requests.
+        /// </param>
         public void ProcessRequest(HttpContext context)
         {
             var queryArguments = context.Request.Url.GetQueryArguments();
 
-            if ((null != queryArguments) && (queryArguments.Any()))
+            if ((null == queryArguments) || (false == queryArguments.Any()))
             {
-                var itemArgument = queryArguments.SingleOrDefault(e => e.Key == "item");
-
-                if (false == string.IsNullOrWhiteSpace(itemArgument.Key))
-                {
-                    string number = itemArgument.Value.FromBase64String();
-                    int itemId = int.Parse(number);
-                    this.ReturnApplicationLogItem(context, itemId);
-                    return;
-                }
+                this.ReturnFeedContent(context);
+                return;
             }
 
-            this.ReturnFeedContent(context);
+            var itemArgument = queryArguments.SingleOrDefault(e => e.Key == "item");
+
+            if (true == string.IsNullOrWhiteSpace(itemArgument.Key))
+            {
+                return;
+            }
+
+            string number = itemArgument.Value.FromBase64String();
+            int itemId = int.Parse(number);
+            this.ReturnApplicationLogItem(context, itemId);
         }
 
+        /// <summary>
+        /// Return the list of content in the feed.
+        /// </summary>
+        /// <param name="context">
+        /// An System.Web.HttpContext object that provides references to the intrinsic server objects (for example, Request, Response, Session, and 
+        /// Server) used to service HTTP requests.
+        /// </param>
         private void ReturnFeedContent(HttpContext context)
         {
             var feed = this.CreateRssFeedObject(context.Request.Url.OriginalString);
@@ -50,6 +73,14 @@ namespace Pelorus.Core.Web.ExceptionLogging
             context.Response.Flush();
         }
 
+        /// <summary>
+        /// Return a specific application log by Id.
+        /// </summary>
+        /// <param name="context">
+        /// An System.Web.HttpContext object that provides references to the intrinsic server objects (for example, Request, Response, Session, and 
+        /// Server) used to service HTTP requests.
+        /// </param>
+        /// <param name="itemId">Id of the application log to return.</param>
         private void ReturnApplicationLogItem(HttpContext context, int itemId)
         {
             var config = CoreWebConfiguration.Configuration.ApplicationLogRssFeed;
@@ -87,6 +118,11 @@ namespace Pelorus.Core.Web.ExceptionLogging
             context.Response.Flush();
         }
 
+        /// <summary>
+        /// Create an instance of an RSS feed object with the data for this RSS feed.
+        /// </summary>
+        /// <param name="thisUrl">The URL of the request for this RSS feed.</param>
+        /// <returns>Instance of an RSS feed object with the items in the feed.</returns>
         private RssFeed CreateRssFeedObject(string thisUrl)
         {
             var config = CoreWebConfiguration.Configuration.ApplicationLogRssFeed.Channel;
@@ -153,6 +189,10 @@ namespace Pelorus.Core.Web.ExceptionLogging
             return feed;
         }
 
+        /// <summary>
+        /// Get the days of the week from the configuration.
+        /// </summary>
+        /// <returns>Collection of days of the week for the RSS feed.</returns>
         private RssDayOfWeek[] GetDaysOfWeek()
         {
             var config = CoreWebConfiguration.Configuration.ApplicationLogRssFeed.Channel.SkipDays;
@@ -180,6 +220,10 @@ namespace Pelorus.Core.Web.ExceptionLogging
             return null;
         }
 
+        /// <summary>
+        /// Get the hours of the day from the configuration.
+        /// </summary>
+        /// <returns>Collection of hours of the day for the RSS feed.</returns>
         private RssHourOfDay[] GetHoursOfDay()
         {
             var config = CoreWebConfiguration.Configuration.ApplicationLogRssFeed.Channel.SkipHours;
@@ -224,6 +268,12 @@ namespace Pelorus.Core.Web.ExceptionLogging
             return null;
         }
 
+        /// <summary>
+        /// Gets the items for the RSS feed from the repository.
+        /// </summary>
+        /// <param name="channelName">Name of the RSS channel.</param>
+        /// <param name="thisUrl">URL to this RSS feed.</param>
+        /// <returns>Collection of RSS items for the feed.</returns>
         private RssItem[] GetItems(string channelName, string thisUrl)
         {
             var config = CoreWebConfiguration.Configuration.ApplicationLogRssFeed;
@@ -250,22 +300,22 @@ namespace Pelorus.Core.Web.ExceptionLogging
             var logs = applicationLogRepository.GetSinceDate(DateTime.UtcNow.Subtract(sixMonths));
             var items = new Collection<RssItem>();
 
-            foreach(var l in logs)
+            foreach(var log in logs)
             {
-                string uniqueId = l.Id.ToString().ToBase64String();
+                string uniqueId = log.Id.ToString().ToBase64String();
                 string link = string.Format(CultureInfo.InvariantCulture, "{0}?item={1}", thisUrl, uniqueId);
                 string title = string.Format(
                     CultureInfo.InvariantCulture,
                     "{0}: {1} - {2}",
-                    l.TraceListenerName,
-                    l.TraceEventType,
-                    l.Message);
+                    log.TraceListenerName,
+                    log.TraceEventType,
+                    log.Message);
                 items.Add(new RssItem
                 {
                     GloballyUniqueIdentifier = uniqueId,
-                    Description = l.Message,
+                    Description = log.Message,
                     Link = link,
-                    PublishDate = l.CreatedOn,
+                    PublishDate = log.CreatedOn,
                     Source = new RssSource
                     {
                         Url = thisUrl,

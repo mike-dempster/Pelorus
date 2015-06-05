@@ -37,7 +37,7 @@ namespace Pelorus.Core.Diagnostics
 
             if (null != exception)
             {
-                this.SerializeException((Exception)data, traceData);
+                this.SerializeException((Exception) data, traceData);
                 return;
             }
 
@@ -69,13 +69,6 @@ namespace Pelorus.Core.Diagnostics
         /// <param name="data">The trace data to emit.</param>
         public override void TraceData(TraceEventCache eventCache, string source, TraceEventType eventType, int id, object data)
         {
-            if (null == data)
-            {
-                var traceData = this.CreateTraceEventData(eventCache, source, eventType, id, null, null);
-                this.LogMessage(traceData);
-                return;
-            }
-
             var exception = data as Exception;
 
             if (null == exception)
@@ -89,7 +82,7 @@ namespace Pelorus.Core.Diagnostics
             Nullable<Guid> correlationId = null;
             Nullable<short> correlationIndex = null;
 
-            if(null!=exception.InnerException)
+            if (null != exception.InnerException)
             {
                 correlationId = Guid.NewGuid();
                 correlationIndex = 0;
@@ -129,6 +122,7 @@ namespace Pelorus.Core.Diagnostics
             {
                 var traceData = this.CreateTraceEventData(eventCache, source, eventType, id, null, null);
                 this.LogMessage(traceData);
+                return;
             }
 
             Nullable<Guid> correlationId = null;
@@ -296,7 +290,7 @@ namespace Pelorus.Core.Diagnostics
             traceData.Data = exceptionData;
             traceData.Context.Add("ExceptionHelpLink", data.HelpLink);
             traceData.Context.Add("ExceptionSource", data.Source);
-       }
+        }
 
         /// <summary>
         /// Creates a new instance of a trace event data object.
@@ -350,7 +344,7 @@ namespace Pelorus.Core.Diagnostics
                 Data = null,
                 EventDateTime = eventCache.DateTime,
                 EventId = id,
-                EventType = TraceEventType.Information,
+                EventType = eventType,
                 LogicalOperationStack = eventCache.LogicalOperationStack,
                 Message = null,
                 ProcessId = processId,

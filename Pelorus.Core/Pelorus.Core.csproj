@@ -44,8 +44,7 @@
     <Compile Include="Configuration\AddTraceSourceConfigurationElement.cs" />
     <Compile Include="Configuration\BaseConfigurationElementCollection.cs" />
     <Compile Include="Configuration\CoreConfiguration.cs" />
-    <Compile Include="Configuration\CoreConfigurationSection.cs" />
-    <Compile Include="Configuration\DiagnosticsConfigurationElement.cs" />
+    <Compile Include="Configuration\DiagnosticsConfigurationSection.cs" />
     <Compile Include="Configuration\EmptyConfigurationElement.cs" />
     <Compile Include="Configuration\SimpleValueConfigurationElement.cs" />
     <Compile Include="Configuration\TraceSourceConfigurationCollection.cs" />

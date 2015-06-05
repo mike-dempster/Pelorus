@@ -1,6 +1,5 @@
 ﻿using Pelorus.Core.Diagnostics.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Reflection;
@@ -13,9 +12,6 @@ namespace Pelorus.Core.Diagnostics
     /// </summary>
     public sealed class SqlServerTraceListener : BaseTraceListener
     {
-        private bool logged = false;
-        private readonly IDictionary<string, object> _traceSessionData;
-
         /// <summary>
         /// Indicates if the trace listener is thread safe.  This trace listener implementation is not thread safe.
         /// </summary>
@@ -26,7 +22,6 @@ namespace Pelorus.Core.Diagnostics
         /// </summary>
         public SqlServerTraceListener()
         {
-            this._traceSessionData = new Dictionary<string, object>();
             this.TraceOutputOptions = TraceOptions.Callstack |
                                       TraceOptions.DateTime |
                                       TraceOptions.LogicalOperationStack |
@@ -56,7 +51,7 @@ namespace Pelorus.Core.Diagnostics
 
             traceData.Context.TryGetValue("exceptionHelpLink", out helpLink);
 
-            this.InsertMessage(
+            long logId = this.InsertMessage(
                 message: traceData.Message,
                 helpLink: helpLink as string,
                 source: traceData.Source,
@@ -68,6 +63,11 @@ namespace Pelorus.Core.Diagnostics
                 correlationIndex: traceData.CorrelationIndex,
                 processId: traceData.ProcessId,
                 threadId: traceData.ThreadId);
+
+            if (default(long) == logId)
+            {
+                Trace.TraceInformation("SqlServerTraceListener: Value of application log Id is default.");
+            }
         }
 
         /// <summary>

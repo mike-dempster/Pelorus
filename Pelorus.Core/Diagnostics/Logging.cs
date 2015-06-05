@@ -80,9 +80,10 @@ namespace Pelorus.Core.Diagnostics
         {
             try
             {
-                var traceSourceNames = CoreConfiguration.Data.Diagnostics.TraceSources.OfType<AddTraceSourceConfigurationElement>()
-                                                                                      .Select(e => e.Name);
-                var traceSources = traceSourceNames.Select(e => new TraceSource(e));
+                var traceSourceNames = CoreConfiguration.Diagnostics.TraceSources.OfType<AddTraceSourceConfigurationElement>()
+                                                        .Select(e => e.Name);
+                var traceSources = traceSourceNames.Select(e => new TraceSource(e))
+                                                   .ToList();
 
                 return traceSources;
             }

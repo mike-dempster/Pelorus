@@ -7,23 +7,29 @@ namespace Pelorus.Core.Configuration
     /// </summary>
     internal static class CoreConfiguration
     {
-        private const string ConfigurationSectionPath = "pelorus.core";
-
-        private static CoreConfigurationSection configurationSection = null;
+        /// <summary>
+        /// Path to the configuration data for the diagnostics configuration data.
+        /// </summary>
+        private const string DiagnosticsConfigurationSectionPath = "pelorus.core/diagnostics";
 
         /// <summary>
-        /// Configuration data.
+        /// Cache of the diagnostics configuration data.
         /// </summary>
-        public static CoreConfigurationSection Data
+        private static DiagnosticsConfigurationSection diagnosticsConfigurationSection;
+
+        /// <summary>
+        /// Configuration section for the diagnostics modules.
+        /// </summary>
+        public static DiagnosticsConfigurationSection Diagnostics
         {
             get
             {
-                if (null == configurationSection)
+                if (null == diagnosticsConfigurationSection)
                 {
-                    configurationSection = ConfigurationManager.GetSection(ConfigurationSectionPath) as CoreConfigurationSection;
+                    diagnosticsConfigurationSection = ConfigurationManager.GetSection(DiagnosticsConfigurationSectionPath) as DiagnosticsConfigurationSection;
                 }
 
-                return configurationSection;
+                return diagnosticsConfigurationSection;
             }
         }
     }
