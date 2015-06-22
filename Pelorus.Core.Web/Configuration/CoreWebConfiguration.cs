@@ -9,7 +9,7 @@ namespace Pelorus.Core.Web.Configuration
     {
         private const string ConfigurationSectionPath = "pelorus.core/web";
 
-        private static CoreWebConfigurationSection configurationSection = null;
+        private static CoreWebConfigurationSection configurationSection;
 
         /// <summary>
         /// Get the configuration section. This property is lazy loaded to improve performance if the web module is not
@@ -19,13 +19,17 @@ namespace Pelorus.Core.Web.Configuration
         {
             get
             {
-                if (null == configurationSection)
-                {
-                    configurationSection = ConfigurationManager.GetSection(ConfigurationSectionPath) as CoreWebConfigurationSection;
-                }
-
-                return configurationSection;
+                return configurationSection ?? (configurationSection = GetConfiguration());
             }
+        }
+
+        /// <summary>
+        /// Gets the core web configuration data from the application config.
+        /// </summary>
+        /// <returns>Web configuration from the application's config data.</returns>
+        private static CoreWebConfigurationSection GetConfiguration()
+        {
+            return ConfigurationManager.GetSection(ConfigurationSectionPath) as CoreWebConfigurationSection;
         }
     }
 }

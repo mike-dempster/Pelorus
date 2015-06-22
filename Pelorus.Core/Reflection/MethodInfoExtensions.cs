@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Pelorus.Core.Reflection
@@ -30,7 +31,7 @@ namespace Pelorus.Core.Reflection
         public static bool HasAttribute<TAttribute>(this MethodInfo subject, bool inherit)
             where TAttribute : Attribute
         {
-            return null == subject.GetCustomAttributes(typeof(TAttribute), inherit);
+            return subject.GetCustomAttributes(typeof (TAttribute), inherit).Any();
         }
     }
 }

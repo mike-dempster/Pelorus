@@ -24,13 +24,17 @@ namespace Pelorus.Core.Configuration
         {
             get
             {
-                if (null == diagnosticsConfigurationSection)
-                {
-                    diagnosticsConfigurationSection = ConfigurationManager.GetSection(DiagnosticsConfigurationSectionPath) as DiagnosticsConfigurationSection;
-                }
-
-                return diagnosticsConfigurationSection;
+                return diagnosticsConfigurationSection ?? (diagnosticsConfigurationSection = GetConfiguration());
             }
+        }
+
+        /// <summary>
+        /// Gets the diagnostic configuration section from the application config.
+        /// </summary>
+        /// <returns>Diagnostic configuration data from the application's config data.</returns>
+        private static DiagnosticsConfigurationSection GetConfiguration()
+        {
+            return ConfigurationManager.GetSection(DiagnosticsConfigurationSectionPath) as DiagnosticsConfigurationSection;
         }
     }
 }

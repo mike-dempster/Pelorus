@@ -70,7 +70,7 @@ namespace Pelorus.Core.Rss
         public DateTime LastBuildDate { get; set; }
 
         /// <summary>
-        /// Optional. Specify one or more categories that the channel belongs to. Follows the same rules as the <item>-level 
+        /// Optional. Specify one or more categories that the channel belongs to. Follows the same rules as the &lt;item&gt;-level 
         /// category element. More info at http://cyber.law.harvard.edu/rss/rss.html#syndic8.
         /// </summary>
         [XmlElement("category", IsNullable = false)]

@@ -28,7 +28,8 @@ namespace Pelorus.Core
             {
                 return (T)converter.ConvertFrom(subject);
             }
-            else if (converter.CanConvertTo(typeof(T)))
+
+            if (converter.CanConvertTo(typeof(T)))
             {
                 return (T)converter.ConvertTo(subject, typeof(T));
             }
@@ -39,7 +40,8 @@ namespace Pelorus.Core
             {
                 return (T)converter.ConvertTo(subject, subjectType);
             }
-            else if (converter.CanConvertFrom(subjectType))
+
+            if (converter.CanConvertFrom(subjectType))
             {
                 return (T)converter.ConvertFrom(subject);
             }
@@ -67,7 +69,8 @@ namespace Pelorus.Core
             {
                 return converter.ConvertFrom(subject);
             }
-            else if (converter.CanConvertTo(targetType))
+
+            if (converter.CanConvertTo(targetType))
             {
                 return converter.ConvertTo(subject, targetType);
             }
@@ -78,7 +81,8 @@ namespace Pelorus.Core
             {
                 return converter.ConvertTo(subject, subjectType);
             }
-            else if (converter.CanConvertFrom(subjectType))
+
+            if (converter.CanConvertFrom(subjectType))
             {
                 return converter.ConvertFrom(subject);
             }

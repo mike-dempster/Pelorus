@@ -79,6 +79,8 @@ namespace Pelorus.Core.Test.Integration
             var rssDocument = RssSerializer.Serialize(rss);
             File.WriteAllText("C:\\Temp\\PelorusFeed.xml", rssDocument.InnerXml);
             var rssFeed = RssSerializer.Deserialize(rssDocument);
+
+            Assert.IsNotNull(rssFeed);
         }
 
         [TestMethod]
@@ -123,6 +125,8 @@ namespace Pelorus.Core.Test.Integration
             var connectionString = ConfigurationManager.ConnectionStrings["PelorusTraceConnection"];
             var repository = new ApplicationLogRepository(connectionString.ConnectionString);
             var log = repository.GetById(18);
+
+            Assert.IsNotNull(log);
         }
 
         // [TestMethod]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Pelorus.Core.Entities;
@@ -24,13 +25,13 @@ namespace Pelorus.Core.Localization
 
             var objectType = obj.GetType();
 
-            if (typeof(DateTime) == objectType)
+            if (typeof (DateTime) == objectType)
             {
-                return localizer((DateTime)obj);
+                return localizer((DateTime) obj);
             }
             else if (objectType.IsArray)
             {
-                var array = (Array)obj;
+                var array = (Array) obj;
                 for (int i = 0; i < array.Length; i++)
                 {
                     var element = array.GetValue(i);
@@ -43,7 +44,7 @@ namespace Pelorus.Core.Localization
                 var listType = objectType.GetGenericArguments()
                                          .FirstOrDefault();
 
-                if ((null != listType) && ((typeof(DateTime) == listType) || (listType.IsSubclassOf(typeof(Entity<>)))))
+                if ((null != listType) && ((typeof (DateTime) == listType) || (listType.IsSubclassOf(typeof (Entity<>)))))
                 {
                     try
                     {
@@ -60,7 +61,7 @@ namespace Pelorus.Core.Localization
                     }
                     catch (TargetInvocationException ex)
                     {
-                        if (!ex.InnerException.GetType().Equals(typeof(ArgumentOutOfRangeException)))
+                        if (false == (ex.InnerException is ArgumentOutOfRangeException))
                         {
                             throw;
                         }
@@ -69,12 +70,12 @@ namespace Pelorus.Core.Localization
                     }
                 }
             }
-            else if (objectType.IsSubclassOf(typeof(Entity<>)))
+            else if (objectType.IsSubclassOf(typeof (Entity<>)))
             {
                 var properties = objectType.GetProperties();
                 foreach (var prop in properties)
                 {
-                    if ((prop.CanWrite) && (0 == prop.GetCustomAttributes(typeof(LocalizerIgnoreAttribute), false).Length))
+                    if ((prop.CanWrite) && (0 == prop.GetCustomAttributes(typeof (LocalizerIgnoreAttribute), false).Length))
                     {
                         var value = prop.GetValue(obj, null);
 

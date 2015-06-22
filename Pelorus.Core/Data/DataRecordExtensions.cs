@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace Pelorus.Core.Data
 {
-    public static class IDataRecordExtensions
+    public static class DataRecordExtensions
     {
         /// <summary>
         /// Gets the value of the specified column as a boolean.
@@ -44,7 +44,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (bool)value;
+            return (bool) value;
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (byte)value;
+            return (byte) value;
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (char)value;
+            return (char) value;
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (DateTime)value;
+            return (DateTime) value;
         }
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (decimal)value;
+            return (decimal) value;
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (double)value;
+            return (double) value;
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (float)value;
+            return (float) value;
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (Guid)value;
+            return (Guid) value;
         }
 
         /// <summary>
@@ -416,7 +416,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (short)value;
+            return (short) value;
         }
 
         /// <summary>
@@ -457,7 +457,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (short)value;
+            return (short) value;
         }
 
         /// <summary>
@@ -498,7 +498,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (short)value;
+            return (short) value;
         }
 
         /// <summary>
@@ -539,7 +539,7 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            return (string)value;
+            return (string) value;
         }
 
         /// <summary>
@@ -557,8 +557,10 @@ namespace Pelorus.Core.Data
 
             int ordinal = reader.GetOrdinal(name);
             string xmlString = reader.GetString(ordinal);
-            var xml = new XmlDocument();
-            xml.InnerXml = xmlString;
+            var xml = new XmlDocument
+            {
+                InnerXml = xmlString
+            };
 
             return xml;
         }
@@ -584,8 +586,10 @@ namespace Pelorus.Core.Data
                 return null;
             }
 
-            var xml = new XmlDocument();
-            xml.InnerXml = (string)value;
+            var xml = new XmlDocument
+            {
+                InnerXml = (string) value
+            };
 
             return xml;
         }

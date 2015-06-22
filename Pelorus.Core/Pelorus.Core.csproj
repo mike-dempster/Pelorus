@@ -48,7 +48,7 @@
     <Compile Include="Configuration\EmptyConfigurationElement.cs" />
     <Compile Include="Configuration\SimpleValueConfigurationElement.cs" />
     <Compile Include="Configuration\TraceSourceConfigurationCollection.cs" />
-    <Compile Include="Data\IDataRecordExtensions.cs" />
+    <Compile Include="Data\DataRecordExtensions.cs" />
     <Compile Include="Data\IBaseReadOnlyRepository.cs" />
     <Compile Include="Data\IBaseRepository.cs" />
     <Compile Include="Diagnostics\Repositories\ApplicationLogDao.cs" />

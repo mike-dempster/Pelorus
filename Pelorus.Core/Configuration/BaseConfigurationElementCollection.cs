@@ -94,6 +94,6 @@ namespace Pelorus.Core.Configuration
         /// </summary>
         /// <param name="index">Index of the element to return.</param>
         /// <returns>Element at the given index of the collection.</returns>
-        public TElement this[int index] { get { return (TElement) BaseGet(index); } }
+        public TElement this[int index] { get { return (TElement) this.BaseGet(index); } }
     }
 }

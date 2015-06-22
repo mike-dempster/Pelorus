@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
@@ -14,12 +15,12 @@ namespace Pelorus.Core.Localization
         /// <summary>
         /// Underlying object instance.
         /// </summary>
-        protected readonly object _instance;
+        protected readonly object Instance;
 
         /// <summary>
         /// Time zone to localize the date time properties to.
         /// </summary>
-        protected TimeZoneInfo _timeZone;
+        protected TimeZoneInfo TimeZone;
 
         /// <summary>
         /// Create a new instance of the localize proxy and return a transparent proxy to the given instance.
@@ -31,7 +32,7 @@ namespace Pelorus.Core.Localization
         public static T CreateTransparentProxy<T>(T instance, TimeZoneInfo timeZone)
         {
             var proxy = new LocalizeProxy(instance, timeZone);
-            return (T)proxy.GetTransparentProxy();
+            return (T) proxy.GetTransparentProxy();
         }
 
         /// <summary>
@@ -41,8 +42,8 @@ namespace Pelorus.Core.Localization
         /// <param name="timeZone">Time zone to use for localizing the DateTime values.</param>
         public LocalizeProxy(object instance, TimeZoneInfo timeZone)
         {
-            this._instance = instance;
-            this._timeZone = timeZone;
+            this.Instance = instance;
+            this.TimeZone = timeZone;
         }
 
         /// <summary>
@@ -54,8 +55,8 @@ namespace Pelorus.Core.Localization
         public LocalizeProxy(object instance, TimeZoneInfo timeZone, Type instanceType)
             : base(instanceType)
         {
-            this._instance = instance;
-            this._timeZone = timeZone;
+            this.Instance = instance;
+            this.TimeZone = timeZone;
         }
 
         /// <summary>
@@ -65,18 +66,35 @@ namespace Pelorus.Core.Localization
         /// <returns>Return message with the data returned from the method.</returns>
         public override IMessage Invoke(IMessage msg)
         {
-            var methodCall = new MethodCallMessageWrapper((IMethodCallMessage)msg);
-            var methodBase = methodCall.MethodBase as MethodBase;
-            object[] inArgs = (0 == methodCall.InArgCount) ? null : new object[methodCall.InArgCount];
-            var localizer = new LocalizeCore();
+            var methodCall = new MethodCallMessageWrapper((IMethodCallMessage) msg);
 
-            for (int i = 0; i < methodCall.InArgCount; i++)
+            if (null == methodCall.MethodBase)
             {
-                var localizedArg = localizer.TraverseObject(methodCall.InArgs[i], this.LocalizeToUtc);
-                inArgs[i] = localizedArg;
+                throw new InvalidOperationException("Method base is null.");
             }
 
-            var resultUtc = methodBase.Invoke(this._instance, inArgs);
+            object[] inArgs = null;
+            var localizer = new LocalizeCore();
+
+            if (0 != methodCall.InArgCount)
+            {
+                inArgs = new object[methodCall.InArgCount];
+
+                for (int i = 0; i < methodCall.InArgCount; i++)
+                {
+                    if (null == methodCall.InArgs)
+                    {
+                        var innerException = new NullReferenceException("Input arguments collection is null.");
+                        string exMsg = string.Format(CultureInfo.InvariantCulture, "Error invoking method '{0}'.", methodCall.MethodName);
+                        throw new TargetInvocationException(exMsg, innerException);
+                    }
+
+                    var localizedArg = localizer.TraverseObject(methodCall.InArgs[i], this.LocalizeToUtc);
+                    inArgs[i] = localizedArg;
+                }
+            }
+
+            var resultUtc = methodCall.MethodBase.Invoke(this.Instance, inArgs);
             var result = localizer.TraverseObject(resultUtc, this.LocalizeToLocal);
             var resultMessage = new ReturnMessage(result, methodCall.Args, methodCall.ArgCount, methodCall.LogicalCallContext, methodCall);
 
@@ -90,12 +108,9 @@ namespace Pelorus.Core.Localization
         /// <returns>Localized DateTime value.</returns>
         private DateTime LocalizeToUtc(DateTime subject)
         {
-            if (subject != null)
-            {
-                return TimeZoneInfo.ConvertTimeToUtc(subject, this._timeZone);
-            }
+            var convertedDateTime = TimeZoneInfo.ConvertTimeToUtc(subject, this.TimeZone);
 
-            return subject;
+            return convertedDateTime;
         }
 
         /// <summary>
@@ -105,12 +120,9 @@ namespace Pelorus.Core.Localization
         /// <returns>Localized DateTime value.</returns>
         private DateTime LocalizeToLocal(DateTime subject)
         {
-            if (subject != null)
-            {
-                return TimeZoneInfo.ConvertTimeFromUtc(subject, this._timeZone);
-            }
+            var convertedDateTime = TimeZoneInfo.ConvertTimeFromUtc(subject, this.TimeZone);
 
-            return subject;
+            return convertedDateTime;
         }
     }
 }

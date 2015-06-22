@@ -32,7 +32,7 @@ namespace Pelorus.Core.Reflection
         public static bool HasAttribute<TAttribute>(this PropertyInfo subject, bool inherit)
             where TAttribute : Attribute
         {
-            return subject.GetCustomAttributes(typeof(TAttribute), inherit).Any();
+            return subject.GetCustomAttributes(typeof (TAttribute), inherit).Any();
         }
 
         /// <summary>
@@ -44,16 +44,18 @@ namespace Pelorus.Core.Reflection
         /// <returns>PropertyInfo of the target property.</returns>
         public static PropertyInfo Property<T, TResult>(Expression<Func<T, TResult>> expression)
         {
-            MemberExpression member = null;
+            var member = expression.Body as MemberExpression;
 
-            if (expression.Body is UnaryExpression)
+            if (null == member)
             {
-                var body = expression.Body as UnaryExpression;
-                member = body.Operand as MemberExpression;
-            }
-            else if (expression.Body is MemberExpression)
-            {
-                member = expression.Body as MemberExpression;
+                var unaryExpression = expression.Body as UnaryExpression;
+
+                if (null == unaryExpression)
+                {
+                    return null;
+                }
+
+                member = unaryExpression.Operand as MemberExpression;
             }
 
             if (null == member)

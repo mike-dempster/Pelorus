@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace Pelorus.Core.Rss
 {
     /// <summary>
-    /// A channel may contain any number of &lt;item&gt;s. An item may represent a &quotstory&quot; -- much like a story 
+    /// A channel may contain any number of &lt;item&gt;s. An item may represent a &quot;story&quot; -- much like a story 
     /// in a newspaper or magazine; if so its description is a synopsis of the story, and the link points to the full 
     /// story. An item may also be complete in itself, if so, the description contains the text (entity-encoded HTML is 
     /// allowed; see examples [http://cyber.law.harvard.edu/rss/encodingDescriptions.html]), and the link and title may 

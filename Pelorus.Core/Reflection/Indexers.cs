@@ -16,7 +16,7 @@ namespace Pelorus.Core.Reflection
         /// <returns>Indexer with the given index type or null if an indexer with the given signature does not exist.</returns>
         public static PropertyInfo GetIndexer<TEntity, TIndexer>()
         {
-            return GetIndexer(typeof(TEntity), typeof(TIndexer));
+            return GetIndexer(typeof (TEntity), typeof (TIndexer));
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Pelorus.Core.Reflection
         /// <returns>Indexer with the given index type or null if an indexer with the given signature does not exist.</returns>
         public static PropertyInfo GetIndexer<TIndexer>(this Type subject)
         {
-            return GetIndexer(subject, typeof(TIndexer));
+            return GetIndexer(subject, typeof (TIndexer));
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Pelorus.Core.Reflection
         /// <returns>True if an indexer with the given signature exists for the entity type.</returns>
         public static bool HasIndexer<TIndexer>(this Type subject)
         {
-            return GetIndexer(subject, typeof(TIndexer)) != null;
+            return GetIndexer(subject, typeof (TIndexer)) != null;
         }
     }
 }
