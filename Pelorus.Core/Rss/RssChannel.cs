@@ -87,7 +87,9 @@ namespace Pelorus.Core.Rss
         /// It's for people who might stumble across an RSS file on a Web server 25 years from now and wonder what it is.
         /// </summary>
         [XmlElement("docs", IsNullable = false)]
+        // ReSharper disable ValueParameterNotUsed
         public string Docs { get { return "http://cyber.law.harvard.edu/rss/"; } set { } }
+        // ReSharper restore ValueParameterNotUsed
 
         /// <summary>
         /// Optional. Allows processes to register with a cloud to be notified of updates to the channel, implementing a 

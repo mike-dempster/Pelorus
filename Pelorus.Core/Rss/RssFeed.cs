@@ -15,7 +15,9 @@ namespace Pelorus.Core.Rss
         /// Indicates the RSS version used by the RSS Feed.
         /// </summary>
         [XmlAttribute("version")]
+        // ReSharper disable ValueParameterNotUsed
         public string Version { get { return "2.0"; } set { } }
+        // ReSharper restore ValueParameterNotUsed
 
         /// <summary>
         /// The channel being served by the RSS Feed.

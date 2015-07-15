@@ -39,7 +39,7 @@ namespace Pelorus.Core.Data.EntityFramework
             }
 
             var block = Expression.Block(expressions);
-            var nullNavPropertiesExpression = Expression.Lambda<Action<TEntity>>(block, new[] { inputParam });
+            var nullNavPropertiesExpression = Expression.Lambda<Action<TEntity>>(block, inputParam);
 
             return nullNavPropertiesExpression;
         }

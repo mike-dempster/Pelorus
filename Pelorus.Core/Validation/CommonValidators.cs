@@ -9,9 +9,9 @@ namespace Pelorus.Core.Validation
     /// </summary>
     public static class CommonValidators
     {
-        private readonly static Regex EmailRegex = new Regex(@"^(?("")(""[^""]+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]*\.)+[0-9a-zA-Z]{2,24}))$");
-        private readonly static Regex PhoneNumberRegex = new Regex(@"[\(]{0,1}[0-9]{3}[\s]{0,}[-\.\*\)]{0,1}[\s]{0,}[0-9]{3}[\s]{0,}[-\.\*\)]{0,1}[\s]{0,}[0-9]{4}");
-        private readonly static Regex ZipCodeRegex = new Regex(@"[0-9]{5}(-[0-9]{4}){0,1}");
+        private readonly static Regex _emailRegex = new Regex(@"^(?("")(""[^""]+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]*\.)+[0-9a-zA-Z]{2,24}))$");
+        private readonly static Regex _phoneNumberRegex = new Regex(@"[\(]{0,1}[0-9]{3}[\s]{0,}[-\.\*\)]{0,1}[\s]{0,}[0-9]{3}[\s]{0,}[-\.\*\)]{0,1}[\s]{0,}[0-9]{4}");
+        private readonly static Regex _zipCodeRegex = new Regex(@"[0-9]{5}(-[0-9]{4}){0,1}");
 
         /// <summary>
         /// Validate an email address.
@@ -26,7 +26,7 @@ namespace Pelorus.Core.Validation
 
             emailAddress = emailAddress.ToLower()
                                        .Trim();
-            var matches = EmailRegex.Matches(emailAddress);
+            var matches = _emailRegex.Matches(emailAddress);
 
             if ((1 != matches.Count) || ((0 < matches.Count) && (!matches[0].Value.Equals(emailAddress))))
             {
@@ -45,7 +45,7 @@ namespace Pelorus.Core.Validation
                 throw new ArgumentNullException("phoneNumber");
             }
 
-            var matches = PhoneNumberRegex.Matches(Types.Cast<string>(phoneNumber));
+            var matches = _phoneNumberRegex.Matches(Types.Cast<string>(phoneNumber));
 
             if ((1 != matches.Count) || ((0 < matches.Count) && (!matches[0].Value.Equals(phoneNumber))))
             {
@@ -64,7 +64,7 @@ namespace Pelorus.Core.Validation
                 throw new ArgumentNullException("zipCode");
             }
 
-            MatchCollection matches = ZipCodeRegex.Matches(Types.Cast<string>(zipCode));
+            MatchCollection matches = _zipCodeRegex.Matches(Types.Cast<string>(zipCode));
 
             if ((1 != matches.Count) || ((0 < matches.Count) && (!matches[0].Value.Equals(zipCode))))
             {

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Pelorus.Core.Entities;
+using Pelorus.Core.Reflection;
+using System;
 using System.Linq;
 using System.Reflection;
-using Pelorus.Core.Entities;
-using Pelorus.Core.Reflection;
 
 namespace Pelorus.Core.Localization
 {
