@@ -37,11 +37,8 @@
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -49,6 +46,8 @@
     <Compile Include="BaseModelConfiguration.cs" />
     <Compile Include="BaseReadOnlyRepository.cs" />
     <Compile Include="BaseRepository.cs" />
+    <Compile Include="DbContextExtensions.cs" />
+    <Compile Include="EntityNavigationExpressionBuilder.cs" />
     <Compile Include="IContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -47,6 +47,74 @@ namespace Pelorus.Core.Data
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
 
         /// <summary>
+        /// Get a collection of 'length' entities.
+        /// </summary>
+        /// <param name="length">Number of items to return.</param>
+        /// <returns>Collection of entities.</returns>
+        IEnumerable<TEntity> GetCount(int length);
+
+        /// <summary>
+        /// Get a collection of 'length' entities starting at the position of 'startIndex'.
+        /// </summary>
+        /// <param name="startIndex">Position in the full collection to select from.</param>
+        /// <param name="length">Number of items to return.</param>
+        /// <returns>Collection of entities.</returns>
+        IEnumerable<TEntity> GetCount(int startIndex, int length);
+
+        /// <summary>
+        /// Get a collection of 'length' entities by the search predicate.
+        /// </summary>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="predicate">Search predicate for querying the entities.</param>
+        /// <returns>Collection of entities that match the search predicate.</returns>
+        IEnumerable<TEntity> GetCount(int length, Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Get a collection of 'length' entities by the search predicate starting at the position of 'startIndex'.
+        /// </summary>
+        /// <param name="startIndex">Position in the full collection to select from.</param>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="predicate">Search predicate for querying the entities.</param>
+        /// <returns>Collection of entities that match the search predicate.</returns>
+        IEnumerable<TEntity> GetCount(int startIndex, int length, Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Get a collection of 'length' entities asynchronously.
+        /// </summary>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Collection of entities.</returns>
+        Task<IEnumerable<TEntity>> GetCountAsync(int length, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Get a collection of 'length' entities starting at the position of 'startIndex' asynchronously.
+        /// </summary>
+        /// <param name="startIndex">Position in the full collection to select from.</param>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Collection of entities.</returns>
+        Task<IEnumerable<TEntity>> GetCountAsync(int startIndex, int length, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Get a collection of 'length' entities by the search predicate asynchronously.
+        /// </summary>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="predicate">Search predicate for querying the entities.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Collection of entities that match the search predicate.</returns>
+        Task<IEnumerable<TEntity>> GetCountAsync(int length, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Get a collection of 'length' entities by the search predicate starting at the position of 'startIndex' asynchronously.
+        /// </summary>
+        /// <param name="startIndex">Position in the full collection to select from.</param>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="predicate">Search predicate for querying the entities.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Collection of entities that match the search predicate.</returns>
+        Task<IEnumerable<TEntity>> GetCountAsync(int startIndex, int length, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
+
+        /// <summary>
         /// Returns all the entities in the data store.
         /// </summary>
         /// <returns>Collection of all entities in the data store.</returns>
@@ -79,8 +147,8 @@ namespace Pelorus.Core.Data
     /// Defines the base functionality of data repositories that have a read only entity with a key of type int.
     /// </summary>
     /// <typeparam name="TEntity">Type of the repository's entity.</typeparam>
-    public interface IBaseReadOnlyRepository<TEntity> : IBaseReadOnlyRepository<TEntity, int>
-        where TEntity : EntityDao<int>
+    public interface IBaseReadOnlyRepository<TEntity> : IBaseReadOnlyRepository<TEntity, long>
+        where TEntity : EntityDao<long>
     {
     }
 }

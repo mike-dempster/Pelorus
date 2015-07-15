@@ -2,7 +2,14 @@
 using Pelorus.Core.Reflection;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -11,7 +18,7 @@ using System.Threading.Tasks;
 namespace Pelorus.Core.Data.EntityFramework
 {
     /// <summary>
-    /// Base functionality for readonly repository classes.
+    /// Base functionality for repository classes with read only entities.
     /// </summary>
     /// <typeparam name="TEntity">The repository's entity type.</typeparam>
     /// <typeparam name="TKey">Type of the Id property on TEntity.</typeparam>
@@ -47,13 +54,15 @@ namespace Pelorus.Core.Data.EntityFramework
             }
 
             this._context = contextFactory.Create();
+            this._context.Configuration.LazyLoadingEnabled = false;
+            this._context.Configuration.ProxyCreationEnabled = false;
             this._dataSet = this._context.Set<TEntity>();
         }
 
         /// <summary>
         /// Initialize the base properties of the repository class.
         /// </summary>
-        /// <param name="context">Context to use for the respository.</param>
+        /// <param name="context">Context to use for the repository.</param>
         protected BaseReadOnlyRepository(DbContext context)
         {
             if (null == context)
@@ -62,6 +71,8 @@ namespace Pelorus.Core.Data.EntityFramework
             }
 
             this._context = context;
+            this._context.Configuration.LazyLoadingEnabled = false;
+            this._context.Configuration.ProxyCreationEnabled = false;
             this._dataSet = this._context.Set<TEntity>();
         }
 
@@ -70,14 +81,9 @@ namespace Pelorus.Core.Data.EntityFramework
         /// </summary>
         /// <param name="entityId">Id of the entity to get.</param>
         /// <returns>Entity with the given Id or null if the entity does not exist.</returns>
-        public TEntity GetById(TKey entityId)
+        public virtual TEntity GetById(TKey entityId)
         {
-            var parameterExpr = Expression.Parameter(typeof (TEntity));
-            var entityIdExpr = Expression.Property(parameterExpr, PropertyInfoExtensions.Property<TEntity, TKey>(e => e.Id));
-            var constIdExpr = Expression.Constant(entityId, typeof (TKey));
-            var whereClause = Expression.Equal(entityIdExpr, constIdExpr);
-            var predicate = Expression.Lambda<Func<TEntity, bool>>(whereClause, parameterExpr);
-
+            var predicate = this.GetKeyEqualityExpression(entityId);
             var query = this.DataSet.Where(predicate);
             var includeQuery = this.IncludeChildren(query);
 
@@ -90,14 +96,9 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <param name="entityId">Id of the entity to get.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Entity with the given Id or null if the entity does not exist.</returns>
-        public async Task<TEntity> GetByIdAsync(TKey entityId, CancellationToken cancellationToken)
+        public virtual async Task<TEntity> GetByIdAsync(TKey entityId, CancellationToken cancellationToken)
         {
-            var parameterExpr = Expression.Parameter(typeof (TEntity));
-            var entityIdExpr = Expression.Property(parameterExpr, PropertyInfoExtensions.Property<TEntity, TKey>(e => e.Id));
-            var constIdExpr = Expression.Constant(entityId, typeof (TKey));
-            var whereClause = Expression.Equal(entityIdExpr, constIdExpr);
-            var predicate = Expression.Lambda<Func<TEntity, bool>>(whereClause, parameterExpr);
-
+            var predicate = this.GetKeyEqualityExpression(entityId);
             var query = this.DataSet.Where(predicate);
             var includeQuery = this.IncludeChildren(query);
 
@@ -110,7 +111,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// </summary>
         /// <param name="predicate">Search predicate for querying the entity.</param>
         /// <returns>Entity that match the search predicate.</returns>
-        public TEntity Get(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity Get(Expression<Func<TEntity, bool>> predicate)
         {
             var query = this.DataSet.Where(predicate);
             var includeQuery = this.IncludeChildren(query);
@@ -124,7 +125,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <param name="predicate">Search predicate for querying the entity.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Entity that match the search predicate.</returns>
-        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+        public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
             var query = this.DataSet.Where(predicate);
             var includeQuery = this.IncludeChildren(query);
@@ -134,10 +135,150 @@ namespace Pelorus.Core.Data.EntityFramework
         }
 
         /// <summary>
+        /// Get a collection of 'length' entities.
+        /// </summary>
+        /// <param name="length">Number of items to return.</param>
+        /// <returns>Collection of entities.</returns>
+        public virtual IEnumerable<TEntity> GetCount(int length)
+        {
+            var query = this.DataSet.AsQueryable()
+                            .OrderBy(e => e.Id)
+                            .Take(length);
+            var includeQuery = this.IncludeChildren(query);
+
+            return includeQuery.ToList();
+        }
+
+        /// <summary>
+        /// Get a collection of 'length' entities starting at the position of 'startIndex'.
+        /// </summary>
+        /// <param name="startIndex">Position in the full collection to select from.</param>
+        /// <param name="length">Number of items to return.</param>
+        /// <returns>Collection of entities.</returns>
+        public virtual IEnumerable<TEntity> GetCount(int startIndex, int length)
+        {
+            var query = this.DataSet.AsQueryable()
+                            .OrderBy(e => e.Id)
+                            .Skip(startIndex)
+                            .Take(length);
+            var includeQuery = this.IncludeChildren(query);
+
+            return includeQuery.ToList();
+        }
+
+        /// <summary>
+        /// Get a collection of 'length' entities by the search predicate.
+        /// </summary>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="predicate">Search predicate for querying the entities.</param>
+        /// <returns>Collection of entities that match the search predicate.</returns>
+        public virtual IEnumerable<TEntity> GetCount(int length, Expression<Func<TEntity, bool>> predicate)
+        {
+            var query = this.DataSet.Where(predicate)
+                            .OrderBy(e => e.Id)
+                            .Take(length);
+            var includeQuery = this.IncludeChildren(query);
+
+            return includeQuery.ToList();
+        }
+
+        /// <summary>
+        /// Get a collection of 'length' entities by the search predicate starting at the position of 'startIndex'.
+        /// </summary>
+        /// <param name="startIndex">Position in the full collection to select from.</param>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="predicate">Search predicate for querying the entities.</param>
+        /// <returns>Collection of entities that match the search predicate.</returns>
+        public virtual IEnumerable<TEntity> GetCount(int startIndex, int length, Expression<Func<TEntity, bool>> predicate)
+        {
+            var query = this.DataSet.Where(predicate)
+                            .OrderBy(e => e.Id)
+                            .Skip(startIndex)
+                            .Take(length);
+            var includeQuery = this.IncludeChildren(query);
+
+            return includeQuery.ToList();
+        }
+
+        /// <summary>
+        /// Get a collection of 'length' entities asynchronously.
+        /// </summary>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Collection of entities.</returns>
+        public virtual async Task<IEnumerable<TEntity>> GetCountAsync(int length, CancellationToken cancellationToken)
+        {
+            var query = this.DataSet.AsQueryable()
+                            .OrderBy(e => e.Id)
+                            .Take(length);
+            var includeQuery = this.IncludeChildren(query);
+
+            return await includeQuery.ToListAsync(cancellationToken)
+                                     .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get a collection of 'length' entities starting at the position of 'startIndex' asynchronously.
+        /// </summary>
+        /// <param name="startIndex">Position in the full collection to select from.</param>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Collection of entities.</returns>
+        public virtual async Task<IEnumerable<TEntity>> GetCountAsync(int startIndex, int length, CancellationToken cancellationToken)
+        {
+            var query = this.DataSet.AsQueryable()
+                            .OrderBy(e => e.Id)
+                            .Skip(startIndex)
+                            .Take(length);
+            var includeQuery = this.IncludeChildren(query);
+
+            return await includeQuery.ToListAsync(cancellationToken)
+                                     .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get a collection of 'length' entities by the search predicate asynchronously.
+        /// </summary>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="predicate">Search predicate for querying the entities.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Collection of entities that match the search predicate.</returns>
+        public virtual async Task<IEnumerable<TEntity>> GetCountAsync(int length, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+        {
+            var query = this.DataSet.Where(predicate)
+                            .OrderBy(e => e.Id)
+                            .Take(length);
+            var includeQuery = this.IncludeChildren(query);
+
+            return await includeQuery.ToListAsync(cancellationToken)
+                                     .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get a collection of 'length' entities by the search predicate starting at the position of 'startIndex' asynchronously.
+        /// </summary>
+        /// <param name="startIndex">Position in the full collection to select from.</param>
+        /// <param name="length">Number of items to return.</param>
+        /// <param name="predicate">Search predicate for querying the entities.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Collection of entities that match the search predicate.</returns>
+        public virtual async Task<IEnumerable<TEntity>> GetCountAsync(int startIndex, int length, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+        {
+            var query = this.DataSet.Where(predicate)
+                            .OrderBy(e => e.Id)
+                            .Skip(startIndex)
+                            .Take(length);
+            var includeQuery = this.IncludeChildren(query);
+
+            return await includeQuery.ToListAsync(cancellationToken)
+                                     .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Get a collection of entities
         /// </summary>
         /// <returns>Collection of entities.</returns>
-        public IEnumerable<TEntity> GetAll()
+        public virtual IEnumerable<TEntity> GetAll()
         {
             var query = this.DataSet.AsQueryable();
             var includeQuery = this.IncludeChildren(query);
@@ -150,7 +291,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// </summary>
         /// <param name="predicate">Search predicate for querying the entities.</param>
         /// <returns>Collection of entities that match the search predicate.</returns>
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
+        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
         {
             var query = this.DataSet.Where(predicate);
             var includeQuery = this.IncludeChildren(query);
@@ -163,7 +304,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// </summary>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Collection of entities.</returns>
-        public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken)
         {
             var query = this.DataSet.AsQueryable();
             var includeQuery = this.IncludeChildren(query);
@@ -178,13 +319,96 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <param name="predicate">Search predicate for querying the entities.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Collection of entities that match the search predicate.</returns>
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
             var query = this.DataSet.Where(predicate);
             var includeQuery = this.IncludeChildren(query);
 
             return await includeQuery.ToListAsync(cancellationToken)
                                      .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets the contents of a FILESTREAM file from SQL Server using a pending transaction.
+        /// </summary>
+        /// <param name="property">Key property used to select a single record for file streaming.</param>
+        /// <param name="fileStreamColumnName">Name of the FILESTREAM column.</param>
+        /// <param name="primaryKey">Primary key of the record to read the file from.</param>
+        /// <returns>Binary stream of the file content.</returns>
+        protected Stream GetContentStream<TResult>(Expression<Func<TEntity, TResult>> property, string fileStreamColumnName, TResult primaryKey)
+        {
+            var propertyInfo = PropertyInfoExtensions.Property<TEntity, TResult>(property);
+            var propertyMappings = this.GetPropertyMapping();
+            string columnName = propertyMappings[propertyInfo.Name];
+            const string sqlQueryFormat = "SELECT {0}.PathName() AS [Path], GET_FILESTREAM_TRANSACTION_CONTEXT() AS [Transaction] FROM {1} WHERE [{2}] = @rowId;";
+            string tableName = this.GetSchemaAndTablename();
+            string connectionString = this._context.Database.Connection.ConnectionString;
+
+            using (var connection = new SqlConnection(connectionString))
+            using (var cmd = connection.CreateCommand())
+            {
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = string.Format(CultureInfo.InvariantCulture, sqlQueryFormat, fileStreamColumnName, tableName, columnName);
+                cmd.Parameters.Add(new SqlParameter("rowId", primaryKey));
+
+                if (ConnectionState.Open != connection.State)
+                {
+                    connection.Open();
+                }
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    cmd.Transaction = transaction;
+                    string logicalPath = null;
+                    byte[] transactionId = null;
+
+                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+                    {
+                        bool hasRows = reader.Read();
+
+                        if (false == hasRows)
+                        {
+                            return Stream.Null;
+                        }
+
+                        int pathOrdinal = reader.GetOrdinal("Path");
+                        int transactionOrdinal = reader.GetOrdinal("Transaction");
+                        logicalPath = reader.GetString(pathOrdinal);
+                        var sqlBytes = reader.GetSqlBytes(transactionOrdinal);
+                        transactionId = sqlBytes.Value;
+                    }
+
+                    var contents = new MemoryStream();
+
+                    using (var stream = new SqlFileStream(logicalPath, transactionId, FileAccess.Read))
+                    {
+                        stream.CopyTo(contents);
+                    }
+
+                    contents.Seek(0, SeekOrigin.Begin);
+                    transaction.Commit();
+
+                    return contents;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the contents of a FILESTREAM file from SQL Server using a pending transaction asynchronously.
+        /// </summary>
+        /// <param name="property">Key property used to select a single record for file streaming.</param>
+        /// <param name="fileStreamColumnName">Name of the FILESTREAM column.</param>
+        /// <param name="primaryKey">Primary key of the record to read the file from.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Binary stream of the file content.</returns>
+        protected async Task<Stream> GetContentStreamAsync<TResult>(
+            Expression<Func<TEntity, TResult>> property,
+            string fileStreamColumnName,
+            TResult primaryKey,
+            CancellationToken cancellationToken)
+        {
+            return await Task.Run(() => this.GetContentStream<TResult>(property, fileStreamColumnName, primaryKey), cancellationToken)
+                             .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -222,14 +446,120 @@ namespace Pelorus.Core.Data.EntityFramework
                 this._context.Dispose();
             }
         }
+
+        /// <summary>
+        /// Build an expression that compares the Id of the entity to the given key value.
+        /// </summary>
+        /// <param name="entityId">Key value for the expression to compare the Id property to.</param>
+        /// <returns>Equality expression equivalent to e => e.Id == entityId.</returns>
+        protected Expression<Func<TEntity, bool>> GetKeyEqualityExpression(TKey entityId)
+        {
+            var parameterExpr = Expression.Parameter(typeof (TEntity));
+            var idPropertyInfo = PropertyInfoExtensions.Property<TEntity, TKey>(e => e.Id);
+            var entityIdExpr = Expression.Property(parameterExpr, idPropertyInfo);
+            var constIdExpr = Expression.Constant(entityId, typeof (TKey));
+            var whereClause = Expression.Equal(entityIdExpr, constIdExpr);
+            var predicate = Expression.Lambda<Func<TEntity, bool>>(whereClause, parameterExpr);
+
+            return predicate;
+        }
+
+        /// <summary>
+        /// Gets the schema and name the table that that TEntity is mapped to.
+        /// </summary>
+        /// <returns>Schema and table name that TEntity is mapped to.</returns>
+        private string GetSchemaAndTablename()
+        {
+            var metadataWorkspace = ((IObjectContextAdapter) this._context).ObjectContext.MetadataWorkspace;
+            var objectSpaceMetadata = metadataWorkspace.GetItems<EntityType>(DataSpace.OSpace);
+            var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+
+            if (null == entityMetadata)
+            {
+                return null;
+            }
+
+            var database = metadataWorkspace.GetItems<EntityContainer>(DataSpace.SSpace)
+                                            .FirstOrDefault();
+
+            if (null == database)
+            {
+                return null;
+            }
+
+            var dbEntitySets = database.BaseEntitySets.OfType<EntitySet>();
+            var tableMetadata = dbEntitySets.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+
+            if (null == tableMetadata)
+            {
+                return null;
+            }
+
+            string schemaAndTableName = string.Format(CultureInfo.InvariantCulture, "[{0}].[{1}]", tableMetadata.Schema, tableMetadata.Table);
+
+            return schemaAndTableName;
+        }
+
+        /// <summary>
+        /// Gets a dictionary that maps entity properties to database column names for the current DbContext.
+        /// </summary>
+        /// <returns>Dictionary of entity properties to database column name mapping.</returns>
+        private IDictionary<string, string> GetPropertyMapping()
+        {
+            var metadataWorkspace = ((IObjectContextAdapter) this._context).ObjectContext.MetadataWorkspace;
+            var objectSpaceMetadata = metadataWorkspace.GetItems<EntityType>(DataSpace.OSpace);
+            var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+
+            if (null == entityMetadata)
+            {
+                return null;
+            }
+
+            var propertyNames = entityMetadata.DeclaredProperties;
+            var database = metadataWorkspace.GetItems<EntityContainer>(DataSpace.SSpace)
+                                            .FirstOrDefault();
+
+            if (null == database)
+            {
+                return null;
+            }
+
+            var dbEntitySets = database.BaseEntitySets.OfType<EntitySet>();
+            var tableMetadata = dbEntitySets.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+
+            if (null == tableMetadata)
+            {
+                return null;
+            }
+
+            var columnNames = tableMetadata.ElementType.DeclaredProperties;
+
+            Func<EdmProperty, int, KeyValuePair<string, string>> createKvp = (e, i) =>
+            {
+                string columnName = columnNames[i].Name;
+                string propertyName = e.Name;
+
+                if (string.IsNullOrWhiteSpace(columnName))
+                {
+                    columnName = propertyName;
+                }
+
+                return new KeyValuePair<string, string>(propertyName, columnName);
+            };
+
+            var mappingDictionary = propertyNames.Select(createKvp)
+                                                 .ToDictionary(e => e.Key, e => e.Value);
+
+            return mappingDictionary;
+        }
     }
 
     /// <summary>
     /// Short hand base repository for TEntity types that have an int Id property.
     /// </summary>
     /// <typeparam name="TEntity">The repository's entity type.</typeparam>
-    public abstract class BaseReadOnlyRepository<TEntity> : BaseReadOnlyRepository<TEntity, int>
-        where TEntity : EntityDao<int>
+    public abstract class BaseReadOnlyRepository<TEntity> : BaseReadOnlyRepository<TEntity, long>
+        where TEntity : EntityDao<long>
     {
         /// <summary>
         /// Create a new instance of the base repository class with a context factory.
@@ -242,7 +572,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Initialize the base properties of the repository class.
         /// </summary>
-        /// <param name="context">Context to use for the respository.</param>
+        /// <param name="context">Context to use for the repository.</param>
         protected BaseReadOnlyRepository(DbContext context) : base(context)
         {
         }

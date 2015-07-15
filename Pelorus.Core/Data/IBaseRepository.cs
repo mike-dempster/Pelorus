@@ -64,42 +64,59 @@ namespace Pelorus.Core.Data
         /// <summary>
         /// Update an existing entity.
         /// </summary>
-        /// <param name="entity">Updated entity to save in the data store.</param>
+        /// <param name="entity">Updaterd entity to update in the data store.</param>
         /// <returns>The updated entity.</returns>
         TEntity Update(TEntity entity);
 
         /// <summary>
-        /// Update the identifiied properties on an existing entity.
+        /// Update the identified properties on an existing entity.
         /// </summary>
-        /// <param name="entity">Updated entity to save in the data store.</param>
+        /// <param name="entity">Updated entity to save.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <returns>Updated entity.</returns>
         TEntity Update(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties);
 
         /// <summary>
+        /// Update the identified properties on an existing entity.
+        /// </summary>
+        /// <param name="entity">Updated entity to save.</param>
+        /// <param name="modifiedProperties">Properties to update on the entity.</param>
+        /// <returns>Updated entity.</returns>
+        TEntity Update(TEntity entity, params Expression<Func<TEntity, object>>[] modifiedProperties);
+
+        /// <summary>
         /// Update an existing entity asynchronously.
         /// </summary>
-        /// <param name="entity">Updated entity to save in the data store.</param>
+        /// <param name="entity">Updated entity to update in the data store.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>The updated entity.</returns>
         Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Update the identifiied properties on an existing entity asynchronously.
+        /// Update the identified properties on an existing entity asynchronously.
         /// </summary>
-        /// <param name="entity">Updated entity to save in the data store.</param>
+        /// <param name="entity">Updated entity to save.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Updated entity.</returns>
         Task<TEntity> UpdateAsync(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Update the identified properties on an existing entity asynchronously.
+        /// </summary>
+        /// <param name="entity">Updated entity to save.</param>
+        /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <param name="modifiedProperties">Properties to update on the entity.</param>
+        /// <returns>Updated entity.</returns>
+        Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken, params Expression<Func<TEntity, object>>[] modifiedProperties);
     }
 
     /// <summary>
-    /// Defines the base functionality of all data repositories that have an entity with a key of type int.
+    /// Defines the base functionality of all data repositories that have an entity with a key of type long.
     /// </summary>
     /// <typeparam name="TEntity">Type of the repository's entity.</typeparam>
-    public interface IBaseRepository<TEntity> : IBaseRepository<TEntity, int>
-        where TEntity : EntityDao
+    public interface IBaseRepository<TEntity> : IBaseRepository<TEntity, long>
+        where TEntity : EntityDao<long>
     {
     }
 }

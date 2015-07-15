@@ -34,9 +34,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -93,6 +90,9 @@
     <Compile Include="Types.cs" />
     <Compile Include="UriExtensions.cs" />
     <Compile Include="Validation\CommonValidators.cs" />
+    <Compile Include="Xml\Serialization\XmlSchemaConfiguration.cs" />
+    <Compile Include="Xml\Serialization\XmlSchemaPropertyConfiguration.cs" />
+    <Compile Include="Xml\Serialization\XmlSerializerContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Diagnostics\Repositories\Sql\GetApplicationLogsByEventTypeSinceDate.sql" />
