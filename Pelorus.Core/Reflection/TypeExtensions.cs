@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Pelorus.Core.Reflection
@@ -19,6 +20,24 @@ namespace Pelorus.Core.Reflection
         {
             return subject.GetInterfaces()
                           .Contains(typeof (TInterface));
+        }
+
+        /// <summary>
+        /// Get a method implemented on type T.
+        /// </summary>
+        /// <typeparam name="T">Type that implements the method.</typeparam>
+        /// <param name="methodExpression">Method to search for.</param>
+        /// <returns>MethodInfo of the specified method.</returns>
+        public static MethodInfo Method<T>(Expression<Action<T>> methodExpression)
+        {
+            var expr = methodExpression.Body as MethodCallExpression;
+
+            if (null == expr)
+            {
+                return null;
+            }
+
+            return expr.Method;
         }
 
         /// <summary>
