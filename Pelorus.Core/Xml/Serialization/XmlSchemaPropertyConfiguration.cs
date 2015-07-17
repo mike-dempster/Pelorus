@@ -14,6 +14,21 @@ namespace Pelorus.Core.Xml.Serialization
         where T : class
     {
         /// <summary>
+        /// Attribute to apply to the property.
+        /// </summary>
+        private Attribute thisPropertyAttribute;
+
+        /// <summary>
+        /// Name of the property.
+        /// </summary>
+        private string propertyName;
+
+        /// <summary>
+        /// Indicates if the property is nullable.
+        /// </summary>
+        private bool propertyIsNullable;
+
+        /// <summary>
         /// Namespace of the property.
         /// </summary>
         private string propertyNamespace;
@@ -36,6 +51,7 @@ namespace Pelorus.Core.Xml.Serialization
         {
             this.PropertyExpression = expression;
             this.Attributes = new XmlAttributes();
+            this.propertyIsNullable = true;
         }
 
         /// <summary>
@@ -44,7 +60,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsAttribute()
         {
-            this.Attributes.XmlAttribute = new XmlAttributeAttribute();
+            this.thisPropertyAttribute = new XmlAttributeAttribute();
 
             return this;
         }
@@ -56,7 +72,8 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsAttribute(string attributeName)
         {
-            this.Attributes.XmlAttribute = new XmlAttributeAttribute(attributeName);
+            this.thisPropertyAttribute = new XmlAttributeAttribute();
+            this.propertyName = attributeName;
 
             return this;
         }
@@ -69,10 +86,9 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsAttribute(string ns, string attributeName)
         {
-            this.Attributes.XmlAttribute = new XmlAttributeAttribute(attributeName)
-            {
-                Namespace = ns
-            };
+            this.thisPropertyAttribute = new XmlAttributeAttribute();
+            this.propertyName = attributeName;
+            this.propertyNamespace = ns;
 
             return this;
         }
@@ -83,7 +99,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsElement()
         {
-            this.Attributes.XmlElements.Add(new XmlElementAttribute());
+            this.thisPropertyAttribute = new XmlElementAttribute();
 
             return this;
         }
@@ -95,7 +111,8 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsElement(string elementName)
         {
-            this.Attributes.XmlElements.Add(new XmlElementAttribute(elementName));
+            this.propertyName = elementName;
+            this.thisPropertyAttribute = new XmlElementAttribute();
 
             return this;
         }
@@ -108,11 +125,41 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsElement(string ns, string elementName)
         {
-            var elementAttribute = new XmlElementAttribute(elementName)
-            {
-                Namespace = ns
-            };
-            this.Attributes.XmlElements.Add(elementAttribute);
+            this.propertyNamespace = ns;
+            this.propertyName = elementName;
+            this.thisPropertyAttribute = new XmlElementAttribute(elementName);
+
+            return this;
+        }
+
+        /// <summary>
+        /// The property represents an XML element.
+        /// </summary>
+        /// <param name="elementName">Name of the element that the proerty represents.</param>
+        /// <param name="isNullable">Indicates if the element is nullable.</param>
+        /// <returns>The property's updated configuration.</returns>
+        public XmlSchemaPropertyConfiguration<T, TProperty> IsElement(string elementName, bool isNullable)
+        {
+            this.propertyName = elementName;
+            this.propertyIsNullable = isNullable;
+            this.thisPropertyAttribute = new XmlElementAttribute(elementName);
+
+            return this;
+        }
+
+        /// <summary>
+        /// The property represents an XML element.
+        /// </summary>
+        /// <param name="ns">Namespace of the XML element.</param>
+        /// <param name="elementName">Name of the element that the proerty represents.</param>
+        /// <param name="isNullable">Indicates if the element is nullable.</param>
+        /// <returns>The property's updated configuration.</returns>
+        public XmlSchemaPropertyConfiguration<T, TProperty> IsElement(string ns, string elementName, bool isNullable)
+        {
+            this.propertyNamespace = ns;
+            this.propertyName = elementName;
+            this.propertyIsNullable = isNullable;
+            this.thisPropertyAttribute = new XmlElementAttribute(elementName);
 
             return this;
         }
@@ -123,7 +170,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsArray()
         {
-            this.Attributes.XmlArray = new XmlArrayAttribute();
+            this.thisPropertyAttribute = new XmlArrayAttribute();
 
             return this;
         }
@@ -135,7 +182,8 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsArray(string elementName)
         {
-            this.Attributes.XmlArray = new XmlArrayAttribute(elementName);
+            this.propertyName = elementName;
+            this.thisPropertyAttribute = new XmlArrayAttribute();
 
             return this;
         }
@@ -148,10 +196,9 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsArray(string ns, string elementName)
         {
-            this.Attributes.XmlArray = new XmlArrayAttribute(elementName)
-            {
-                Namespace = ns
-            };
+            this.propertyNamespace = ns;
+            this.propertyName = elementName;
+            this.thisPropertyAttribute = new XmlArrayAttribute();
 
             return this;
         }
@@ -162,7 +209,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsArrayItem()
         {
-            this.Attributes.XmlArrayItems.Add(new XmlArrayItemAttribute());
+            this.thisPropertyAttribute = new XmlArrayItemAttribute();
 
             return this;
         }
@@ -174,7 +221,8 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsArrayItem(string elementName)
         {
-            this.Attributes.XmlArrayItems.Add(new XmlArrayItemAttribute(elementName));
+            this.propertyName = elementName;
+            this.thisPropertyAttribute = new XmlArrayItemAttribute();
 
             return this;
         }
@@ -187,11 +235,41 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsArrayItem(string ns, string elementName)
         {
-            var arrayAttribute = new XmlArrayItemAttribute(elementName)
-            {
-                Namespace = ns
-            };
-            this.Attributes.XmlArrayItems.Add(arrayAttribute);
+            this.propertyNamespace = ns;
+            this.propertyName = elementName;
+            this.thisPropertyAttribute = new XmlArrayItemAttribute();
+
+            return this;
+        }
+
+        /// <summary>
+        /// The property represents an XML array item.
+        /// </summary>
+        /// <param name="elementName">Name of the elements of the XML array.</param>
+        /// <param name="isNullable">Indicates if the item is nullable.</param>
+        /// <returns>The property's updated configuration.</returns>
+        public XmlSchemaPropertyConfiguration<T, TProperty> IsArrayItem(string elementName, bool isNullable)
+        {
+            this.propertyName = elementName;
+            this.propertyIsNullable = isNullable;
+            this.thisPropertyAttribute = new XmlArrayItemAttribute();
+
+            return this;
+        }
+
+        /// <summary>
+        /// The property represents an XML array item.
+        /// </summary>
+        /// <param name="ns">Namespace of the items in the XML array.</param>
+        /// <param name="elementName">Name of the elements of the XML array.</param>
+        /// <param name="isNullable">Indicates if the item is nullable.</param>
+        /// <returns>The property's updated configuration.</returns>
+        public XmlSchemaPropertyConfiguration<T, TProperty> IsArrayItem(string ns, string elementName, bool isNullable)
+        {
+            this.propertyNamespace = ns;
+            this.propertyName = elementName;
+            this.propertyIsNullable = isNullable;
+            this.thisPropertyAttribute = new XmlArrayItemAttribute();
 
             return this;
         }
@@ -210,7 +288,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsEnum()
         {
-            this.Attributes.XmlEnum = new XmlEnumAttribute();
+            this.thisPropertyAttribute = new XmlEnumAttribute();
 
             return this;
         }
@@ -222,7 +300,8 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsEnum(string name)
         {
-            this.Attributes.XmlEnum = new XmlEnumAttribute(name);
+            this.propertyName = name;
+            this.thisPropertyAttribute = new XmlEnumAttribute();
 
             return this;
         }
@@ -233,7 +312,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot()
         {
-            this.Attributes.XmlRoot = new XmlRootAttribute();
+            this.thisPropertyAttribute = new XmlRootAttribute();
 
             return this;
         }
@@ -245,7 +324,8 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot(string elementName)
         {
-            this.Attributes.XmlRoot = new XmlRootAttribute(elementName);
+            this.propertyName = elementName;
+            this.thisPropertyAttribute = new XmlRootAttribute();
 
             return this;
         }
@@ -258,10 +338,41 @@ namespace Pelorus.Core.Xml.Serialization
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot(string ns, string elementName)
         {
-            this.Attributes.XmlRoot = new XmlRootAttribute(elementName)
-            {
-                Namespace = ns
-            };
+            this.propertyNamespace = ns;
+            this.propertyName = elementName;
+            this.thisPropertyAttribute = new XmlRootAttribute();
+
+            return this;
+        }
+
+        /// <summary>
+        /// The property is the root of the XML graph.
+        /// </summary>
+        /// <param name="elementName">Name of the root element of the XML graph.</param>
+        /// <param name="isNullable">Indicates if the root element is nullable.</param>
+        /// <returns>The property's updated configuration.</returns>
+        public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot(string elementName, bool isNullable)
+        {
+            this.propertyName = elementName;
+            this.propertyIsNullable = isNullable;
+            this.thisPropertyAttribute = new XmlRootAttribute();
+
+            return this;
+        }
+
+        /// <summary>
+        /// The property is the root of the XML graph.
+        /// </summary>
+        /// <param name="ns">Namespace of the root XML element.</param>
+        /// <param name="elementName">Name of the root element of the XML graph.</param>
+        /// <param name="isNullable">Indicates if the root element is nullable.</param>
+        /// <returns>The property's updated configuration.</returns>
+        public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot(string ns, string elementName, bool isNullable)
+        {
+            this.propertyNamespace = ns;
+            this.propertyName = elementName;
+            this.propertyIsNullable = isNullable;
+            this.thisPropertyAttribute = new XmlRootAttribute();
 
             return this;
         }
@@ -273,46 +384,29 @@ namespace Pelorus.Core.Xml.Serialization
         public XmlSchemaPropertyConfiguration<T, TProperty> IsText()
         {
             var propertyInfo = PropertyInfoExtensions.Property(this.PropertyExpression);
-            this.Attributes.XmlText = new XmlTextAttribute(propertyInfo.PropertyType);
+            this.thisPropertyAttribute = new XmlTextAttribute(propertyInfo.PropertyType);
 
             return this;
         }
 
         /// <summary>
-        /// Specifies how the property is to be serialized or deserialized.
+        /// Makes the property not nullable.
         /// </summary>
         /// <returns>The property's updated configuration.</returns>
-        public XmlSchemaPropertyConfiguration<T, TProperty> IsType()
+        public XmlSchemaPropertyConfiguration<T, TProperty> IsRequired()
         {
-            this.Attributes.XmlType = new XmlTypeAttribute();
+            this.propertyIsNullable = false;
 
             return this;
         }
 
         /// <summary>
-        /// Specifies how the property is to be serialized or deserialized.
+        /// Makes the property nullable.
         /// </summary>
-        /// <param name="typeName">Name of the type.</param>
         /// <returns>The property's updated configuration.</returns>
-        public XmlSchemaPropertyConfiguration<T, TProperty> IsType(string typeName)
+        public XmlSchemaPropertyConfiguration<T, TProperty> IsOptional()
         {
-            this.Attributes.XmlType = new XmlTypeAttribute(typeName);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Specifies how the property is to be serialized or deserialized.
-        /// </summary>
-        /// <param name="ns">Namespace of the type.</param>
-        /// <param name="typeName">Name of the type.</param>
-        /// <returns>The property's updated configuration.</returns>
-        public XmlSchemaPropertyConfiguration<T, TProperty> IsType(string ns, string typeName)
-        {
-            this.Attributes.XmlType = new XmlTypeAttribute(typeName)
-            {
-                Namespace = ns
-            };
+            this.propertyIsNullable = true;
 
             return this;
         }
@@ -342,50 +436,193 @@ namespace Pelorus.Core.Xml.Serialization
                 return;
             }
 
-            this.SetNamespace();
+            this.ConfigureAttributes();
             overridesInstance.Add(propertyInfo.DeclaringType, propertyInfo.Name, this.Attributes);
         }
 
         /// <summary>
-        /// Sets the namespace on the attributes for the property.
+        /// Configures the properties of the attributes.
         /// </summary>
-        private void SetNamespace()
+        private void ConfigureAttributes()
         {
-            if (null == this.propertyNamespace)
+            var attribute = this.thisPropertyAttribute as XmlAttributeAttribute;
+
+            if (null != attribute)
+            {
+                this.ConfigureAttribute(attribute);
+                return;
+            }
+
+            var element = this.thisPropertyAttribute as XmlElementAttribute;
+
+            if (null != element)
+            {
+                this.ConfigureElement(element);
+                return;
+            }
+
+            var array = this.thisPropertyAttribute as XmlArrayAttribute;
+
+            if (null != array)
+            {
+                this.ConfigureArray(array);
+                return;
+            }
+
+            var arrayItem = this.thisPropertyAttribute as XmlArrayItemAttribute;
+
+            if (null != arrayItem)
+            {
+                this.ConfigureArrayItem(arrayItem);
+                return;
+            }
+
+            var enumAttribute = this.thisPropertyAttribute as XmlEnumAttribute;
+
+            if (null != enumAttribute)
+            {
+                this.ConfigureEnum(enumAttribute);
+                return;
+            }
+
+            var root = this.thisPropertyAttribute as XmlRootAttribute;
+
+            if (null != root)
+            {
+                this.ConfigureRoot(root);
+                return;
+            }
+
+            var text = this.thisPropertyAttribute as XmlTextAttribute;
+
+            if (null == text)
             {
                 return;
             }
 
-            if (null != this.Attributes.XmlRoot)
+            this.ConfigureText(text);
+        }
+
+        /// <summary>
+        /// Configures the property as an attribute.
+        /// </summary>
+        /// <param name="attribute">Attribute attribute to apply to the property.</param>
+        private void ConfigureAttribute(XmlAttributeAttribute attribute)
+        {
+            if (false == string.IsNullOrWhiteSpace(this.propertyName))
             {
-                this.Attributes.XmlRoot.Namespace = this.propertyNamespace;
+                attribute.AttributeName = this.propertyName;
             }
 
-            if (null != this.Attributes.XmlArray)
+            if (false == string.IsNullOrWhiteSpace(this.propertyNamespace))
             {
-                this.Attributes.XmlArray.Namespace = this.propertyNamespace;
+                attribute.Namespace = this.propertyNamespace;
             }
 
-            if (null != this.Attributes.XmlAttribute)
+            this.Attributes.XmlAttribute = attribute;
+        }
+
+        /// <summary>
+        /// Configures the property as an element.
+        /// </summary>
+        /// <param name="element">Element attribute to apply to the property.</param>
+        private void ConfigureElement(XmlElementAttribute element)
+        {
+            if (false == string.IsNullOrWhiteSpace(this.propertyName))
             {
-                this.Attributes.XmlAttribute.Namespace = this.propertyNamespace;
+                element.ElementName = this.propertyName;
             }
 
-            if (null != this.Attributes.XmlArrayItems)
+            if (false == string.IsNullOrWhiteSpace(this.propertyNamespace))
             {
-                foreach (XmlArrayItemAttribute item in this.Attributes.XmlArrayItems)
-                {
-                    item.Namespace = this.propertyNamespace;
-                }
+                element.Namespace = this.propertyNamespace;
             }
 
-            if (null != this.Attributes.XmlElements)
+            element.IsNullable = this.propertyIsNullable;
+            this.Attributes.XmlElements.Add(element);
+        }
+
+        /// <summary>
+        /// Configures the property as an array.
+        /// </summary>
+        /// <param name="array">Array attribute to apply to the property.</param>
+        private void ConfigureArray(XmlArrayAttribute array)
+        {
+            if (false == string.IsNullOrWhiteSpace(this.propertyName))
             {
-                foreach (XmlElementAttribute item in this.Attributes.XmlElements)
-                {
-                    item.Namespace = this.propertyNamespace;
-                }
+                array.ElementName = this.propertyName;
             }
+
+            if (false == string.IsNullOrWhiteSpace(this.propertyNamespace))
+            {
+                array.Namespace = this.propertyNamespace;
+            }
+
+            array.IsNullable = this.propertyIsNullable;
+            this.Attributes.XmlArray = array;
+        }
+
+        /// <summary>
+        /// Configures the property as an array item.
+        /// </summary>
+        /// <param name="arrayItem">Array item attribute to apply to the property.</param>
+        private void ConfigureArrayItem(XmlArrayItemAttribute arrayItem)
+        {
+            if (false == string.IsNullOrWhiteSpace(this.propertyName))
+            {
+                arrayItem.ElementName = this.propertyName;
+            }
+
+            if (false == string.IsNullOrWhiteSpace(this.propertyNamespace))
+            {
+                arrayItem.Namespace = this.propertyNamespace;
+            }
+
+            arrayItem.IsNullable = this.propertyIsNullable;
+            this.Attributes.XmlArrayItems.Add(arrayItem);
+        }
+
+        /// <summary>
+        /// Configures the property as an enum.
+        /// </summary>
+        /// <param name="enumAttribute">Enum attribute to apply to the property.</param>
+        private void ConfigureEnum(XmlEnumAttribute enumAttribute)
+        {
+            if (false == string.IsNullOrWhiteSpace(this.propertyName))
+            {
+                enumAttribute.Name = this.propertyName;
+            }
+
+            this.Attributes.XmlEnum = enumAttribute;
+        }
+
+        /// <summary>
+        /// Configures the property as the root of the XML document.
+        /// </summary>
+        /// <param name="root">Root attribute to apply to the property.</param>
+        private void ConfigureRoot(XmlRootAttribute root)
+        {
+            if (false == string.IsNullOrWhiteSpace(this.propertyName))
+            {
+                root.ElementName = this.propertyName;
+            }
+
+            if (false == string.IsNullOrWhiteSpace(this.propertyNamespace))
+            {
+                root.Namespace = this.propertyNamespace;
+            }
+
+            root.IsNullable = this.propertyIsNullable;
+            this.Attributes.XmlRoot = root;
+        }
+
+        /// <summary>
+        /// Configures the property as text.
+        /// </summary>
+        /// <param name="text">Text attribute to apply to the property.</param>
+        private void ConfigureText(XmlTextAttribute text)
+        {
+            this.Attributes.XmlText = text;
         }
     }
 
