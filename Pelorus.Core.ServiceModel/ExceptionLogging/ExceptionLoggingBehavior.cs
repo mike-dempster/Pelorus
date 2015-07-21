@@ -4,7 +4,7 @@ using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 
-namespace Pelorus.Core.Web.ExceptionLogging
+namespace Pelorus.Core.ServiceModel.ExceptionLogging
 {
     /// <summary>
     /// Implements the configuration element for the WCF exception logging behavior.

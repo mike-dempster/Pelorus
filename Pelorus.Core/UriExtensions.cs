@@ -27,8 +27,10 @@ namespace Pelorus.Core
             foreach (var arg in arguments)
             {
                 var seperatorIndex = arg.IndexOf('=');
-                string key = arg.Substring(0, seperatorIndex);
-                string value = arg.Substring(seperatorIndex + 1);
+                string escapedKey = arg.Substring(0, seperatorIndex);
+                string escapedValue = arg.Substring(seperatorIndex + 1);
+                string key = Uri.UnescapeDataString(escapedKey);
+                string value = Uri.UnescapeDataString(escapedValue);
 
                 queryArguments.Add(key, value);
             }

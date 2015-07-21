@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Pelorus.Core.Web")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Core web components of the Pelorus library.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Pelorus.Core.Web")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("Mike Dempster")]
+[assembly: AssemblyProduct("Pelorus.Core")]
+[assembly: AssemblyCopyright("Copyright © Mike Dempster 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

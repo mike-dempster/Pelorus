@@ -21,6 +21,10 @@ Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Pelorus.Core.Web.NuGet", "P
 EndProject
 Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Pelorus.Core.Data.EntityFramework.NuGet", "Pelorus.Core.Data.EntityFramework.NuGet\Pelorus.Core.Data.EntityFramework.NuGet.nuproj", "{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.ServiceModel", "Pelorus.Core.ServiceModel\Pelorus.Core.ServiceModel.csproj", "{5D5C276D-BB76-444F-979A-294DA7D63570}"
+EndProject
+Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Pelorus.Core.ServiceModel.NuGet", "Pelorus.Core.ServiceModel.NuGet\Pelorus.Core.ServiceModel.NuGet.nuproj", "{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +63,14 @@ Global
 		{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D5C276D-BB76-444F-979A-294DA7D63570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D5C276D-BB76-444F-979A-294DA7D63570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D5C276D-BB76-444F-979A-294DA7D63570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D5C276D-BB76-444F-979A-294DA7D63570}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +79,6 @@ Global
 		{32E9A5B4-9AD3-467E-9414-0359F453824A} = {55789946-A1C9-450B-B79F-5016E167340E}
 		{1804FC42-FFC0-4E7B-A2EA-837335919E93} = {55789946-A1C9-450B-B79F-5016E167340E}
 		{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F} = {55789946-A1C9-450B-B79F-5016E167340E}
+		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF} = {55789946-A1C9-450B-B79F-5016E167340E}
 	EndGlobalSection
 EndGlobal

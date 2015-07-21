@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ServiceModel.Configuration;
 
-namespace Pelorus.Core.Web.ExceptionLogging
+namespace Pelorus.Core.ServiceModel.ExceptionLogging
 {
     /// <summary>
     /// Configuration element for WCF behavior to catch unhandled exceptions.

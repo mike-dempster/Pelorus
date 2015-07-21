@@ -3,7 +3,7 @@ using System;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Dispatcher;
 
-namespace Pelorus.Core.Web.ExceptionLogging
+namespace Pelorus.Core.ServiceModel.ExceptionLogging
 {
     /// <summary>
     /// Log an exception that was thrown in the WCF service call.

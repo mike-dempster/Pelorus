@@ -1,16 +1,19 @@
-﻿using Pelorus.Core.Entities;
-using Pelorus.Core.Reflection;
+﻿using Pelorus.Core.Reflection;
 using System;
 using System.Linq;
 using System.Reflection;
 
 namespace Pelorus.Core.Localization
 {
+    /// <summary>
+    /// Localizes the DateTime values using a delegate method.
+    /// TODO: This class is very incomplete and limited.
+    /// </summary>
     public class LocalizeCore
     {
         /// <summary>
-        /// Traverse the input object recursively by 'Entity' types and execute the localizer method on all properties of type
-        /// DateTime.  All elements of arrays and collections that implement an 'int' indexer will be examined.
+        /// Traverse the input object recursively and execute the localizer method on all properties of type DateTime.  All elements of arrays and collections that implement an 'int' 
+        /// indexer will be examined.
         /// </summary>
         /// <param name="obj">Object to traverse</param>
         /// <param name="localizer">Method to perform the localization on the DateTime properties</param>
@@ -28,63 +31,80 @@ namespace Pelorus.Core.Localization
             {
                 return localizer((DateTime) obj);
             }
-            else if (objectType.IsArray)
+
+            if (objectType.IsArray)
             {
                 var array = (Array) obj;
+
                 for (int i = 0; i < array.Length; i++)
                 {
                     var element = array.GetValue(i);
                     var localizedObject = this.TraverseObject(element, localizer);
                     array.SetValue(localizedObject, i);
                 }
+
+                return obj;
             }
-            else if (objectType.HasIndexer<int>())
+
+            if (objectType.HasIndexer<int>())
             {
                 var listType = objectType.GetGenericArguments()
                                          .FirstOrDefault();
 
-                if ((null != listType) && ((typeof (DateTime) == listType) || (listType.IsSubclassOf(typeof (Entity<>)))))
+                if (null == listType)
                 {
-                    try
-                    {
-                        int i = 0;
-                        while (true)
-                        {
-                            var indexer = objectType.GetIndexer<int>();
-                            var indexValue = indexer.GetValue(obj, new object[] { i });
+                    return obj;
+                }
 
-                            var localizedObject = this.TraverseObject(indexValue, localizer);
-                            indexer.SetValue(obj, localizedObject, new object[] { i });
-                            i++;
-                        }
-                    }
-                    catch (TargetInvocationException ex)
+                try
+                {
+                    int i = 0;
+                    while (true)
                     {
-                        if (false == (ex.InnerException is ArgumentOutOfRangeException))
-                        {
-                            throw;
-                        }
+                        var indexer = objectType.GetIndexer<int>();
+                        var indexValue = indexer.GetValue(obj, new object[] { i });
 
-                        // The index of the collection was exceeded and execution can continue traversing the properties.
+                        var localizedObject = this.TraverseObject(indexValue, localizer);
+                        indexer.SetValue(obj, localizedObject, new object[] { i });
+                        i++;
                     }
                 }
+                catch (TargetInvocationException ex)
+                {
+                    if (false == (ex.InnerException is ArgumentOutOfRangeException))
+                    {
+                        throw;
+                    }
+
+                    // The index of the collection was exceeded and execution can continue traversing the properties.
+                }
+
+                return obj;
             }
-            else if (objectType.IsSubclassOf(typeof (Entity<>)))
-            {
-                var properties = objectType.GetProperties();
-                foreach (var prop in properties)
-                {
-                    if ((prop.CanWrite) && (0 == prop.GetCustomAttributes(typeof (LocalizerIgnoreAttribute), false).Length))
-                    {
-                        var value = prop.GetValue(obj, null);
 
-                        if (value != null)
-                        {
-                            var localizedObject = this.TraverseObject(value, localizer);
-                            prop.SetValue(obj, localizedObject, null);
-                        }
-                    }
+            if (true == objectType.IsSerializable)
+            {
+                return obj;
+            }
+
+            var properties = objectType.GetProperties();
+
+            foreach (var prop in properties)
+            {
+                if ((false == prop.CanWrite) || (null != prop.GetCustomAttribute<LocalizerIgnoreAttribute>()))
+                {
+                    continue;
                 }
+
+                var value = prop.GetValue(obj, null);
+
+                if (value == null)
+                {
+                    continue;
+                }
+
+                var localizedObject = this.TraverseObject(value, localizer);
+                prop.SetValue(obj, localizedObject, null);
             }
 
             return obj;

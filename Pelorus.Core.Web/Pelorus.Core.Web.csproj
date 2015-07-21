@@ -34,12 +34,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -55,9 +50,6 @@
     <Compile Include="Configuration\RssSkipDaysConfigurationElement.cs" />
     <Compile Include="Configuration\RssSkipHoursConfigurationElement.cs" />
     <Compile Include="Configuration\RssTextInputConfigurationElement.cs" />
-    <Compile Include="ExceptionLogging\ExceptionLoggingBehavior.cs" />
-    <Compile Include="ExceptionLogging\ExceptionLoggingBehaviorElement.cs" />
-    <Compile Include="ExceptionLogging\ExceptionLoggingErrorHandler.cs" />
     <Compile Include="ExceptionLogging\ExceptionLoggingHttpModule.cs" />
     <Compile Include="ExceptionLogging\ErrorRssFeedHttpHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
