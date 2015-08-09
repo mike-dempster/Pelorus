@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core", "Pelorus.Core\Pelorus.Core.csproj", "{9915F15D-7A6B-481D-9960-1ECF3FFEC771}"
 EndProject
@@ -12,16 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Test.Integration", "Pelorus.Core.Test.Integration\Pelorus.Core.Test.Integration.csproj", "{2B81B169-2D5C-462F-9AA9-CDFFFF23B116}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Web.Test.Integration", "Pelorus.Core.Web.Test.Integration\Pelorus.Core.Web.Test.Integration.csproj", "{D1ABE0CD-900C-4A97-90E6-FF295A6B9990}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{55789946-A1C9-450B-B79F-5016E167340E}"
-EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Pelorus.Core.NuGet", "Pelorus.Core.NuGet\Pelorus.Core.NuGet.nuproj", "{32E9A5B4-9AD3-467E-9414-0359F453824A}"
-EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Pelorus.Core.Web.NuGet", "Pelorus.Core.Web.NuGet\Pelorus.Core.Web.NuGet.nuproj", "{1804FC42-FFC0-4E7B-A2EA-837335919E93}"
-EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Pelorus.Core.Data.EntityFramework.NuGet", "Pelorus.Core.Data.EntityFramework.NuGet\Pelorus.Core.Data.EntityFramework.NuGet.nuproj", "{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F}"
-EndProject
-Project("{FF286327-C783-4F7A-AB73-9BCBAD0D4460}") = "Pelorus.Core.ServiceModel.NuGet", "Pelorus.Core.ServiceModel.NuGet\Pelorus.Core.ServiceModel.NuGet.nuproj", "{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.ServiceModel", "Pelorus.Core.ServiceModel\Pelorus.Core.ServiceModel.csproj", "{11039BDA-E628-4DBA-9A74-ED16BCC2E84E}"
 EndProject
@@ -51,22 +41,6 @@ Global
 		{D1ABE0CD-900C-4A97-90E6-FF295A6B9990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1ABE0CD-900C-4A97-90E6-FF295A6B9990}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1ABE0CD-900C-4A97-90E6-FF295A6B9990}.Release|Any CPU.Build.0 = Release|Any CPU
-		{32E9A5B4-9AD3-467E-9414-0359F453824A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{32E9A5B4-9AD3-467E-9414-0359F453824A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{32E9A5B4-9AD3-467E-9414-0359F453824A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{32E9A5B4-9AD3-467E-9414-0359F453824A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1804FC42-FFC0-4E7B-A2EA-837335919E93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1804FC42-FFC0-4E7B-A2EA-837335919E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1804FC42-FFC0-4E7B-A2EA-837335919E93}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1804FC42-FFC0-4E7B-A2EA-837335919E93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11039BDA-E628-4DBA-9A74-ED16BCC2E84E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{11039BDA-E628-4DBA-9A74-ED16BCC2E84E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11039BDA-E628-4DBA-9A74-ED16BCC2E84E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -74,11 +48,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{32E9A5B4-9AD3-467E-9414-0359F453824A} = {55789946-A1C9-450B-B79F-5016E167340E}
-		{1804FC42-FFC0-4E7B-A2EA-837335919E93} = {55789946-A1C9-450B-B79F-5016E167340E}
-		{350901F3-AD5E-4AEC-B69C-4F5EBE5AA20F} = {55789946-A1C9-450B-B79F-5016E167340E}
-		{A728E7C7-0658-4CE2-A13C-D52EEBB4F0FF} = {55789946-A1C9-450B-B79F-5016E167340E}
 	EndGlobalSection
 EndGlobal
