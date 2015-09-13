@@ -16,9 +16,6 @@ namespace Pelorus.Core.Web.Configuration
         /// Configuration element for the application log RSS feed.
         /// </summary>
         [ConfigurationProperty(ApplicationLogRssFeedKey, IsRequired = false)]
-        public ApplicationLogRssFeedConfigurationElement ApplicationLogRssFeed
-        {
-            get { return this[ApplicationLogRssFeedKey] as ApplicationLogRssFeedConfigurationElement; }
-        }
+        public ApplicationLogRssFeedConfigurationElement ApplicationLogRssFeed => this[ApplicationLogRssFeedKey] as ApplicationLogRssFeedConfigurationElement;
     }
 }

@@ -14,15 +14,11 @@ namespace Pelorus.Core.Configuration
         /// Value of the element.
         /// </summary>
         [ConfigurationProperty(ValueKey)]
-        public TValue Value
-        {
-            get { return (TValue)this[ValueKey]; }
-            set { this[ValueKey] = value; }
-        }
+        public TValue Value => (TValue) this[ValueKey];
     }
 
     /// <summary>
-    /// Generic configuration element with a single attribute called "value" of type string.
+    /// Generic configuration element with a single attribute called &quot;value&quot; of type string.
     /// </summary>
     public class SimpleValueConfigurationElement : SimpleValueConfigurationElement<string>
     {

@@ -7,34 +7,31 @@ namespace Pelorus.Core.Configuration
     /// </summary>
     internal static class CoreConfiguration
     {
+        private const string ConfigurationSectionPath = "pelorus.core";
         /// <summary>
-        /// Path to the configuration data for the diagnostics configuration data.
+        /// Cache of the configuration data.
         /// </summary>
-        private const string DiagnosticsConfigurationSectionPath = "pelorus.core/diagnostics";
+        private static CoreConfigurationSection coreSection;
+
+        public static CoreConfigurationSection Core => coreSection ?? (coreSection = GetConfiguration());
 
         /// <summary>
-        /// Cache of the diagnostics configuration data.
+        /// Configuration section for the diagnostics module.
         /// </summary>
-        private static DiagnosticsConfigurationSection diagnosticsConfigurationSection;
+        public static DiagnosticsConfigurationElement Diagnostics => Core.Diagnostics;
 
         /// <summary>
-        /// Configuration section for the diagnostics modules.
+        /// Configuration data for the IoC module.
         /// </summary>
-        public static DiagnosticsConfigurationSection Diagnostics
+        public static IoCConfigurationElement IoC => Core.IoC;
+
+        /// <summary>
+        /// Gets the configuration section from the application config.
+        /// </summary>
+        /// <returns>Configuration data from the application's config data.</returns>
+        private static CoreConfigurationSection GetConfiguration()
         {
-            get
-            {
-                return diagnosticsConfigurationSection ?? (diagnosticsConfigurationSection = GetConfiguration());
-            }
-        }
-
-        /// <summary>
-        /// Gets the diagnostic configuration section from the application config.
-        /// </summary>
-        /// <returns>Diagnostic configuration data from the application's config data.</returns>
-        private static DiagnosticsConfigurationSection GetConfiguration()
-        {
-            return ConfigurationManager.GetSection(DiagnosticsConfigurationSectionPath) as DiagnosticsConfigurationSection;
+            return ConfigurationManager.GetSection(ConfigurationSectionPath) as CoreConfigurationSection;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Pelorus.Core.Web.ExceptionLogging
         /// <summary>
         /// This module can be reused across multiple requests.
         /// </summary>
-        public bool IsReusable { get { return true; } }
+        public bool IsReusable => true;
 
         /// <summary>
         /// Process the HTTP request.

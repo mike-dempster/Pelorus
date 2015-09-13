@@ -16,21 +16,18 @@ namespace Pelorus.Core.Web.Configuration
         /// Connection string to the application log data.
         /// </summary>
         [ConfigurationProperty(ConnectionStringNameKey, IsRequired = true)]
-        public ConnectionStringConfigurationElement ConnectionString
-        {
-            get { return this[ConnectionStringNameKey] as ConnectionStringConfigurationElement; }
-        }
+        public ConnectionStringConfigurationElement ConnectionString => this[ConnectionStringNameKey] as ConnectionStringConfigurationElement;
 
         /// <summary>
         /// Uri to an XSLT transform that is used to transform application log details to a viewable XHTML page.
         /// </summary>
         [ConfigurationProperty(XsltUriKey, IsRequired = false)]
-        public SimpleValueConfigurationElement XsltUri { get { return this[XsltUriKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement XsltUri => this[XsltUriKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Configuration data for the RSS channel.
         /// </summary>
         [ConfigurationProperty(ChannelKey, IsRequired = true)]
-        public RssChannelConfigurationElement Channel { get { return this[ChannelKey] as RssChannelConfigurationElement; } }
+        public RssChannelConfigurationElement Channel => this[ChannelKey] as RssChannelConfigurationElement;
     }
 }

@@ -15,13 +15,7 @@ namespace Pelorus.Core.Web.Configuration
         /// Get the configuration section. This property is lazy loaded to improve performance if the web module is not
         /// used by the application that it is configured for.
         /// </summary>
-        public static CoreWebConfigurationSection Configuration
-        {
-            get
-            {
-                return configurationSection ?? (configurationSection = GetConfiguration());
-            }
-        }
+        public static CoreWebConfigurationSection Configuration => configurationSection ?? (configurationSection = GetConfiguration());
 
         /// <summary>
         /// Gets the core web configuration data from the application config.

@@ -13,6 +13,6 @@ namespace Pelorus.Core.Web.Configuration
         /// Name of the connection string to use from the connectionString configuration section.
         /// </summary>
         [ConfigurationProperty(NameKey)]
-        public string Name { get { return this[NameKey] as string; } }
+        public string Name => this[NameKey] as string;
     }
 }

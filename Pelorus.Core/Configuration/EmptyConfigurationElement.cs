@@ -10,6 +10,6 @@ namespace Pelorus.Core.Configuration
         /// <summary>
         /// Indicates if the element is present in the configuration.
         /// </summary>
-        public bool IsPresent { get { return this.ElementInformation.IsPresent; } }
+        public bool IsPresent => this.ElementInformation.IsPresent;
     }
 }

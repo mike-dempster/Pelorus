@@ -5,7 +5,7 @@ namespace Pelorus.Core.Configuration
     /// <summary>
     /// Diagnostics configuration data.
     /// </summary>
-    internal class DiagnosticsConfigurationSection : ConfigurationSection
+    internal class DiagnosticsConfigurationElement : ConfigurationElement
     {
         private const string TraceSourcesKey = "traceSources";
 
@@ -13,6 +13,6 @@ namespace Pelorus.Core.Configuration
         /// Diagnostic trace sources.
         /// </summary>
         [ConfigurationProperty(TraceSourcesKey)]
-        public TraceSourceConfigurationCollection TraceSources { get { return this[TraceSourcesKey] as TraceSourceConfigurationCollection; } }
+        public TraceSourceConfigurationCollection TraceSources => this[TraceSourcesKey] as TraceSourceConfigurationCollection;
     }
 }

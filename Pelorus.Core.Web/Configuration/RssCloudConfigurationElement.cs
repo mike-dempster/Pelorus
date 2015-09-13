@@ -18,45 +18,30 @@ namespace Pelorus.Core.Web.Configuration
         /// Domain name of the web service.
         /// </summary>
         [ConfigurationProperty(DomainKey, IsRequired = true)]
-        public SimpleValueConfigurationElement Domain
-        {
-            get { return this[DomainKey] as SimpleValueConfigurationElement; }
-        }
+        public SimpleValueConfigurationElement Domain => this[DomainKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Path to the service endpoint.
         /// </summary>
         [ConfigurationProperty(PathKey, IsRequired = true)]
-        public SimpleValueConfigurationElement Path
-        {
-            get { return this[PathKey] as SimpleValueConfigurationElement; }
-        }
+        public SimpleValueConfigurationElement Path => this[PathKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Port that the web service is listening on.
         /// </summary>
         [ConfigurationProperty(PortKey, IsRequired = true)]
-        public SimpleValueConfigurationElement<int> Port
-        {
-            get { return this[PortKey] as SimpleValueConfigurationElement<int>; }
-        }
+        public SimpleValueConfigurationElement<int> Port => this[PortKey] as SimpleValueConfigurationElement<int>;
 
         /// <summary>
         /// The protocol that the web service uses for communication.
         /// </summary>
         [ConfigurationProperty(ProtocolKey, IsRequired = true)]
-        public SimpleValueConfigurationElement Protocol
-        {
-            get { return this[ProtocolKey] as SimpleValueConfigurationElement; }
-        }
+        public SimpleValueConfigurationElement Protocol => this[ProtocolKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// The procedure name to call to register with the service.
         /// </summary>
         [ConfigurationProperty(RegisterProcedureKey, IsRequired = true)]
-        public SimpleValueConfigurationElement RegisterProcedure
-        {
-            get { return this[RegisterProcedureKey] as SimpleValueConfigurationElement; }
-        }
+        public SimpleValueConfigurationElement RegisterProcedure => this[RegisterProcedureKey] as SimpleValueConfigurationElement;
     }
 }

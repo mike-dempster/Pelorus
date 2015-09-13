@@ -29,102 +29,96 @@ namespace Pelorus.Core.Web.Configuration
         /// Required.  Title of the channel.
         /// </summary>
         [ConfigurationProperty(TitleKey, IsRequired = true)]
-        public SimpleValueConfigurationElement Title { get { return this[TitleKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement Title => this[TitleKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Required. Title of the channel.
         /// </summary>
         [ConfigurationProperty(LinkKey, IsRequired = true)]
-        public SimpleValueConfigurationElement Link { get { return this[LinkKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement Link => this[LinkKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Required. Description of the channel.
         /// </summary>
         [ConfigurationProperty(DescriptionKey, IsRequired = true)]
-        public SimpleValueConfigurationElement Description { get { return this[DescriptionKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement Description => this[DescriptionKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Optional. Language of the content provided by the channel.
         /// </summary>
         [ConfigurationProperty(LanguageKey, IsRequired = false)]
-        public SimpleValueConfigurationElement Language { get { return this[LanguageKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement Language => this[LanguageKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Optional. Copyright notice for the channel's content.
         /// </summary>
         [ConfigurationProperty(CopyrightKey, IsRequired = false)]
-        public SimpleValueConfigurationElement Copyright { get { return this[CopyrightKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement Copyright => this[CopyrightKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Optional. Email address of the person for the editorial content of the channel.
         /// </summary>
         [ConfigurationProperty(ManagingEditorKey, IsRequired = false)]
-        public SimpleValueConfigurationElement ManagingEditor { get { return this[ManagingEditorKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement ManagingEditor => this[ManagingEditorKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Optional. Email address of the person responsible for technical issues related to the channel.
         /// </summary>
         [ConfigurationProperty(WebMasterKey, IsRequired = false)]
-        public SimpleValueConfigurationElement WebMaster { get { return this[WebMasterKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement WebMaster => this[WebMasterKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Optional. Name of the progrma used to generate the channel.
         /// </summary>
         [ConfigurationProperty(GeneratorKey, IsRequired = false)]
-        public SimpleValueConfigurationElement Generator { get { return this[GeneratorKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement Generator => this[GeneratorKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Categories that apply to the RSS channel.
         /// </summary>
         [ConfigurationProperty(CategoriesKey, IsRequired = false)]
-        public RssCategoriesConfigurationCollection Categories
-        {
-            get { return this[CategoriesKey] as RssCategoriesConfigurationCollection; }
-        }
+        public RssCategoriesConfigurationCollection Categories => this[CategoriesKey] as RssCategoriesConfigurationCollection;
 
         /// <summary>
         /// Service that supports the rssCloud interface.
         /// </summary>
         [ConfigurationProperty(CloudKey, IsRequired = false)]
-        public RssCloudConfigurationElement Cloud
-        {
-            get { return this[CloudKey] as RssCloudConfigurationElement; }
-        }
+        public RssCloudConfigurationElement Cloud => this[CloudKey] as RssCloudConfigurationElement;
 
         /// <summary>
         /// Optional. Number of minutes that the channel content can be cached before a refresh is required.
         /// </summary>
         [ConfigurationProperty(TtlKey, IsRequired = false)]
-        public SimpleValueConfigurationElement<int> TimeToLive { get { return this[TtlKey] as SimpleValueConfigurationElement<int>; } }
+        public SimpleValueConfigurationElement<int> TimeToLive => this[TtlKey] as SimpleValueConfigurationElement<int>;
 
         /// <summary>
         /// Optional. Image to display for the RSS channel.
         /// </summary>
         [ConfigurationProperty(ImageKey, IsRequired = false)]
-        public RssImageConfigurationElement Image { get { return this[ImageKey] as RssImageConfigurationElement; } }
+        public RssImageConfigurationElement Image => this[ImageKey] as RssImageConfigurationElement;
 
         /// <summary>
         /// Optional. PICS rating of the channel's content.
         /// </summary>
         [ConfigurationProperty(RatingKey, IsRequired = false)]
-        public SimpleValueConfigurationElement Rating { get { return this[RatingKey] as SimpleValueConfigurationElement; } }
+        public SimpleValueConfigurationElement Rating => this[RatingKey] as SimpleValueConfigurationElement;
 
         /// <summary>
         /// Optional. Text input area configuration.
         /// </summary>
         [ConfigurationProperty(TextInputKey, IsRequired = false)]
-        public RssTextInputConfigurationElement TextInput { get { return this[TextInputKey] as RssTextInputConfigurationElement; } }
+        public RssTextInputConfigurationElement TextInput => this[TextInputKey] as RssTextInputConfigurationElement;
 
         /// <summary>
         /// Optional. Represents the hours of the day that aggregators can skip.
         /// </summary>
         [ConfigurationProperty(SkipHoursKey, IsRequired = false)]
-        public RssSkipHoursConfigurationElement SkipHours { get { return this[SkipHoursKey] as RssSkipHoursConfigurationElement; } }
+        public RssSkipHoursConfigurationElement SkipHours => this[SkipHoursKey] as RssSkipHoursConfigurationElement;
 
         /// <summary>
         /// Optional. Represents the days that aggregators can skip.
         /// </summary>
         [ConfigurationProperty(SkipDaysKey, IsRequired = false)]
-        public RssSkipDaysConfigurationElement SkipDays { get { return this[SkipDaysKey] as RssSkipDaysConfigurationElement; } }
+        public RssSkipDaysConfigurationElement SkipDays => this[SkipDaysKey] as RssSkipDaysConfigurationElement;
     }
 }

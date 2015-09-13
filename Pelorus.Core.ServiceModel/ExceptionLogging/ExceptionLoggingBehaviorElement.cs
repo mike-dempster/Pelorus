@@ -20,9 +20,6 @@ namespace Pelorus.Core.ServiceModel.ExceptionLogging
         /// <summary>
         /// Type of the exception logging behavior.
         /// </summary>
-        public override Type BehaviorType
-        {
-            get { return typeof(ExceptionLoggingBehavior); }
-        }
+        public override Type BehaviorType => typeof (ExceptionLoggingBehavior);
     }
 }

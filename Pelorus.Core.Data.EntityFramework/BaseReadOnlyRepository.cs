@@ -32,10 +32,9 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Expose the data set for the repository to the inheriting class.
         /// </summary>
-        protected virtual DbSet<TEntity> DataSet
-        {
-            get { return this._dataSet; }
-        }
+        // ReSharper disable ConvertToAutoProperty
+        protected virtual DbSet<TEntity> DataSet => this._dataSet;
+        // ReSharper restore ConvertToAutoProperty
 
         /// <summary>
         /// Expression for including child entities in the base queries.
@@ -50,7 +49,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == contextFactory)
             {
-                throw new ArgumentNullException("contextFactory");
+                throw new ArgumentNullException(nameof(contextFactory));
             }
 
             this._context = contextFactory.Create();
@@ -67,7 +66,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == context)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
 
             this._context = context;

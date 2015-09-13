@@ -14,12 +14,12 @@ namespace Pelorus.Core.Web.Configuration
         /// Value or name of the category.
         /// </summary>
         [ConfigurationProperty(ValueKey, IsRequired = true)]
-        public string Value { get { return this[ValueKey] as string; } }
+        public string Value => this[ValueKey] as string;
 
         /// <summary>
         /// Domain of the category.
         /// </summary>
         [ConfigurationProperty(DomainKey, IsRequired = true)]
-        public string Domain { get { return this[DomainKey] as string; } }
+        public string Domain => this[DomainKey] as string;
     }
 }

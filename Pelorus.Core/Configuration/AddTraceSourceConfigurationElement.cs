@@ -13,6 +13,6 @@ namespace Pelorus.Core.Configuration
         /// Name of the trace source to add to the collection.
         /// </summary>
         [ConfigurationProperty(NameKey)]
-        public string Name { get { return this[NameKey] as string; } }
+        public string Name => this[NameKey] as string;
     }
 }

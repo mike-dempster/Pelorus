@@ -9,24 +9,24 @@ namespace Pelorus.Core.Web.Configuration
     internal class RssSkipDaysConfigurationElement : ConfigurationElement
     {
         [ConfigurationProperty("sunday", IsRequired = false)]
-        public EmptyConfigurationElement Sunday { get { return this["sunday"] as EmptyConfigurationElement; } }
+        public EmptyConfigurationElement Sunday => this["sunday"] as EmptyConfigurationElement;
 
         [ConfigurationProperty("monday", IsRequired = false)]
-        public EmptyConfigurationElement Monday { get { return this["monday"] as EmptyConfigurationElement; } }
+        public EmptyConfigurationElement Monday => this["monday"] as EmptyConfigurationElement;
 
         [ConfigurationProperty("tuesday", IsRequired = false)]
-        public EmptyConfigurationElement Tuesday { get { return this["tuesday"] as EmptyConfigurationElement; } }
+        public EmptyConfigurationElement Tuesday => this["tuesday"] as EmptyConfigurationElement;
 
         [ConfigurationProperty("wednesday", IsRequired = false)]
-        public EmptyConfigurationElement Wednesday { get { return this["wednesday"] as EmptyConfigurationElement; } }
+        public EmptyConfigurationElement Wednesday => this["wednesday"] as EmptyConfigurationElement;
 
         [ConfigurationProperty("thursday", IsRequired = false)]
-        public EmptyConfigurationElement Thursday { get { return this["thursday"] as EmptyConfigurationElement; } }
+        public EmptyConfigurationElement Thursday => this["thursday"] as EmptyConfigurationElement;
 
         [ConfigurationProperty("friday", IsRequired = false)]
-        public EmptyConfigurationElement Friday { get { return this["friday"] as EmptyConfigurationElement; } }
+        public EmptyConfigurationElement Friday => this["friday"] as EmptyConfigurationElement;
 
         [ConfigurationProperty("saturday", IsRequired = false)]
-        public EmptyConfigurationElement Saturday { get { return this["saturday"] as EmptyConfigurationElement; } }
+        public EmptyConfigurationElement Saturday => this["saturday"] as EmptyConfigurationElement;
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Pelorus.Core.Reflection;
+using System;
 using System.Linq.Expressions;
 using System.Xml.Serialization;
-using Pelorus.Core.Reflection;
 
 namespace Pelorus.Core.Xml.Serialization
 {
@@ -32,16 +32,6 @@ namespace Pelorus.Core.Xml.Serialization
         /// Namespace of the property.
         /// </summary>
         private string propertyNamespace;
-
-        /// <summary>
-        /// Attributes that apply to the property.
-        /// </summary>
-        internal XmlAttributes Attributes { get; set; }
-
-        /// <summary>
-        /// Expression identifying the property that is configured.
-        /// </summary>
-        internal Expression<Func<T, TProperty>> PropertyExpression { get; set; }
 
         /// <summary>
         /// Creates a new instance of the property configuration and initializes the internal state.
@@ -307,77 +297,6 @@ namespace Pelorus.Core.Xml.Serialization
         }
 
         /// <summary>
-        /// The property is the root of the XML graph.
-        /// </summary>
-        /// <returns>The property's updated configuration.</returns>
-        public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot()
-        {
-            this.thisPropertyAttribute = new XmlRootAttribute();
-
-            return this;
-        }
-
-        /// <summary>
-        /// The property is the root of the XML graph.
-        /// </summary>
-        /// <param name="elementName">Name of the root element of the XML graph.</param>
-        /// <returns>The property's updated configuration.</returns>
-        public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot(string elementName)
-        {
-            this.propertyName = elementName;
-            this.thisPropertyAttribute = new XmlRootAttribute();
-
-            return this;
-        }
-
-        /// <summary>
-        /// The property is the root of the XML graph.
-        /// </summary>
-        /// <param name="ns">Namespace of the root XML element.</param>
-        /// <param name="elementName">Name of the root element of the XML graph.</param>
-        /// <returns>The property's updated configuration.</returns>
-        public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot(string ns, string elementName)
-        {
-            this.propertyNamespace = ns;
-            this.propertyName = elementName;
-            this.thisPropertyAttribute = new XmlRootAttribute();
-
-            return this;
-        }
-
-        /// <summary>
-        /// The property is the root of the XML graph.
-        /// </summary>
-        /// <param name="elementName">Name of the root element of the XML graph.</param>
-        /// <param name="isNullable">Indicates if the root element is nullable.</param>
-        /// <returns>The property's updated configuration.</returns>
-        public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot(string elementName, bool isNullable)
-        {
-            this.propertyName = elementName;
-            this.propertyIsNullable = isNullable;
-            this.thisPropertyAttribute = new XmlRootAttribute();
-
-            return this;
-        }
-
-        /// <summary>
-        /// The property is the root of the XML graph.
-        /// </summary>
-        /// <param name="ns">Namespace of the root XML element.</param>
-        /// <param name="elementName">Name of the root element of the XML graph.</param>
-        /// <param name="isNullable">Indicates if the root element is nullable.</param>
-        /// <returns>The property's updated configuration.</returns>
-        public XmlSchemaPropertyConfiguration<T, TProperty> IsRoot(string ns, string elementName, bool isNullable)
-        {
-            this.propertyNamespace = ns;
-            this.propertyName = elementName;
-            this.propertyIsNullable = isNullable;
-            this.thisPropertyAttribute = new XmlRootAttribute();
-
-            return this;
-        }
-
-        /// <summary>
         /// The property should be serialized as text.
         /// </summary>
         /// <returns>The property's updated configuration.</returns>
@@ -422,6 +341,78 @@ namespace Pelorus.Core.Xml.Serialization
 
             return this;
         }
+
+        /// <summary>
+        /// Get the hash code of the property schema.
+        /// </summary>
+        /// <returns>Hash code of the property schema.</returns>
+        // ReSharper disable NonReadonlyMemberInGetHashCode
+        public override int GetHashCode()
+        {
+            var propertyInfo = PropertyInfoExtensions.Property(this.PropertyExpression);
+            var attribute = this.thisPropertyAttribute as XmlAttributeAttribute;
+
+            if (null != attribute)
+            {
+                int hash = this.GetAttributeHash(attribute);
+                hash ^= propertyInfo.MetadataToken;
+
+                return hash;
+            }
+
+            var element = this.thisPropertyAttribute as XmlElementAttribute;
+
+            if (null != element)
+            {
+                int hash = this.GetElementHash(element);
+                hash ^= propertyInfo.MetadataToken;
+
+                return hash;
+            }
+
+            var array = this.thisPropertyAttribute as XmlArrayAttribute;
+
+            if (null != array)
+            {
+                int hash = this.GetArrayHash(array);
+                hash ^= propertyInfo.MetadataToken;
+
+                return hash;
+            }
+
+            var arrayItem = this.thisPropertyAttribute as XmlArrayItemAttribute;
+
+            if (null != arrayItem)
+            {
+                int hash = this.GetArrayItemHash(arrayItem);
+                hash ^= propertyInfo.MetadataToken;
+
+                return hash;
+            }
+
+            var enumAttribute = this.thisPropertyAttribute as XmlEnumAttribute;
+
+            if (null != enumAttribute)
+            {
+                int hash = this.GetEnumHash(enumAttribute);
+                hash ^= propertyInfo.MetadataToken;
+
+                return hash;
+            }
+
+            var text = this.thisPropertyAttribute as XmlTextAttribute;
+
+            if (null == text)
+            {
+                return 0;
+            }
+
+            int textHash = this.GetTextHash(text);
+            textHash ^= propertyInfo.MetadataToken;
+
+            return textHash;
+        }
+        // ReSharper restore NonReadonlyMemberInGetHashCode
 
         /// <summary>
         /// Adds the configured attributes for the property to the given attribute override.
@@ -482,14 +473,6 @@ namespace Pelorus.Core.Xml.Serialization
             if (null != enumAttribute)
             {
                 this.ConfigureEnum(enumAttribute);
-                return;
-            }
-
-            var root = this.thisPropertyAttribute as XmlRootAttribute;
-
-            if (null != root)
-            {
-                this.ConfigureRoot(root);
                 return;
             }
 
@@ -597,32 +580,121 @@ namespace Pelorus.Core.Xml.Serialization
         }
 
         /// <summary>
-        /// Configures the property as the root of the XML document.
-        /// </summary>
-        /// <param name="root">Root attribute to apply to the property.</param>
-        private void ConfigureRoot(XmlRootAttribute root)
-        {
-            if (false == string.IsNullOrWhiteSpace(this.propertyName))
-            {
-                root.ElementName = this.propertyName;
-            }
-
-            if (false == string.IsNullOrWhiteSpace(this.propertyNamespace))
-            {
-                root.Namespace = this.propertyNamespace;
-            }
-
-            root.IsNullable = this.propertyIsNullable;
-            this.Attributes.XmlRoot = root;
-        }
-
-        /// <summary>
         /// Configures the property as text.
         /// </summary>
         /// <param name="text">Text attribute to apply to the property.</param>
         private void ConfigureText(XmlTextAttribute text)
         {
             this.Attributes.XmlText = text;
+        }
+
+        /// <summary>
+        /// Calculates the hash code for an Xml attribute attribute.
+        /// </summary>
+        /// <param name="attributeAttribute">Attribute to calculate the hash code for.</param>
+        /// <returns>Hash code of the given Xml attribute attribute.</returns>
+        private int GetAttributeHash(XmlAttributeAttribute attributeAttribute)
+        {
+            int hash = (attributeAttribute.AttributeName ?? string.Empty).GetHashCode();
+            hash ^= (attributeAttribute.DataType ?? string.Empty).GetHashCode();
+            hash ^= attributeAttribute.Form.GetHashCode();
+            hash ^= (attributeAttribute.Namespace ?? string.Empty).GetHashCode();
+
+            if (null != attributeAttribute.Type)
+            {
+                hash ^= attributeAttribute.Type.MetadataToken;
+            }
+
+            return hash;
+        }
+
+        /// <summary>
+        /// Calculates the hash code for an Xml element attribute.
+        /// </summary>
+        /// <param name="elementAttribute">Attribute to calculate the hash code for.</param>
+        /// <returns>Hash code of the given Xml element attribute.</returns>
+        private int GetElementHash(XmlElementAttribute elementAttribute)
+        {
+            int hash = elementAttribute.Order.GetHashCode();
+            hash ^= (elementAttribute.DataType ?? string.Empty).GetHashCode();
+            hash ^= (elementAttribute.ElementName ?? string.Empty).GetHashCode();
+            hash ^= elementAttribute.Form.GetHashCode();
+            hash ^= elementAttribute.IsNullable.GetHashCode();
+            hash ^= (elementAttribute.Namespace ?? string.Empty).GetHashCode();
+
+            if (null != elementAttribute.Type)
+            {
+                hash ^= elementAttribute.Type.MetadataToken;
+            }
+
+            return hash;
+        }
+
+        /// <summary>
+        /// Calculates the hash code for an Xml array attribute.
+        /// </summary>
+        /// <param name="arrayAttribute">Attribute to calculate the hash code for.</param>
+        /// <returns>Hash code of the given Xml array attribute.</returns>
+        private int GetArrayHash(XmlArrayAttribute arrayAttribute)
+        {
+            int hash = arrayAttribute.Order.GetHashCode();
+            hash ^= (arrayAttribute.ElementName ?? string.Empty).GetHashCode();
+            hash ^= arrayAttribute.Form.GetHashCode();
+            hash ^= arrayAttribute.IsNullable.GetHashCode();
+            hash ^= (arrayAttribute.Namespace ?? string.Empty).GetHashCode();
+
+            return hash;
+        }
+
+        /// <summary>
+        /// Calculates the hash code for an Xml array item attribute.
+        /// </summary>
+        /// <param name="arrayItemAttribute">Attribute to calculate the hash code for.</param>
+        /// <returns>Hash code of the given Xml array item attribute.</returns>
+        private int GetArrayItemHash(XmlArrayItemAttribute arrayItemAttribute)
+        {
+            int hash = arrayItemAttribute.NestingLevel.GetHashCode();
+            hash ^= (arrayItemAttribute.DataType ?? string.Empty).GetHashCode();
+            hash ^= (arrayItemAttribute.ElementName ?? string.Empty).GetHashCode();
+            hash ^= arrayItemAttribute.Form.GetHashCode();
+            hash ^= arrayItemAttribute.IsNullable.GetHashCode();
+            hash ^= (arrayItemAttribute.Namespace ?? string.Empty).GetHashCode();
+
+            if (null != arrayItemAttribute.Type)
+            {
+                hash ^= arrayItemAttribute.Type.MetadataToken;
+            }
+
+            return hash;
+        }
+
+        /// <summary>
+        /// Calculates the hash code for an Xml enum attribute.
+        /// </summary>
+        /// <param name="enumAttribute">Attribute to calculate the hash code for.</param>
+        /// <returns>Hash code of the given Xml enum attribute.</returns>
+        private int GetEnumHash(XmlEnumAttribute enumAttribute)
+        {
+            int hash = enumAttribute.Name.GetHashCode();
+
+            return hash;
+        }
+
+        /// <summary>
+        /// Calculates the hash code for an Xml text attribute.
+        /// </summary>
+        /// <param name="textAttribute">Attribute to calculate the hash code for.</param>
+        /// <returns>Hash code of the given Xml text attribute.</returns>
+        private int GetTextHash(XmlTextAttribute textAttribute)
+        {
+            int hash = (textAttribute.DataType ?? string.Empty).GetHashCode();
+
+            if (null != textAttribute.Type)
+            {
+                hash ^= textAttribute.Type.MetadataToken;
+            }
+
+            return hash;
         }
     }
 
@@ -631,6 +703,16 @@ namespace Pelorus.Core.Xml.Serialization
     /// </summary>
     public abstract class XmlSchemaPropertyConfiguration
     {
+        /// <summary>
+        /// Attributes that apply to the property.
+        /// </summary>
+        internal XmlAttributes Attributes { get; set; }
+
+        /// <summary>
+        /// Expression identifying the property that is configured.
+        /// </summary>
+        internal LambdaExpression PropertyExpression { get; set; }
+
         /// <summary>
         /// Adds the configured attributes for the property to the given attribute override.
         /// </summary>

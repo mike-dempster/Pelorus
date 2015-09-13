@@ -4,6 +4,9 @@ using System.Xml;
 
 namespace Pelorus.Core.Data
 {
+    /// <summary>
+    /// Extension methods for IDataRecord objects.
+    /// </summary>
     public static class DataRecordExtensions
     {
         /// <summary>
@@ -16,7 +19,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -33,7 +36,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -57,7 +60,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -74,7 +77,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -103,7 +106,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -120,7 +123,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -137,7 +140,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -166,7 +169,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -183,7 +186,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -200,7 +203,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -224,7 +227,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -241,7 +244,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -265,7 +268,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -282,7 +285,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -306,7 +309,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -323,7 +326,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -347,7 +350,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -364,7 +367,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -388,7 +391,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -405,7 +408,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -429,7 +432,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -446,7 +449,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -470,7 +473,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -487,7 +490,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -511,7 +514,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -528,7 +531,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -552,7 +555,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -575,7 +578,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);
@@ -605,7 +608,7 @@ namespace Pelorus.Core.Data
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             int ordinal = reader.GetOrdinal(name);

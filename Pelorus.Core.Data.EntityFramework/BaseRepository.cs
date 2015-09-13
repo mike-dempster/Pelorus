@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Pelorus.Core.Entities;
+using Pelorus.Core.Reflection;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -12,8 +14,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Pelorus.Core.Entities;
-using Pelorus.Core.Reflection;
 
 namespace Pelorus.Core.Data.EntityFramework
 {
@@ -32,10 +32,9 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Expose the data set for the repository to the inheriting class.
         /// </summary>
-        protected override DbSet<TEntity> DataSet
-        {
-            get { return this._dataSet; }
-        }
+        // ReSharper disable ConvertToAutoProperty
+        protected override DbSet<TEntity> DataSet => this._dataSet;
+        // ReSharper restore ConvertToAutoProperty
 
         /// <summary>
         /// Expression for including child entities in the base queries.
@@ -50,7 +49,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == contextFactory)
             {
-                throw new ArgumentNullException("contextFactory");
+                throw new ArgumentNullException(nameof(contextFactory));
             }
         }
 
@@ -62,7 +61,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == context)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
 
             this._context = context;
@@ -80,7 +79,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == contextFactory)
             {
-                throw new ArgumentNullException("contextFactory");
+                throw new ArgumentNullException(nameof(contextFactory));
             }
 
             return contextFactory.Create();
@@ -695,7 +694,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == propertyExpression)
             {
-                throw new ArgumentNullException("propertyExpression");
+                throw new ArgumentNullException(nameof(propertyExpression));
             }
 
             var propertyInfo = PropertyInfoExtensions.Property(propertyExpression);

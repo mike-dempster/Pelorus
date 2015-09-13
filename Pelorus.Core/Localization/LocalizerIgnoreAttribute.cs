@@ -12,7 +12,9 @@ namespace Pelorus.Core.Localization
         /// <summary>
         /// Reason that the property is to be ignored by the localizer.
         /// </summary>
-        public string IgnoreReason { get { return this._ignoreReason; } }
+        // ReSharper disable ConvertToAutoProperty
+        public string IgnoreReason => this._ignoreReason;
+        // ReSharper restore ConvertToAutoProperty
 
         /// <summary>
         /// Create a new instance of the localizer attribute.

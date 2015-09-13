@@ -62,7 +62,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == context)
             {
-                throw new ArgumentNullException("context");
+                throw new ArgumentNullException(nameof(context));
             }
 
             var metadataWorkspace = ((IObjectContextAdapter) context).ObjectContext.MetadataWorkspace;

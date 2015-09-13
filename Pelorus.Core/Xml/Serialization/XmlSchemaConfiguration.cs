@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Serialization;
 
@@ -13,8 +14,6 @@ namespace Pelorus.Core.Xml.Serialization
     public class XmlSchemaConfiguration<T> : XmlSchemaConfiguration
         where T : class
     {
-        private XmlRootAttribute rootAttribute;
-
         /// <summary>
         /// Gets an instance of an property configuration for a property on the entity type.
         /// </summary>
@@ -28,42 +27,6 @@ namespace Pelorus.Core.Xml.Serialization
 
             return property;
         }
-
-        /// <summary>
-        /// Sets the entity type as the root entity in the XML graph.
-        /// </summary>
-        public void IsRoot()
-        {
-            this.rootAttribute = new XmlRootAttribute();
-        }
-
-        /// <summary>
-        /// Sets the entity type as the root entity in the XML graph with the given element name.
-        /// </summary>
-        /// <param name="name">Name of the root element.</param>
-        public void IsRoot(string name)
-        {
-            this.rootAttribute = new XmlRootAttribute(name);
-        }
-
-        /// <summary>
-        /// Applies the entity's configuration to the set of attribute overrides.
-        /// </summary>
-        /// <param name="overridesInstance">Instance of an attribute override object to add the entity's configuration to.</param>
-        internal override void ApplyConfiguration(XmlAttributeOverrides overridesInstance)
-        {
-            if (null != this.rootAttribute)
-            {
-                var attrs = new XmlAttributes
-                {
-                    XmlRoot = this.rootAttribute
-                };
-
-                overridesInstance.Add(typeof (T), attrs);
-            }
-
-            base.ApplyConfiguration(overridesInstance);
-        }
     }
 
     /// <summary>
@@ -72,9 +35,19 @@ namespace Pelorus.Core.Xml.Serialization
     public class XmlSchemaConfiguration
     {
         /// <summary>
+        /// Gets the name of the element representing this entity.
+        /// </summary>
+        internal string ElementName { get; private set; }
+
+        /// <summary>
+        /// Gets the namespace of the element representing this entity.
+        /// </summary>
+        internal string ElementNamespace { get; private set; }
+
+        /// <summary>
         /// Collection of properties that have configuration data.
         /// </summary>
-        internal ICollection<XmlSchemaPropertyConfiguration> Properties { get; private set; }
+        internal ICollection<XmlSchemaPropertyConfiguration> Properties { get; }
 
         /// <summary>
         /// Creates an instance of the schema configuration and initializes the internal state.
@@ -101,6 +74,30 @@ namespace Pelorus.Core.Xml.Serialization
         }
 
         /// <summary>
+        /// Sets the name of this entity.
+        /// </summary>
+        /// <param name="name">Name of the element.</param>
+        /// <returns>Instance of the schema configuration with the root name configuration.</returns>
+        public XmlSchemaConfiguration Name(string name)
+        {
+            this.ElementName = name;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the root namespace for this entity.
+        /// </summary>
+        /// <param name="ns">Namespace of the element</param>
+        /// <returns>Instance of the schema configuration with the root namespace configuration.</returns>
+        public XmlSchemaConfiguration Namespace(string ns)
+        {
+            this.ElementNamespace = ns;
+
+            return this;
+        }
+
+        /// <summary>
         /// Applies the entity's configuration to the set of attribute overrides.
         /// </summary>
         /// <param name="overridesInstance">Instance of an attribute override object to add the entity's configuration to.</param>
@@ -110,6 +107,31 @@ namespace Pelorus.Core.Xml.Serialization
             {
                 prop.ApplyConfigurationToContext(overridesInstance);
             }
+        }
+
+        /// <summary>
+        /// Calculates the hash code for the Xml schema.
+        /// </summary>
+        /// <returns>Hash code of the Xml schema.</returns>
+        public override int GetHashCode()
+        {
+            var hashCodes = new Collection<int>();
+
+            foreach (var prop in this.Properties)
+            {
+                hashCodes.Add(prop.GetHashCode());
+            }
+
+            var orderedHashes = hashCodes.OrderBy(e => e)
+                                         .ToList();
+            int hash = 0;
+
+            foreach (var h in orderedHashes)
+            {
+                hash ^= h;
+            }
+
+            return hash;
         }
     }
 }

@@ -38,6 +38,37 @@ namespace Pelorus.Core.Reflection
         /// <summary>
         /// Get the property info of a property expression.
         /// </summary>
+        /// <param name="expression">Property expression identifying the target property.</param>
+        /// <returns>PropertyInfo of the target property.</returns>
+        public static PropertyInfo Property(LambdaExpression expression)
+        {
+            var member = expression.Body as MemberExpression;
+
+            if (null == member)
+            {
+                var unaryExpression = expression.Body as UnaryExpression;
+
+                if (null == unaryExpression)
+                {
+                    return null;
+                }
+
+                member = unaryExpression.Operand as MemberExpression;
+            }
+
+            if (null == member)
+            {
+                return null;
+            }
+
+            var property = member.Member as PropertyInfo;
+
+            return property;
+        }
+
+        /// <summary>
+        /// Get the property info of a property expression.
+        /// </summary>
         /// <typeparam name="T">Type of the property's parent object.</typeparam>
         /// <typeparam name="TResult">Type of the property.</typeparam>
         /// <param name="expression">Property expression identifying the target property.</param>

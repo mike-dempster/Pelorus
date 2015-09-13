@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Globalization;
 
 namespace Pelorus.Core.Configuration
 {
@@ -25,16 +24,12 @@ namespace Pelorus.Core.Configuration
         {
             var addElement = element as AddTraceSourceConfigurationElement;
 
-            if (null != addElement)
+            if (null == addElement)
             {
-                return addElement.Name;
+                throw new InvalidCastException($"Cannot cast element to type '{typeof(AddTraceSourceConfigurationElement).FullName}'.");
             }
 
-            string exMsg = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Cannot cast element to type '{0}'.",
-                    typeof(AddTraceSourceConfigurationElement).FullName);
-            throw new InvalidCastException(exMsg);
+            return addElement.Name;
         }
     }
 }

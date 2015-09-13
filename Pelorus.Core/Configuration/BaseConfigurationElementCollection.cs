@@ -54,12 +54,14 @@ namespace Pelorus.Core.Configuration
         /// <summary>
         /// Type of the collection type object.
         /// </summary>
-        public override ConfigurationElementCollectionType CollectionType { get { return this._collectionType; } }
+        // ReSharper disable ConvertToAutoProperty
+        public override ConfigurationElementCollectionType CollectionType => this._collectionType;
+        // ReSharper restore ConvertToAutoProperty
 
         /// <summary>
         /// Name of the child elements.
         /// </summary>
-        protected override string ElementName { get { return this._childElementName; } }
+        protected override string ElementName => this._childElementName;
 
         /// <summary>
         /// Determines if the collection is readonly.
@@ -94,6 +96,6 @@ namespace Pelorus.Core.Configuration
         /// </summary>
         /// <param name="index">Index of the element to return.</param>
         /// <returns>Element at the given index of the collection.</returns>
-        public TElement this[int index] { get { return (TElement) this.BaseGet(index); } }
+        public TElement this[int index] => (TElement) this.BaseGet(index);
     }
 }

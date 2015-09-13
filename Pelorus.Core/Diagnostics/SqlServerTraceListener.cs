@@ -15,7 +15,7 @@ namespace Pelorus.Core.Diagnostics
         /// <summary>
         /// Indicates if the trace listener is thread safe.  This trace listener implementation is not thread safe.
         /// </summary>
-        public override bool IsThreadSafe { get { return false; } }
+        public override bool IsThreadSafe => false;
 
         /// <summary>
         /// Create a new instance of the listener and initialize the internal state.

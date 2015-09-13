@@ -43,10 +43,14 @@
     <Compile Include="Configuration\AddTraceSourceConfigurationElement.cs" />
     <Compile Include="Configuration\BaseConfigurationElementCollection.cs" />
     <Compile Include="Configuration\CoreConfiguration.cs" />
-    <Compile Include="Configuration\DiagnosticsConfigurationSection.cs" />
+    <Compile Include="Configuration\CoreConfigurationSection.cs" />
+    <Compile Include="Configuration\DiagnosticsConfigurationElement.cs" />
     <Compile Include="Configuration\EmptyConfigurationElement.cs" />
+    <Compile Include="Configuration\IoCConfigurationElement.cs" />
+    <Compile Include="Configuration\IoCMapperCollection.cs" />
     <Compile Include="Configuration\SimpleValueConfigurationElement.cs" />
     <Compile Include="Configuration\TraceSourceConfigurationCollection.cs" />
+    <Compile Include="Configuration\TypeConfigurationElement.cs" />
     <Compile Include="Data\DataRecordExtensions.cs" />
     <Compile Include="Data\IBaseReadOnlyRepository.cs" />
     <Compile Include="Data\IBaseRepository.cs" />
@@ -67,6 +71,9 @@
     <Compile Include="Entities\EntityDao.cs" />
     <Compile Include="Entities\EntityDto.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="IoC\BaseInitializer.cs" />
+    <Compile Include="IoC\BaseMapper.cs" />
+    <Compile Include="IoC\IContainer.cs" />
     <Compile Include="Localization\LocalizeCore.cs" />
     <Compile Include="Localization\LocalizeProxy.cs" />
     <Compile Include="Localization\LocalizerDelegate.cs" />
@@ -117,12 +124,12 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Robusto.1.0.0\build\Robusto.targets" Condition="Exists('..\packages\Robusto.1.0.0\build\Robusto.targets')" />
+  <Import Project="..\packages\Robusto.1.0.1\build\Robusto.targets" Condition="Exists('..\packages\Robusto.1.0.1\build\Robusto.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Robusto.1.0.0\build\Robusto.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Robusto.1.0.0\build\Robusto.targets'))" />
+    <Error Condition="!Exists('..\packages\Robusto.1.0.1\build\Robusto.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Robusto.1.0.1\build\Robusto.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

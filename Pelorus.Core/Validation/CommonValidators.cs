@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Pelorus.Core.Validation
@@ -21,7 +20,7 @@ namespace Pelorus.Core.Validation
         {
             if (string.IsNullOrWhiteSpace(emailAddress))
             {
-                throw new ArgumentNullException("emailAddress");
+                throw new ArgumentNullException(nameof(emailAddress));
             }
 
             emailAddress = emailAddress.ToLower()
@@ -30,7 +29,7 @@ namespace Pelorus.Core.Validation
 
             if ((1 != matches.Count) || ((0 < matches.Count) && (!matches[0].Value.Equals(emailAddress))))
             {
-                throw new Exception(string.Format(CultureInfo.InvariantCulture, "Invalid email address: {0}", emailAddress));
+                throw new Exception($"Invalid email address: {emailAddress}.");
             }
         }
 
@@ -42,14 +41,14 @@ namespace Pelorus.Core.Validation
         {
             if (string.IsNullOrWhiteSpace(phoneNumber))
             {
-                throw new ArgumentNullException("phoneNumber");
+                throw new ArgumentNullException(nameof(phoneNumber));
             }
 
             var matches = _phoneNumberRegex.Matches(Types.Cast<string>(phoneNumber));
 
             if ((1 != matches.Count) || ((0 < matches.Count) && (!matches[0].Value.Equals(phoneNumber))))
             {
-                throw new Exception(string.Format("Invalid phone number: {0}", phoneNumber));
+                throw new Exception($"Invalid phone number: {phoneNumber}.");
             }
         }
 
@@ -61,14 +60,14 @@ namespace Pelorus.Core.Validation
         {
             if (string.IsNullOrWhiteSpace(zipCode))
             {
-                throw new ArgumentNullException("zipCode");
+                throw new ArgumentNullException(nameof(zipCode));
             }
 
             MatchCollection matches = _zipCodeRegex.Matches(Types.Cast<string>(zipCode));
 
             if ((1 != matches.Count) || ((0 < matches.Count) && (!matches[0].Value.Equals(zipCode))))
             {
-                throw new Exception(string.Format("Invalid zip code: {0}", zipCode));
+                throw new Exception($"Invalid zip code: {zipCode}.");
             }
         }
     }

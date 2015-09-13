@@ -54,12 +54,12 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == property)
             {
-                throw new ArgumentNullException("property");
+                throw new ArgumentNullException(nameof(property));
             }
 
             if (null == variableExpression)
             {
-                throw new ArgumentNullException("variableExpression");
+                throw new ArgumentNullException(nameof(variableExpression));
             }
 
             var constExpr = Expression.Constant(null, property.PropertyType);
@@ -78,7 +78,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == propertyType)
             {
-                throw new ArgumentNullException("propertyType");
+                throw new ArgumentNullException(nameof(propertyType));
             }
 
             if (propertyType.IsValueType)
@@ -125,7 +125,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (null == propertyBaseType)
             {
-                throw new ArgumentNullException("propertyBaseType");
+                throw new ArgumentNullException(nameof(propertyBaseType));
             }
 
             var baseType = propertyBaseType;
