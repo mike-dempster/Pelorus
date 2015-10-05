@@ -19,8 +19,8 @@ namespace Pelorus.Core.IoC
         /// <summary>
         /// When overridden in a derived class, configures the container.
         /// </summary>
-        /// <param name="containerName"></param>
-        /// <param name="container"></param>
+        /// <param name="containerName">Name of the container to configure.</param>
+        /// <param name="container">Container instance to configure.</param>
         protected abstract void ConfigureContainer(string containerName, IContainer container);
 
         /// <summary>

@@ -330,6 +330,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Gets the contents of a FILESTREAM file from SQL Server using a pending transaction.
         /// </summary>
+        /// <typeparam name="TResult">Type of the primary key of the table to open the content stream from.</typeparam>
         /// <param name="property">Key property used to select a single record for file streaming.</param>
         /// <param name="fileStreamColumnName">Name of the FILESTREAM column.</param>
         /// <param name="primaryKey">Primary key of the record to read the file from.</param>
@@ -395,6 +396,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Gets the contents of a FILESTREAM file from SQL Server using a pending transaction asynchronously.
         /// </summary>
+        /// <typeparam name="TResult">Type of the primary key of the table to open the content stream from.</typeparam>
         /// <param name="property">Key property used to select a single record for file streaming.</param>
         /// <param name="fileStreamColumnName">Name of the FILESTREAM column.</param>
         /// <param name="primaryKey">Primary key of the record to read the file from.</param>

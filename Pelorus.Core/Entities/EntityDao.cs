@@ -3,6 +3,7 @@
     /// <summary>
     /// Base class for all DAO entities.
     /// </summary>
+    /// <typeparam name="TKey">Type of the key for this entity.</typeparam>
     public abstract class EntityDao<TKey>
         where TKey : struct
     {
@@ -13,9 +14,9 @@
     }
 
     /// <summary>
-    /// Base class for all DAO entities with a key type of int.
+    /// Base class for all DAO entities with a key type of long.
     /// </summary>
-    public abstract class EntityDao : EntityDao<int>
+    public abstract class EntityDao : EntityDao<long>
     {
     }
 }

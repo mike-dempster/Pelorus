@@ -5,6 +5,7 @@ namespace Pelorus.Core.Entities
     /// <summary>
     /// Base class for all DAO entities with standard audit columns.
     /// </summary>
+    /// <typeparam name="TKey">Type of the key for this entity.</typeparam>
     public abstract class AuditedEntityDao<TKey> : EntityDao<TKey>
         where TKey : struct
     {
@@ -32,7 +33,7 @@ namespace Pelorus.Core.Entities
     /// <summary>
     /// Base class for all DAO entities with standard audit columns.
     /// </summary>
-    public abstract class AuditedEntityDao : AuditedEntityDao<int>
+    public abstract class AuditedEntityDao : AuditedEntityDao<long>
     {
     }
 }

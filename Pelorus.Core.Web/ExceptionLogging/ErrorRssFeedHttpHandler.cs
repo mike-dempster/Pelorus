@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Web;
 
@@ -69,7 +69,7 @@ namespace Pelorus.Core.Web.ExceptionLogging
             var rss = RssSerializer.Serialize(feed);
             context.Response.ContentType = "text/xml";
             context.Response.Output.Write(rss.InnerXml);
-            context.Response.StatusCode = 200;
+            context.Response.StatusCode = (int) HttpStatusCode.OK;
             context.Response.Flush();
         }
 
@@ -114,7 +114,7 @@ namespace Pelorus.Core.Web.ExceptionLogging
 
             context.Response.ContentType = "text/xml";
             context.Response.Output.Write(xmlDocument.InnerXml);
-            context.Response.StatusCode = 200;
+            context.Response.StatusCode = (int) HttpStatusCode.OK;
             context.Response.Flush();
         }
 
@@ -199,25 +199,20 @@ namespace Pelorus.Core.Web.ExceptionLogging
 
             var daysOfTheWeek = new Dictionary<RssDayOfWeek, bool>
             {
-                { RssDayOfWeek.Sunday, config.Sunday.IsPresent},
-                { RssDayOfWeek.Monday, config.Monday.IsPresent},
-                { RssDayOfWeek.Tuesday, config.Tuesday.IsPresent},
-                { RssDayOfWeek.Wednesday, config.Wednesday.IsPresent},
-                { RssDayOfWeek.Thursday, config.Thursday.IsPresent},
-                { RssDayOfWeek.Friday, config.Friday.IsPresent},
-                { RssDayOfWeek.Saturday, config.Saturday.IsPresent}
+                { RssDayOfWeek.Sunday, config.Sunday.IsPresent },
+                { RssDayOfWeek.Monday, config.Monday.IsPresent },
+                { RssDayOfWeek.Tuesday, config.Tuesday.IsPresent },
+                { RssDayOfWeek.Wednesday, config.Wednesday.IsPresent },
+                { RssDayOfWeek.Thursday, config.Thursday.IsPresent },
+                { RssDayOfWeek.Friday, config.Friday.IsPresent },
+                { RssDayOfWeek.Saturday, config.Saturday.IsPresent }
             };
 
             var array = daysOfTheWeek.Where(e => e.Value)
                                      .Select(e => e.Key)
                                      .ToArray();
 
-            if (array.Any())
-            {
-                return array;
-            }
-
-            return null;
+            return array;
         }
 
         /// <summary>
@@ -230,42 +225,37 @@ namespace Pelorus.Core.Web.ExceptionLogging
 
             var hoursOfDay = new Dictionary<RssHourOfDay, bool>
             {
-                { RssHourOfDay.Midnight, config.Midnight.IsPresent},
-                { RssHourOfDay.OneAm, config.OneAm.IsPresent},
-                { RssHourOfDay.TwoAm, config.TwoAm.IsPresent},
-                { RssHourOfDay.ThreeAm, config.ThreeAm.IsPresent},
-                { RssHourOfDay.FourAm, config.FourAm.IsPresent},
-                { RssHourOfDay.FiveAm, config.FiveAm.IsPresent},
-                { RssHourOfDay.SixAm, config.SixAm.IsPresent},
-                { RssHourOfDay.SevenAm, config.SevenAm.IsPresent},
-                { RssHourOfDay.EightAm, config.EightAm.IsPresent},
-                { RssHourOfDay.NineAm, config.NineAm.IsPresent},
-                { RssHourOfDay.TenAm, config.TenAm.IsPresent},
-                { RssHourOfDay.ElevenAm, config.ElevenAm.IsPresent},
-                { RssHourOfDay.Noon, config.Noon.IsPresent},
-                { RssHourOfDay.OnePm, config.OnePm.IsPresent},
-                { RssHourOfDay.TwoPm, config.TwoPm.IsPresent},
-                { RssHourOfDay.ThreePm, config.ThreePm.IsPresent},
-                { RssHourOfDay.FourPm, config.FourPm.IsPresent},
-                { RssHourOfDay.FivePm, config.FivePm.IsPresent},
-                { RssHourOfDay.SixPm, config.SixPm.IsPresent},
-                { RssHourOfDay.SevenPm, config.SevenPm.IsPresent},
-                { RssHourOfDay.EightPm, config.EightPm.IsPresent},
-                { RssHourOfDay.NinePm, config.NinePm.IsPresent},
-                { RssHourOfDay.TenPm, config.TenPm.IsPresent},
-                { RssHourOfDay.ElevenPm, config.ElevenPm.IsPresent}
+                { RssHourOfDay.Midnight, config.Midnight.IsPresent },
+                { RssHourOfDay.OneAm, config.OneAm.IsPresent },
+                { RssHourOfDay.TwoAm, config.TwoAm.IsPresent },
+                { RssHourOfDay.ThreeAm, config.ThreeAm.IsPresent },
+                { RssHourOfDay.FourAm, config.FourAm.IsPresent },
+                { RssHourOfDay.FiveAm, config.FiveAm.IsPresent },
+                { RssHourOfDay.SixAm, config.SixAm.IsPresent },
+                { RssHourOfDay.SevenAm, config.SevenAm.IsPresent },
+                { RssHourOfDay.EightAm, config.EightAm.IsPresent },
+                { RssHourOfDay.NineAm, config.NineAm.IsPresent },
+                { RssHourOfDay.TenAm, config.TenAm.IsPresent },
+                { RssHourOfDay.ElevenAm, config.ElevenAm.IsPresent },
+                { RssHourOfDay.Noon, config.Noon.IsPresent },
+                { RssHourOfDay.OnePm, config.OnePm.IsPresent },
+                { RssHourOfDay.TwoPm, config.TwoPm.IsPresent },
+                { RssHourOfDay.ThreePm, config.ThreePm.IsPresent },
+                { RssHourOfDay.FourPm, config.FourPm.IsPresent },
+                { RssHourOfDay.FivePm, config.FivePm.IsPresent },
+                { RssHourOfDay.SixPm, config.SixPm.IsPresent },
+                { RssHourOfDay.SevenPm, config.SevenPm.IsPresent },
+                { RssHourOfDay.EightPm, config.EightPm.IsPresent },
+                { RssHourOfDay.NinePm, config.NinePm.IsPresent },
+                { RssHourOfDay.TenPm, config.TenPm.IsPresent },
+                { RssHourOfDay.ElevenPm, config.ElevenPm.IsPresent }
             };
 
             var array = hoursOfDay.Where(e => e.Value)
                                   .Select(e => e.Key)
                                   .ToArray();
 
-            if (array.Any())
-            {
-                return array;
-            }
-
-            return null;
+            return array;
         }
 
         /// <summary>
@@ -288,11 +278,7 @@ namespace Pelorus.Core.Web.ExceptionLogging
 
             if (null == connectionString)
             {
-                string exMsg = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Connection string '{0}' was not found.",
-                    connectionStringName);
-                throw new ConfigurationErrorsException(exMsg);
+                throw new ConfigurationErrorsException($"Connection string '{connectionStringName}' was not found.");
             }
 
             var applicationLogRepository = new ApplicationLogRepository(connectionString.ConnectionString);
@@ -303,25 +289,18 @@ namespace Pelorus.Core.Web.ExceptionLogging
             foreach(var log in logs)
             {
                 string uniqueId = log.Id.ToString().ToBase64String();
-                string link = string.Format(CultureInfo.InvariantCulture, "{0}?item={1}", thisUrl, uniqueId);
-                string title = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0}: {1} - {2}",
-                    log.TraceListenerName,
-                    log.TraceEventType,
-                    log.Message);
                 items.Add(new RssItem
                 {
                     GloballyUniqueIdentifier = uniqueId,
                     Description = log.Message,
-                    Link = link,
+                    Link = $"{thisUrl}?item={uniqueId}",
                     PublishDate = log.CreatedOn,
                     Source = new RssSource
                     {
                         Url = thisUrl,
                         Value = channelName
                     },
-                    Title = title
+                    Title = $"{log.TraceListenerName}: {log.TraceEventType} - {log.Message}"
                 });
             }
 

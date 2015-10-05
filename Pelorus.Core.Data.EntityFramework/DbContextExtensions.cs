@@ -17,9 +17,10 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Gets the schema and name the table that that TEntity is mapped to in the data context.
         /// </summary>
+        /// <typeparam name="TEntity">Entity type to get the schema and table name for.</typeparam>
         /// <param name="context">Data context with the entity mapping.</param>
         /// <returns>Schema and table name that TEntity is mapped to.</returns>
-        public static string GetSchemaAndTablename<TEntity>(this DbContext context)
+        public static string GetSchemaAndTableName<TEntity>(this DbContext context)
             where TEntity : class
         {
             var metadataWorkspace = ((IObjectContextAdapter) context).ObjectContext.MetadataWorkspace;
@@ -55,6 +56,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Gets a dictionary of properties and the column names that they are mapped to for the DbContext.
         /// </summary>
+        /// <typeparam name="TEntity">Entity type to get the property mapping for.</typeparam>
         /// <param name="context">Data context with the property mapping.</param>
         /// <returns>Dictionary of entity properties to database column name mapping.</returns>
         public static IDictionary<PropertyInfo, string> GetPropertyMapping<TEntity>(this DbContext context)
@@ -117,6 +119,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Gets a dictionary that maps database column names to entity properties for the data context.
         /// </summary>
+        /// <typeparam name="TEntity">Entity type to get the column mapping for.</typeparam>
         /// <param name="context">Data context with the property mapping.</param>
         /// <returns>Dictionary of database column names to entity property mapping.</returns>
         public static IDictionary<string, PropertyInfo> GetColumnMapping<TEntity>(this DbContext context)

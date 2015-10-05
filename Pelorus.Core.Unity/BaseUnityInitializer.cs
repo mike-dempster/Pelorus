@@ -22,8 +22,8 @@ namespace Pelorus.Core.Unity
         /// <summary>
         /// When overridden in a derived class, configures the container.
         /// </summary>
-        /// <param name="containerName"></param>
-        /// <param name="container"></param>
+        /// <param name="containerName">Name of the container to configure.</param>
+        /// <param name="container">Container instance to configure.</param>
         protected override void ConfigureContainer(string containerName, IContainer container)
         {
             var containerWrapper = container as UnityContainerWrapper;

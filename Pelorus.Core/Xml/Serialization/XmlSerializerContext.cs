@@ -155,6 +155,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <summary>
         /// Deserializes a stream of XML data to an object.
         /// </summary>
+        /// <typeparam name="TEntity">Type represented by the XML document.</typeparam>
         /// <param name="xmlStream">Stream of XML data representing the object instance.</param>
         /// <returns>Instance of the object in the stream.</returns>
         public TEntity Deserialize<TEntity>(Stream xmlStream)
@@ -169,6 +170,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <summary>
         /// Deserializes the XML data in the given text reader to an object.
         /// </summary>
+        /// <typeparam name="TEntity">Type represented by the XML document.</typeparam>
         /// <param name="textReader">Text reader of XML data representing the object instance.</param>
         /// <returns>Instance of the object in the text reader.</returns>
         public TEntity Deserialize<TEntity>(TextReader textReader)
@@ -183,6 +185,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <summary>
         /// Deserializes the XML data in the given XML reader to an object.
         /// </summary>
+        /// <typeparam name="TEntity">Type represented by the XML document.</typeparam>
         /// <param name="xmlReader">XML reader of the data representing the object instance.</param>
         /// <returns>Instance of the object in the XML reader.</returns>
         public TEntity Deserialize<TEntity>(XmlReader xmlReader)
@@ -197,6 +200,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <summary>
         /// Deserializes the XML data in the given XML reader to an object.
         /// </summary>
+        /// <typeparam name="TEntity">Type represented by the XML document.</typeparam>
         /// <param name="xmlReader">XML reader of the data representing the object instance.</param>
         /// <param name="encodingStyle">Encoding style of the data in the XML reader.</param>
         /// <returns>Instance of the object in the XML reader.</returns>
@@ -212,6 +216,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <summary>
         /// Deserializes the XML data in the given XML reader to an object.
         /// </summary>
+        /// <typeparam name="TEntity">Type represented by the XML document.</typeparam>
         /// <param name="xmlReader">XML reader of the data representing the object instance.</param>
         /// <param name="events">An instance of the System.Xml.Serialization.XmlDeserializationEvents class.</param>
         /// <returns>Instance of the object in the XML reader.</returns>
@@ -227,6 +232,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <summary>
         /// Deserializes the XML data in the given XML reader to an object.
         /// </summary>
+        /// <typeparam name="TEntity">Type represented by the XML document.</typeparam>
         /// <param name="xmlReader">XML reader of the data representing the object instance.</param>
         /// <param name="encodingStyle">Encoding style of the data in the XML reader.</param>
         /// <param name="events">An instance of the System.Xml.Serialization.XmlDeserializationEvents class.</param>
@@ -288,7 +294,7 @@ namespace Pelorus.Core.Xml.Serialization
         {
             XmlSchemaConfiguration entityConfig;
 
-            if (true == this.Entities.TryGetValue(typeof(TEntity), out entityConfig))
+            if (true == this.Entities.TryGetValue(typeof (TEntity), out entityConfig))
             {
                 entityConfig.Name(name);
                 return entityConfig as XmlSchemaConfiguration<TEntity>;
@@ -296,7 +302,7 @@ namespace Pelorus.Core.Xml.Serialization
 
             entityConfig = new XmlSchemaConfiguration<TEntity>();
             entityConfig.Name(name);
-            this.Entities.Add(typeof(TEntity), entityConfig);
+            this.Entities.Add(typeof (TEntity), entityConfig);
 
             return (XmlSchemaConfiguration<TEntity>) entityConfig;
         }
@@ -313,7 +319,7 @@ namespace Pelorus.Core.Xml.Serialization
 
             if (_serializers.ContainsKey(hash))
             {
-                return (XmlSerializer)_serializers[hash];
+                return (XmlSerializer) _serializers[hash];
             }
 
             var entityConfig = this.Entities[type];

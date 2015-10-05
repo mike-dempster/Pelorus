@@ -26,24 +26,24 @@ namespace Pelorus.Core
 
             if (converter.CanConvertFrom(subjectType))
             {
-                return (T)converter.ConvertFrom(subject);
+                return (T) converter.ConvertFrom(subject);
             }
 
-            if (converter.CanConvertTo(typeof(T)))
+            if (converter.CanConvertTo(typeof (T)))
             {
-                return (T)converter.ConvertTo(subject, typeof(T));
+                return (T) converter.ConvertTo(subject, typeof (T));
             }
 
-            converter = TypeDescriptor.GetConverter(typeof(T));
+            converter = TypeDescriptor.GetConverter(typeof (T));
 
             if (converter.CanConvertTo(subjectType))
             {
-                return (T)converter.ConvertTo(subject, subjectType);
+                return (T) converter.ConvertTo(subject, subjectType);
             }
 
             if (converter.CanConvertFrom(subjectType))
             {
-                return (T)converter.ConvertFrom(subject);
+                return (T) converter.ConvertFrom(subject);
             }
 
             return default(T);

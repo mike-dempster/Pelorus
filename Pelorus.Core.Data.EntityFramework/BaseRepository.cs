@@ -34,6 +34,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// </summary>
         // ReSharper disable ConvertToAutoProperty
         protected override DbSet<TEntity> DataSet => this._dataSet;
+
         // ReSharper restore ConvertToAutoProperty
 
         /// <summary>
@@ -377,6 +378,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Writes the content of a stream to a FILESTREAM file on SQL Server using a pending transaction.
         /// </summary>
+        /// <typeparam name="TResult">Type of the primary key of the table to write the content stream to.</typeparam>
         /// <param name="property">Key property used to select a single record for file streaming.</param>
         /// <param name="fileStreamColumnName">Name of the FILESTREAM column.</param>
         /// <param name="primaryKey">Primary key of the record to write the file to.</param>
@@ -392,7 +394,7 @@ namespace Pelorus.Core.Data.EntityFramework
             string columnName = propertyMappings[propertyInfo];
             const string sqlQueryFormat = "SELECT {0}.PathName() AS [Path], GET_FILESTREAM_TRANSACTION_CONTEXT() AS [Transaction] FROM {1} WHERE [{2}] = @rowId;";
             string connectionString = this._context.Database.Connection.ConnectionString;
-            string schemaAndTableName = this._context.GetSchemaAndTablename<TEntity>();
+            string schemaAndTableName = this._context.GetSchemaAndTableName<TEntity>();
 
             using (var connection = new SqlConnection(connectionString))
             using (var cmd = connection.CreateCommand())
@@ -449,11 +451,13 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Writes the content of a stream to a FILESTREAM file on SQL Server using a pending transaction asynchronously.
         /// </summary>
+        /// <typeparam name="TResult">Type of the primary key of the table to write the content stream to.</typeparam>
         /// <param name="property">Key property used to select a single record for file streaming.</param>
         /// <param name="fileStreamColumnName">Name of the FILESTREAM column.</param>
         /// <param name="primaryKey">Primary key of the record to write the file to.</param>
         /// <param name="contents">File content to write to the database.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
+        /// <returns>Handle to the async task.</returns>
         protected async Task WriteContentStreamAsync<TResult>(
             Expression<Func<TEntity, TResult>> property,
             string fileStreamColumnName,
@@ -621,6 +625,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Save the changes in the underlying data context.
         /// </summary>
+        /// <returns>Number of rows affected by the operation.</returns>
         protected virtual int SaveChanges()
         {
             return this._context.SaveChanges();
@@ -630,7 +635,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// Save the changes in the underlying data context.
         /// </summary>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
-        /// <returns></returns>
+        /// <returns>Number of rows affected by the operation.</returns>
         protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
             await this._context.SaveChangesAsync(cancellationToken)
