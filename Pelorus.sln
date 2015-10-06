@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.ServiceModel",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Unity", "Pelorus.Core.Unity\Pelorus.Core.Unity.csproj", "{D31B7EB8-E619-4709-9BFF-B4BCE2D058BF}"
 EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Pelorus.Core.Documentation", "Pelorus.Core.Documentation\Pelorus.Core.Documentation.shfbproj", "{0DB93010-E95B-4DF9-A3FB-AE326E37C992}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{D31B7EB8-E619-4709-9BFF-B4BCE2D058BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D31B7EB8-E619-4709-9BFF-B4BCE2D058BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D31B7EB8-E619-4709-9BFF-B4BCE2D058BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DB93010-E95B-4DF9-A3FB-AE326E37C992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DB93010-E95B-4DF9-A3FB-AE326E37C992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DB93010-E95B-4DF9-A3FB-AE326E37C992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DB93010-E95B-4DF9-A3FB-AE326E37C992}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
