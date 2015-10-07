@@ -154,3 +154,7 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# Ignore the Sandcastle generated files
+Pelorus.Core.Documentation/Help/*
+Pelorus.Core.Documentation/obj/*
