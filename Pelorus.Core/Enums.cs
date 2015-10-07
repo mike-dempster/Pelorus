@@ -8,7 +8,7 @@ namespace Pelorus.Core
     public static class Enums
     {
         /// <summary>
-        /// Parse a string for the name of an enum value. This parse is case sensitive.
+        /// Parses a string for the name of an enum value. This parse is case sensitive.
         /// </summary>
         /// <typeparam name="TEnum">Type of the enum that is represented by the string.</typeparam>
         /// <param name="enumName">String to parse for an enum value.</param>
@@ -22,7 +22,7 @@ namespace Pelorus.Core
         }
 
         /// <summary>
-        /// Parse a string for the name of an enum value.
+        /// Parses a string for the name of an enum value.
         /// </summary>
         /// <typeparam name="TEnum">Type of the enum that is represented by the string.</typeparam>
         /// <param name="enumName">String to parse for an enum value.</param>
