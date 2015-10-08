@@ -2,6 +2,8 @@ environment:
   github_token:
     secure: Fg/hvfXfxXIrzcRiv+UFMY16tor23GPl/35p05fVUbVA5/KSnKJu+Rb9zOMcpnME
 
+test: off
+
 before_build:
     - cmd: nuget restore
 
