@@ -79,6 +79,7 @@
     <Compile Include="Localization\LocalizeProxy.cs" />
     <Compile Include="Localization\LocalizerDelegate.cs" />
     <Compile Include="Localization\LocalizerIgnoreAttribute.cs" />
+    <Compile Include="MathExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\Indexers.cs" />
     <Compile Include="Reflection\MethodInfoExtensions.cs" />
