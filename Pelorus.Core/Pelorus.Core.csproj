@@ -98,6 +98,15 @@
     <Compile Include="Rss\RssSource.cs" />
     <Compile Include="Rss\RssTextInput.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="Synchronization\DistributedMutualExclusion.cs" />
+    <Compile Include="Synchronization\MutualExclusion.cs" />
+    <Compile Include="Synchronization\ProcessMutualExclusion.cs" />
+    <Compile Include="Synchronization\SqlQueries.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SqlQueries.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Synchronization\SystemMutualExclusion.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="UriExtensions.cs" />
     <Compile Include="Validation\CommonValidators.cs" />
@@ -113,6 +122,12 @@
     <Content Include="Diagnostics\Repositories\Sql\GetApplicationLogById.sql" />
     <Content Include="Diagnostics\Repositories\Sql\InsertApplicationLog.sql" />
     <Content Include="Diagnostics\SqlScripts\CreateDiagnosticsObjects.sql" />
+    <Content Include="Synchronization\EnterLockState.sql" />
+    <Content Include="Synchronization\ReleaseLockState.sql" />
+    <Content Include="Synchronization\SqlQueries.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SqlQueries.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Diagnostics\Repositories\Sql\SqlQueries.tt">
