@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Pelorus.Core.Synchronization
 {
@@ -7,7 +8,8 @@ namespace Pelorus.Core.Synchronization
     /// </summary>
     public abstract class ExclusiveLock : IDisposable
     {
-        // TODO: Implement a method that derived classes can use to check if it is operating within the scope of a previous instance of the mutual exclusion.
+        [ThreadStatic]
+        private static List<string> locksOwnedInScope;
 
         /// <summary>
         /// When overriden in a derived class, disposes of the exclusive lock.
@@ -18,7 +20,7 @@ namespace Pelorus.Core.Synchronization
         /// <summary>
         /// Name of the exclusive lock.
         /// </summary>
-        protected string Name { get; private set; }
+        protected string Name { get; }
 
         /// <summary>
         /// Creates a new instance of the exclusive lock with the given name.
@@ -27,6 +29,22 @@ namespace Pelorus.Core.Synchronization
         protected ExclusiveLock(string name)
         {
             this.Name = name;
+
+            if (null == locksOwnedInScope)
+            {
+                locksOwnedInScope = new List<string>();
+            }
+
+            locksOwnedInScope.Add(name);
+        }
+
+        /// <summary>
+        /// Checks if ownership of the lock is already owned by the current thread.
+        /// </summary>
+        /// <returns>true if the thread already owns the exclusive lock otherwise false.</returns>
+        protected bool ExclusionOwned()
+        {
+            return locksOwnedInScope.Contains(this.Name);
         }
 
         /// <summary>
@@ -35,6 +53,7 @@ namespace Pelorus.Core.Synchronization
         public void Dispose()
         {
             this.Dispose(true);
+            locksOwnedInScope.Remove(this.Name);
         }
     }
 }

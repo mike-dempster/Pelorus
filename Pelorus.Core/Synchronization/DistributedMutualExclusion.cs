@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Transactions;
 
 namespace Pelorus.Core.Synchronization
 {
@@ -10,8 +11,7 @@ namespace Pelorus.Core.Synchronization
     /// </summary>
     public class DistributedExclusiveLock : ExclusiveLock
     {
-        // TODO: Ensure that the transaction used in this class does not interfere with nested transactions or parent transactions that this may be nested in.
-
+        private readonly bool _isNestedScope;
         private readonly SqlConnection _connection;
         private readonly SqlTransaction _transaction;
 
@@ -21,30 +21,45 @@ namespace Pelorus.Core.Synchronization
         /// <param name="name">Name of the lock.</param>
         public DistributedExclusiveLock(string name) : base(name)
         {
-            var connectionStringObject = ConfigurationManager.ConnectionStrings["DistributedLockConnectionString"];
-
-            if (null == connectionStringObject)
+            if (string.IsNullOrWhiteSpace(name))
             {
-                throw new Exception("Connection string does not exist.");
+                throw new ArgumentNullException(nameof(name));
             }
 
-            string connectionString = connectionStringObject.ConnectionString;
-            this._connection = new SqlConnection(connectionString);
+            this._isNestedScope = this.ExclusionOwned();
 
-            using (var cmd = this._connection.CreateCommand())
+            if (this._isNestedScope)
             {
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = SqlQueries.EnterLockState;
-                cmd.Parameters.Add(new SqlParameter
+                return;
+            }
+
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                var connectionStringObject = ConfigurationManager.ConnectionStrings["DistributedLockConnectionString"];
+
+                if (null == connectionStringObject)
                 {
-                    ParameterName = "globallyUniqueName",
-                    DbType = DbType.String,
-                    Value = name
-                });
-                this._connection.Open();
-                this._transaction = this._connection.BeginTransaction();
-                cmd.Transaction = this._transaction;
-                cmd.ExecuteNonQuery();
+                    throw new Exception("Connection string does not exist.");
+                }
+
+                string connectionString = connectionStringObject.ConnectionString;
+                this._connection = new SqlConnection(connectionString);
+
+                using (var cmd = this._connection.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = SqlQueries.EnterLockState;
+                    cmd.Parameters.Add(new SqlParameter
+                    {
+                        ParameterName = "globallyUniqueName",
+                        DbType = DbType.String,
+                        Value = name
+                    });
+                    this._connection.Open();
+                    this._transaction = this._connection.BeginTransaction();
+                    cmd.Transaction = this._transaction;
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -54,13 +69,14 @@ namespace Pelorus.Core.Synchronization
         /// <param name="disposing">Indicates if the method is being called because the instance is being disposed.</param>
         protected override void Dispose(bool disposing)
         {
-            if (null == this._connection)
+            if ((this._isNestedScope) || (null == this._connection))
             {
                 return;
             }
 
             try
             {
+                using(new TransactionScope(TransactionScopeOption.Suppress))
                 using (var cmd = this._connection.CreateCommand())
                 {
                     cmd.CommandType = CommandType.Text;
@@ -85,7 +101,7 @@ namespace Pelorus.Core.Synchronization
             {
                 if (null != this._transaction)
                 {
-                    this._transaction.Commit();
+                    this._transaction.Rollback();
                 }
 
                 this._connection.Close();
