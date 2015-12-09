@@ -8,6 +8,7 @@ namespace Pelorus.Core.Configuration
     internal static class CoreConfiguration
     {
         private const string ConfigurationSectionPath = "pelorus.core";
+
         /// <summary>
         /// Cache of the configuration data.
         /// </summary>
@@ -18,12 +19,17 @@ namespace Pelorus.Core.Configuration
         /// <summary>
         /// Configuration section for the diagnostics module.
         /// </summary>
-        public static DiagnosticsConfigurationElement Diagnostics => Core.Diagnostics;
+        public static DiagnosticsConfigurationElement Diagnostics => null == Core ? null : Core.Diagnostics;
 
         /// <summary>
         /// Configuration data for the IoC module.
         /// </summary>
-        public static IoCConfigurationElement IoC => Core.IoC;
+        public static IoCConfigurationElement IoC => null == Core ? null : Core.IoC;
+
+        /// <summary>
+        /// Configuration data for the distributed mutual exclusion provider.
+        /// </summary>
+        public static DistributedMutualExclusionConfigurationElement DistributedMutualExclusion => null == Core ? null : Core.DistributedMutualExclusion;
 
         /// <summary>
         /// Gets the configuration section from the application config.

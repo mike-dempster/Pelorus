@@ -50,6 +50,7 @@
     <Compile Include="Configuration\EmptyConfigurationElement.cs" />
     <Compile Include="Configuration\IoCConfigurationElement.cs" />
     <Compile Include="Configuration\IoCMapperCollection.cs" />
+    <Compile Include="Configuration\DistributedMutualExclusionConfigurationElement.cs" />
     <Compile Include="Configuration\SimpleValueConfigurationElement.cs" />
     <Compile Include="Configuration\TraceSourceConfigurationCollection.cs" />
     <Compile Include="Configuration\TypeConfigurationElement.cs" />
@@ -124,7 +125,6 @@
     <Content Include="Diagnostics\Repositories\Sql\InsertApplicationLog.sql" />
     <Content Include="Diagnostics\SqlScripts\CreateDiagnosticsObjects.sql" />
     <Content Include="Synchronization\EnterLockState.sql" />
-    <Content Include="Synchronization\ReleaseLockState.sql" />
     <Content Include="Synchronization\SqlQueries.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>SqlQueries.cs</LastGenOutput>

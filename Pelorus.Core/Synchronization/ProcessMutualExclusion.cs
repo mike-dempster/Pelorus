@@ -6,7 +6,7 @@ namespace Pelorus.Core.Synchronization
     /// <summary>
     /// Creates and manages a named system level exclusive lock.
     /// </summary>
-    public class ProcessExclusiveLock : ExclusiveLock
+    public class ProcessMutualExclusion : MutualExclusion
     {
         private static readonly IDictionary<string, object> _allLocks;
         private static readonly object _dictionaryLock;
@@ -16,7 +16,7 @@ namespace Pelorus.Core.Synchronization
         /// <summary>
         /// Initializes the static properties.
         /// </summary>
-        static ProcessExclusiveLock()
+        static ProcessMutualExclusion()
         {
             _dictionaryLock = new object();
 
@@ -30,7 +30,7 @@ namespace Pelorus.Core.Synchronization
         /// Creates a new instance of the named lock and returns when ownership of the lock is obtained.
         /// </summary>
         /// <param name="name">Name of the lock.</param>
-        public ProcessExclusiveLock(string name) : base(name)
+        public ProcessMutualExclusion(string name) : base(name)
         {
             lock (_dictionaryLock)
             {

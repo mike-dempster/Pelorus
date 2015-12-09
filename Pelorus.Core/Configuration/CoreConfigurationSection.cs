@@ -9,6 +9,7 @@ namespace Pelorus.Core.Configuration
     {
         private const string DiagnosticsElementKey = "diagnostics";
         private const string IoCElementKey = "ioc";
+        private const string DistributedMutualExclusionKey = "distributedMutualExclusion";
 
         /// <summary>
         /// Diagnostics configuration data.
@@ -21,5 +22,11 @@ namespace Pelorus.Core.Configuration
         /// </summary>
         [ConfigurationProperty(IoCElementKey)]
         public IoCConfigurationElement IoC => this[IoCElementKey] as IoCConfigurationElement;
+
+        /// <summary>
+        /// Distributed mutual exclsusion configuration data.
+        /// </summary>
+        [ConfigurationProperty(DistributedMutualExclusionKey)]
+        public DistributedMutualExclusionConfigurationElement DistributedMutualExclusion => this[DistributedMutualExclusionKey] as DistributedMutualExclusionConfigurationElement;
     }
 }

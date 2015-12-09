@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pelorus.Core.Configuration;
+using System;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
@@ -9,7 +10,7 @@ namespace Pelorus.Core.Synchronization
     /// <summary>
     /// Creates and manages a named distributed exclusive lock.
     /// </summary>
-    public class DistributedExclusiveLock : ExclusiveLock
+    public class DistributedMutualExclusion : MutualExclusion
     {
         private readonly bool _isNestedScope;
         private readonly SqlConnection _connection;
@@ -19,7 +20,16 @@ namespace Pelorus.Core.Synchronization
         /// Creates a new instance of the named lock and returns when ownership of the lock is obtained.
         /// </summary>
         /// <param name="name">Name of the lock.</param>
-        public DistributedExclusiveLock(string name) : base(name)
+        public DistributedMutualExclusion(string name) : this(name, 0)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of the named lock and returns when ownership of the lock is obtained.
+        /// </summary>
+        /// <param name="name">Name of the lock.</param>
+        /// <param name="timeout">Max length of time (in seconds) to wait to obtain the lock.</param>
+        public DistributedMutualExclusion(string name, int timeout) : base(name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -33,20 +43,14 @@ namespace Pelorus.Core.Synchronization
                 return;
             }
 
-            using (new TransactionScope(TransactionScopeOption.Suppress))
+            using (new TransactionScope(TransactionScopeOption.Suppress)) // Ensure that we do not participate in any other transactions
             {
-                var connectionStringObject = ConfigurationManager.ConnectionStrings["DistributedLockConnectionString"];
-
-                if (null == connectionStringObject)
-                {
-                    throw new Exception("Connection string does not exist.");
-                }
-
-                string connectionString = connectionStringObject.ConnectionString;
+                string connectionString = this.GetConnectionString();
                 this._connection = new SqlConnection(connectionString);
 
                 using (var cmd = this._connection.CreateCommand())
                 {
+                    cmd.CommandTimeout = timeout;
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = SqlQueries.EnterLockState;
                     cmd.Parameters.Add(new SqlParameter
@@ -58,7 +62,20 @@ namespace Pelorus.Core.Synchronization
                     this._connection.Open();
                     this._transaction = this._connection.BeginTransaction();
                     cmd.Transaction = this._transaction;
-                    cmd.ExecuteNonQuery();
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        if (ex.Message.ToLower().Contains("timeout expired."))
+                        {
+                            throw new TimeoutException("Unable to obtain the exclusive lock before the timeout expired.");
+                        }
+
+                        throw;
+                    }
                 }
             }
         }
@@ -74,39 +91,49 @@ namespace Pelorus.Core.Synchronization
                 return;
             }
 
-            try
+            if (null != this._transaction)
             {
-                using(new TransactionScope(TransactionScopeOption.Suppress))
-                using (var cmd = this._connection.CreateCommand())
+                this._transaction.Rollback();
+            }
+
+            this._connection.Close();
+            this._connection.Dispose();
+        }
+
+        /// <summary>
+        /// Gets the connection string from the configuration data. The method searches for the name of the connection string to use in the following xpaths:
+        /// configuration/pelorus.core/distributedMutualExclusion[@connectionStringName]
+        /// configuration/appSettings/add[@key=DistributedMutualExclusionConnectionString]
+        /// If the connection string name is not found at any of these xpaths, the default name will be used.
+        /// </summary>
+        /// <returns>Connection string to use to connect to the database.</returns>
+        /// <exception cref="ConfigurationErrorsException">This exception is thrown if the connection string cannot be found in the configuration data.</exception>
+        private string GetConnectionString()
+        {
+            string connectionStringName = "MutualExclusions";
+
+            if ((null != CoreConfiguration.DistributedMutualExclusion) && (false == string.IsNullOrWhiteSpace(CoreConfiguration.DistributedMutualExclusion.ConnectionStringName)))
+            {
+                connectionStringName = CoreConfiguration.DistributedMutualExclusion.ConnectionStringName;
+            }
+            else
+            {
+                string appSettingConnectionStringName = ConfigurationManager.AppSettings["DistributedMutualExclusionConnectionStringName"];
+
+                if (false == string.IsNullOrWhiteSpace(appSettingConnectionStringName))
                 {
-                    cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = SqlQueries.ReleaseLockState;
-                    cmd.Parameters.Add(new SqlParameter
-                    {
-                        ParameterName = "globallyUniqueName",
-                        DbType = DbType.String,
-                        Value = this.Name
-                    });
-
-                    if (ConnectionState.Open != this._connection.State)
-                    {
-                        this._connection.Open();
-                    }
-
-                    cmd.Transaction = this._transaction;
-                    cmd.ExecuteNonQuery();
+                    connectionStringName = appSettingConnectionStringName;
                 }
             }
-            finally
-            {
-                if (null != this._transaction)
-                {
-                    this._transaction.Rollback();
-                }
 
-                this._connection.Close();
-                this._connection.Dispose();
+            var connectionStringObject = ConfigurationManager.ConnectionStrings[connectionStringName];
+
+            if (null == connectionStringObject)
+            {
+                throw new ConfigurationErrorsException("Connection string does not exist.");
             }
+
+            return connectionStringObject.ConnectionString;
         }
     }
 }

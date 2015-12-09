@@ -6,7 +6,7 @@ namespace Pelorus.Core.Synchronization
     /// <summary>
     /// Creates and manages a named system level exclusive lock.
     /// </summary>
-    public class SystemExclusiveLock : ExclusiveLock
+    public class SystemMutualExclusion : MutualExclusion
     {
         private readonly Mutex _systemMutex;
 
@@ -14,7 +14,7 @@ namespace Pelorus.Core.Synchronization
         /// Creates a new instance of the named lock and returns when ownership of the lock is obtained.
         /// </summary>
         /// <param name="name">Name of the lock.</param>
-        public SystemExclusiveLock(string name) : base(name)
+        public SystemMutualExclusion(string name) : base(name)
         {
             try
             {

@@ -6,10 +6,11 @@ namespace Pelorus.Core.Synchronization
     /// <summary>
     /// Base class for mutual exclusion providers.
     /// </summary>
-    public abstract class ExclusiveLock : IDisposable
+    public abstract class MutualExclusion : IDisposable
     {
-        [ThreadStatic]
-        private static List<string> locksOwnedInScope;
+        [ThreadStatic] private static List<string> locksOwnedInScope;
+
+        private readonly bool _inNestedScope;
 
         /// <summary>
         /// When overriden in a derived class, disposes of the exclusive lock.
@@ -26,7 +27,7 @@ namespace Pelorus.Core.Synchronization
         /// Creates a new instance of the exclusive lock with the given name.
         /// </summary>
         /// <param name="name">Name of the lock to obtain.</param>
-        protected ExclusiveLock(string name)
+        protected MutualExclusion(string name)
         {
             this.Name = name;
 
@@ -35,6 +36,7 @@ namespace Pelorus.Core.Synchronization
                 locksOwnedInScope = new List<string>();
             }
 
+            this._inNestedScope = locksOwnedInScope.Contains(this.Name);
             locksOwnedInScope.Add(name);
         }
 
@@ -44,7 +46,7 @@ namespace Pelorus.Core.Synchronization
         /// <returns>true if the thread already owns the exclusive lock otherwise false.</returns>
         protected bool ExclusionOwned()
         {
-            return locksOwnedInScope.Contains(this.Name);
+            return this._inNestedScope;
         }
 
         /// <summary>
