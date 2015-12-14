@@ -12,6 +12,7 @@ namespace Pelorus.Core.Synchronization
     /// </summary>
     public class DistributedMutualExclusion : MutualExclusion
     {
+        private readonly int _timeout;
         private readonly bool _isNestedScope;
         private readonly SqlConnection _connection;
         private readonly SqlTransaction _transaction;
@@ -36,6 +37,7 @@ namespace Pelorus.Core.Synchronization
                 throw new ArgumentNullException(nameof(name));
             }
 
+            this._timeout = timeout;
             this._isNestedScope = this.ExclusionOwned();
 
             if (this._isNestedScope)
@@ -50,7 +52,7 @@ namespace Pelorus.Core.Synchronization
 
                 using (var cmd = this._connection.CreateCommand())
                 {
-                    cmd.CommandTimeout = timeout;
+                    cmd.CommandTimeout = this._timeout;
                     cmd.CommandType = CommandType.Text;
                     cmd.CommandText = SqlQueries.EnterLockState;
                     cmd.Parameters.Add(new SqlParameter
@@ -91,13 +93,44 @@ namespace Pelorus.Core.Synchronization
                 return;
             }
 
-            if (null != this._transaction)
+            using (new TransactionScope(TransactionScopeOption.Suppress)) // Ensure that we do not participate in any other transactions
             {
-                this._transaction.Rollback();
-            }
+                using (var cmd = this._connection.CreateCommand())
+                {
+                    cmd.CommandTimeout = this._timeout;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = SqlQueries.ReleaseLockState;
+                    cmd.Parameters.Add(new SqlParameter
+                    {
+                        ParameterName = "globallyUniqueName",
+                        DbType = DbType.String,
+                        Value = this.Name
+                    });
+                    cmd.Transaction = this._transaction;
 
-            this._connection.Close();
-            this._connection.Dispose();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (SqlException ex)
+                    {
+                        if (ex.Message.ToLower().Contains("timeout expired."))
+                        {
+                            throw new TimeoutException("Unable to release the exclusive lock before the timeout expired.");
+                        }
+
+                        throw;
+                    }
+                    finally
+                    {
+                        this._transaction.Rollback();
+                        this._transaction.Dispose();
+                    }
+                }
+
+                this._connection.Close();
+                this._connection.Dispose();
+            }
         }
 
         /// <summary>

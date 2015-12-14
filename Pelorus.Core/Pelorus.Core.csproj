@@ -104,9 +104,9 @@
     <Compile Include="Synchronization\MutualExclusion.cs" />
     <Compile Include="Synchronization\ProcessMutualExclusion.cs" />
     <Compile Include="Synchronization\SqlQueries.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>SqlQueries.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Synchronization\SystemMutualExclusion.cs" />
     <Compile Include="Types.cs" />
@@ -124,6 +124,7 @@
     <Content Include="Diagnostics\Repositories\Sql\GetApplicationLogById.sql" />
     <Content Include="Diagnostics\Repositories\Sql\InsertApplicationLog.sql" />
     <Content Include="Diagnostics\SqlScripts\CreateDiagnosticsObjects.sql" />
+    <Content Include="Synchronization\ReleaseLockState.sql" />
     <Content Include="Synchronization\EnterLockState.sql" />
     <Content Include="Synchronization\SqlQueries.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
