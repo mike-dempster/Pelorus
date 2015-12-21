@@ -54,16 +54,16 @@ namespace Pelorus.Core.Test.Integration
             {
                 Console.WriteLine("0: Entering block.");
 
-                using (new DistributedMutualExclusion("LOCK0", 30))
+                using (new DistributedMutualExclusion("LOCK0", 10))
                 {
                     Console.WriteLine("0: Inside the lock block.");
 
-                    using (new DistributedMutualExclusion("LOCK0", 30))
+                    using (new DistributedMutualExclusion("LOCK0", 10))
                     {
                         Console.WriteLine("0: Inside the nested lock block.");
                     }
 
-                    using (new DistributedMutualExclusion("LOCK1", 30))
+                    using (new DistributedMutualExclusion("LOCK1", 10))
                     {
                         Console.WriteLine("0: Inside the nested lock block with a different lock name.");
                     }
@@ -81,16 +81,16 @@ namespace Pelorus.Core.Test.Integration
                 Thread.Sleep(200);
                 Console.WriteLine("1: Done waiting.");
 
-                using (new DistributedMutualExclusion("LOCK0", 30))
+                using (new DistributedMutualExclusion("LOCK0", 10))
                 {
                     Console.WriteLine("1: Inside the lock block.");
 
-                    using (new DistributedMutualExclusion("LOCK0", 30))
+                    using (new DistributedMutualExclusion("LOCK0", 10))
                     {
                         Console.WriteLine("1: Inside the nested lock block.");
                     }
 
-                    using (new DistributedMutualExclusion("LOCK1", 30))
+                    using (new DistributedMutualExclusion("LOCK1", 10))
                     {
                         Console.WriteLine("1: Inside the nested lock block with a different lock name.");
                     }
