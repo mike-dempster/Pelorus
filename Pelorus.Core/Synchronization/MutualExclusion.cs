@@ -13,7 +13,7 @@ namespace Pelorus.Core.Synchronization
         private readonly bool _inNestedScope;
 
         /// <summary>
-        /// When overriden in a derived class, disposes of the exclusive lock.
+        /// When overridden in a derived class, disposes of the exclusive lock.
         /// </summary>
         /// <param name="disposing">Indicates that the exclusive lock instance is being disposed.</param>
         protected abstract void Dispose(bool disposing);

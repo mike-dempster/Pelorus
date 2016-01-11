@@ -68,7 +68,7 @@ namespace Pelorus.Core.Diagnostics.Repositories
         /// <summary>
         /// Gets a collection of application logs that were created on or after the given date.
         /// </summary>
-        /// <param name="oldestCreatedOn">Eariliest date of the application logs to get.</param>
+        /// <param name="oldestCreatedOn">Earliest date of the application logs to get.</param>
         /// <returns>Collection of application logs that were created on or after the given date.</returns>
         public IEnumerable<ApplicationLogDao> GetSinceDate(DateTime oldestCreatedOn)
         {

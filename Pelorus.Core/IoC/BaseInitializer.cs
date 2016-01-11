@@ -105,7 +105,7 @@ namespace Pelorus.Core.IoC
         }
 
         /// <summary>
-        /// Gets a collection of mapper instancews from the configuration data.
+        /// Gets a collection of mapper instances from the configuration data.
         /// </summary>
         /// <returns>Collection of mappers based on the configuration data.</returns>
         private IEnumerable<BaseMapper> GetConfiguredMappers()
@@ -122,12 +122,12 @@ namespace Pelorus.Core.IoC
 
             foreach (var mapper in CoreConfiguration.IoC.Mappers)
             {
-                var tpyeConfigElement = (TypeConfigurationElement) mapper;
-                var type = Type.GetType(tpyeConfigElement.Type);
+                var typeConfigElement = (TypeConfigurationElement) mapper;
+                var type = Type.GetType(typeConfigElement.Type);
 
                 if (null == type)
                 {
-                    throw new TypeLoadException($"Unable to load type '{tpyeConfigElement.Type}'.");
+                    throw new TypeLoadException($"Unable to load type '{typeConfigElement.Type}'.");
                 }
 
                 mapperTypes.Add(type);

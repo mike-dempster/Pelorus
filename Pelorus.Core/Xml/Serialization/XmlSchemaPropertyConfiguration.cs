@@ -97,7 +97,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <summary>
         /// The property represents an XML element.
         /// </summary>
-        /// <param name="elementName">Name of the element that the proerty represents.</param>
+        /// <param name="elementName">Name of the element that the property represents.</param>
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsElement(string elementName)
         {
@@ -111,7 +111,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// The property represents an XML element.
         /// </summary>
         /// <param name="ns">Namespace of the XML element.</param>
-        /// <param name="elementName">Name of the element that the proerty represents.</param>
+        /// <param name="elementName">Name of the element that the property represents.</param>
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsElement(string ns, string elementName)
         {
@@ -125,7 +125,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// <summary>
         /// The property represents an XML element.
         /// </summary>
-        /// <param name="elementName">Name of the element that the proerty represents.</param>
+        /// <param name="elementName">Name of the element that the property represents.</param>
         /// <param name="isNullable">Indicates if the element is nullable.</param>
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsElement(string elementName, bool isNullable)
@@ -141,7 +141,7 @@ namespace Pelorus.Core.Xml.Serialization
         /// The property represents an XML element.
         /// </summary>
         /// <param name="ns">Namespace of the XML element.</param>
-        /// <param name="elementName">Name of the element that the proerty represents.</param>
+        /// <param name="elementName">Name of the element that the property represents.</param>
         /// <param name="isNullable">Indicates if the element is nullable.</param>
         /// <returns>The property's updated configuration.</returns>
         public XmlSchemaPropertyConfiguration<T, TProperty> IsElement(string ns, string elementName, bool isNullable)

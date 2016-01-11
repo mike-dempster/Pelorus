@@ -68,7 +68,7 @@ namespace Pelorus.Core.Web.Configuration
         public SimpleValueConfigurationElement WebMaster => this[WebMasterKey] as SimpleValueConfigurationElement;
 
         /// <summary>
-        /// Optional. Name of the progrma used to generate the channel.
+        /// Optional. Name of the program used to generate the channel.
         /// </summary>
         [ConfigurationProperty(GeneratorKey, IsRequired = false)]
         public SimpleValueConfigurationElement Generator => this[GeneratorKey] as SimpleValueConfigurationElement;

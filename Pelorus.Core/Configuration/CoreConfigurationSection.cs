@@ -24,7 +24,7 @@ namespace Pelorus.Core.Configuration
         public IoCConfigurationElement IoC => this[IoCElementKey] as IoCConfigurationElement;
 
         /// <summary>
-        /// Distributed mutual exclsusion configuration data.
+        /// Distributed mutual exclusion configuration data.
         /// </summary>
         [ConfigurationProperty(DistributedMutualExclusionKey)]
         public DistributedMutualExclusionConfigurationElement DistributedMutualExclusion => this[DistributedMutualExclusionKey] as DistributedMutualExclusionConfigurationElement;

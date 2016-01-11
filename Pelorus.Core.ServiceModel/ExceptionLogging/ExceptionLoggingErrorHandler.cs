@@ -14,7 +14,7 @@ namespace Pelorus.Core.ServiceModel.ExceptionLogging
         /// Log the exception.
         /// </summary>
         /// <param name="error">Exception that is being handled.</param>
-        /// <returns>Retruns false.</returns>
+        /// <returns>Returns false.</returns>
         public bool HandleError(Exception error)
         {
             Logging.LogException(error);
@@ -25,7 +25,7 @@ namespace Pelorus.Core.ServiceModel.ExceptionLogging
         /// Enables the creation of a custom System.ServiceModel.FaultException&gt;TDetail&lt; that is returned from an exception in the course of a
         /// service method.
         /// </summary>
-        /// <param name="error">Execption that was thrown.</param>
+        /// <param name="error">Exception that was thrown.</param>
         /// <param name="version">Version of the message.</param>
         /// <param name="fault">The System.ServiceModel.Channels.Message object that is returned to the client, or service, in the duplex case.</param>
         public void ProvideFault(Exception error, MessageVersion version, ref Message fault)

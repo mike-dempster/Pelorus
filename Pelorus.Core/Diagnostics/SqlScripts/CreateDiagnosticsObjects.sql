@@ -13,29 +13,37 @@ GO
 -- Create the tblTraceDimension table --
 IF OBJECT_ID (N'[Pelorus.Core].[tblTraceDimension]') IS NULL
 CREATE TABLE [Pelorus.Core].[tblTraceDimension] (
-	[Id] INT NOT NULL,
-	[TraceId] VARCHAR(255) NOT NULL,
-	CONSTRAINT [PK_TraceDimensionId] PRIMARY KEY CLUSTERED ([Id] ASC),
-	CONSTRAINT [AK_TraceDimensionTraceId] UNIQUE ([TraceId])
+	[Id]		INT				NOT NULL,
+	[TraceId]	VARCHAR(255)	NOT NULL,
+
+	CONSTRAINT [PK_TraceDimensionId]		PRIMARY KEY CLUSTERED (
+		[Id] ASC
+	),
+	CONSTRAINT [AK_TraceDimensionTraceId]	UNIQUE (
+		[TraceId]
+	)
 )
 GO
 
 -- Create the tblAssembly table --
 IF OBJECT_ID (N'[Pelorus.Core].[tblAssembly]') IS NULL
 CREATE TABLE [Pelorus.Core].[tblAssembly] (
-	[Id] INT NOT NULL IDENTITY(1, 1),
-	[AssemblyName] VARCHAR(255) NOT NULL,
-	[AssemblyFullName] VARCHAR(255) NOT NULL,
-	[VersionMajor] INT NOT NULL,
-	[VersionMinor] INT NOT NULL,
-	[VersionBuild] INT NOT NULL,
-	[VersionRevision] INT NOT NULL,
-	[CreatedOn] DATETIME NOT NULL DEFAULT(GETUTCDATE()),
-	[CreatedBy] VARCHAR(255) NOT NULL DEFAULT(SYSTEM_USER),
-	[LastUpdatedOn] DATETIME NOT NULL DEFAULT(GETUTCDATE()),
-	[LastUpdatedBy] VARCHAR(255) NOT NULL DEFAULT(SYSTEM_USER),
-	CONSTRAINT [PK_AssemblyId] PRIMARY KEY CLUSTERED ([Id] ASC),
-	CONSTRAINT [AK_AssemblyFullNameVersion] UNIQUE (
+	[Id]				INT				NOT NULL	IDENTITY(1, 1),
+	[AssemblyName]		VARCHAR(255)	NOT NULL,
+	[AssemblyFullName]	VARCHAR(255)	NOT NULL,
+	[VersionMajor]		INT				NOT NULL,
+	[VersionMinor]		INT				NOT NULL,
+	[VersionBuild]		INT				NOT NULL,
+	[VersionRevision]	INT				NOT NULL,
+	[CreatedOn]			DATETIME		NOT NULL	DEFAULT(GETUTCDATE()),
+	[CreatedBy]			VARCHAR(255)	NOT NULL	DEFAULT(SYSTEM_USER),
+	[LastUpdatedOn]		DATETIME		NOT NULL	DEFAULT(GETUTCDATE()),
+	[LastUpdatedBy]		VARCHAR(255)	NOT NULL	DEFAULT(SYSTEM_USER),
+
+	CONSTRAINT [PK_AssemblyId]				PRIMARY KEY CLUSTERED (
+		[Id]	ASC
+	),
+	CONSTRAINT [AK_AssemblyFullNameVersion]	UNIQUE (
 		[AssemblyFullName],
 		[VersionMajor],
 		[VersionMinor],
@@ -48,30 +56,31 @@ GO
 -- Create the tblMessageLog table --
 IF OBJECT_ID (N'[Pelorus.Core].[tblMessageLog]') IS NULL
 CREATE TABLE [Pelorus.Core].[tblMessageLog] (
-	[Id] BIGINT NOT NULL IDENTITY(1, 1),
-	[Message] VARCHAR(MAX) NULL,
-	[HelpLink] VARCHAR(2083) NULL,
-	[Source] VARCHAR(MAX) NOT NULL,
-	[StackTrace] VARCHAR(MAX) NULL,
-	[Data] XML NULL,
-	[TraceId] INT NOT NULL,
-	[CorrelationId] UNIQUEIDENTIFIER NULL,
-	[CorrelationIndex] SMALLINT NULL,
-	[AssemblyId] INT NOT NULL,
-	[MachineName] VARCHAR(255) NOT NULL,
-	[AppDomainName] VARCHAR(255) NOT NULL,
-	[ProcessId] INT NOT NULL,
-	[ThreadId] VARCHAR(255) NOT NULL,
-	[TraceEventType] INT NOT NULL,
-	[TraceListenerName] VARCHAR(255) NULL,
-	[CreatedOn] DATETIME NOT NULL DEFAULT(GETUTCDATE()),
-	[CreatedBy] VARCHAR(255) NOT NULL DEFAULT(SYSTEM_USER),
-	[LastUpdatedOn] DATETIME NOT NULL DEFAULT(GETUTCDATE()),
-	[LastUpdatedBy] VARCHAR(255) NOT NULL DEFAULT(SYSTEM_USER),
-	CONSTRAINT [PK_ApplicationLogId] PRIMARY KEY CLUSTERED ([Id] ASC),
-	CONSTRAINT [FK_ApplicationLogTraceId_TraceDimensionId] FOREIGN KEY ([TraceId]) REFERENCES [Pelorus.Core].[tblTraceDimension]([Id]),
-	CONSTRAINT [FK_ApplicationLogAssemblyId_AssemblyId] FOREIGN KEY ([AssemblyId]) REFERENCES [Pelorus.Core].[tblAssembly]([Id]),
-	CONSTRAINT [CK_CorrelationIdIndexMatch] CHECK ([CorrelationIndex] IS NULL OR [CorrelationId] IS NOT NULL)
+	[Id]				BIGINT				NOT NULL	IDENTITY(1, 1),
+	[Message]			VARCHAR(MAX)		NULL,
+	[HelpLink]			VARCHAR(2083)		NULL,
+	[Source]			VARCHAR(MAX)		NOT NULL,
+	[StackTrace]		VARCHAR(MAX)		NULL,
+	[Data]				XML					NULL,
+	[TraceId]			INT					NOT NULL,
+	[CorrelationId]		UNIQUEIDENTIFIER	NULL,
+	[CorrelationIndex]	SMALLINT			NULL,
+	[AssemblyId]		INT					NOT NULL,
+	[MachineName]		VARCHAR(255)		NOT NULL,
+	[AppDomainName]		VARCHAR(255)		NOT NULL,
+	[ProcessId]			INT					NOT NULL,
+	[ThreadId]			VARCHAR(255)		NOT NULL,
+	[TraceEventType]	INT					NOT NULL,
+	[TraceListenerName]	VARCHAR(255)		NULL,
+	[CreatedOn]			DATETIME			NOT NULL	DEFAULT(GETUTCDATE()),
+	[CreatedBy]			VARCHAR(255)		NOT NULL	DEFAULT(SYSTEM_USER),
+	[LastUpdatedOn]		DATETIME			NOT NULL	DEFAULT(GETUTCDATE()),
+	[LastUpdatedBy]		VARCHAR(255)		NOT NULL	DEFAULT(SYSTEM_USER),
+
+	CONSTRAINT [PK_ApplicationLogId]						PRIMARY KEY CLUSTERED	([Id] ASC),
+	CONSTRAINT [FK_ApplicationLogTraceId_TraceDimensionId]	FOREIGN KEY				([TraceId])		REFERENCES [Pelorus.Core].[tblTraceDimension]([Id]),
+	CONSTRAINT [FK_ApplicationLogAssemblyId_AssemblyId]		FOREIGN KEY				([AssemblyId])	REFERENCES [Pelorus.Core].[tblAssembly]([Id]),
+	CONSTRAINT [CK_CorrelationIdIndexMatch]					CHECK					([CorrelationIndex] IS NULL OR [CorrelationId] IS NOT NULL)
 )
 GO
 
@@ -130,10 +139,10 @@ BEGIN
 	UPDATE
 		[Pelorus.Core].[tblMessageLog]
 	SET
-		[Pelorus.Core].[tblMessageLog].[LastUpdatedBy] = SYSTEM_USER,
-		[Pelorus.Core].[tblMessageLog].[LastUpdatedOn] = GETUTCDATE(),
-		[Pelorus.Core].[tblMessageLog].[CreatedBy] = [DELETED].[CreatedBy],
-		[Pelorus.Core].[tblMessageLog].[CreatedOn] = [DELETED].[CreatedOn]
+		[Pelorus.Core].[tblMessageLog].[LastUpdatedBy]	= SYSTEM_USER,
+		[Pelorus.Core].[tblMessageLog].[LastUpdatedOn]	= GETUTCDATE(),
+		[Pelorus.Core].[tblMessageLog].[CreatedBy]		= [DELETED].[CreatedBy],
+		[Pelorus.Core].[tblMessageLog].[CreatedOn]		= [DELETED].[CreatedOn]
 	FROM
 		[INSERTED] INNER JOIN
 		[DELETED] ON
@@ -157,8 +166,8 @@ BEGIN
 	UPDATE
 		[Pelorus.Core].[tblAssembly]
 	SET
-		[Pelorus.Core].[tblAssembly].[CreatedBy] = SYSTEM_USER,
-		[Pelorus.Core].[tblAssembly].[CreatedOn] = GETUTCDATE()
+		[Pelorus.Core].[tblAssembly].[CreatedBy]	= SYSTEM_USER,
+		[Pelorus.Core].[tblAssembly].[CreatedOn]	= GETUTCDATE()
 	FROM
 		[INSERTED] INNER JOIN
 		[Pelorus.Core].[tblAssembly] ON
@@ -217,31 +226,33 @@ GO
 -- Description:	Inserts records for trace message events.
 -- =========================================================
 CREATE PROCEDURE [Pelorus.Core].[sp_InsertMessage]
-	@inMessage AS VARCHAR(MAX),
-	@inHelpLink AS VARCHAR(2083),
-	@inSource AS VARCHAR(MAX),
-	@inStackTrace AS VARCHAR(MAX),
-	@inTraceData AS XML,
-	@inTraceId AS INT,
-	@inCorrelationId AS UNIQUEIDENTIFIER,
-	@inCorrelationIndex AS INT,
-	@inAssemblyName AS VARCHAR(255),
-	@inAssemblyFullName AS VARCHAR(255),
-	@inAssemblyVersionMajor AS INT,
-	@inAssemblyVersionMinor AS INT,
-	@inAssemblyVersionBuild AS INT,
-	@inAssemblyVersionRevision AS INT,
-	@inMachineName AS VARCHAR(255),
-	@inAppDomainName AS VARCHAR(255),
-	@inProcessId AS INT,
-	@inThreadId AS VARCHAR(255),
-	@inTraceEventType AS INT,
-	@inTraceListenerName AS VARCHAR(255),
-	@outMessageLogId BIGINT OUTPUT
+	@inMessage					AS VARCHAR(MAX),
+	@inHelpLink					AS VARCHAR(2083),
+	@inSource					AS VARCHAR(MAX),
+	@inStackTrace				AS VARCHAR(MAX),
+	@inTraceData				AS XML,
+	@inTraceId					AS INT,
+	@inCorrelationId			AS UNIQUEIDENTIFIER,
+	@inCorrelationIndex			AS INT,
+	@inAssemblyName				AS VARCHAR(255),
+	@inAssemblyFullName			AS VARCHAR(255),
+	@inAssemblyVersionMajor		AS INT,
+	@inAssemblyVersionMinor		AS INT,
+	@inAssemblyVersionBuild		AS INT,
+	@inAssemblyVersionRevision	AS INT,
+	@inMachineName				AS VARCHAR(255),
+	@inAppDomainName			AS VARCHAR(255),
+	@inProcessId				AS INT,
+	@inThreadId					AS VARCHAR(255),
+	@inTraceEventType			AS INT,
+	@inTraceListenerName		AS VARCHAR(255),
+	@outMessageLogId			BIGINT OUTPUT
 AS
 DECLARE @assemblyId AS INT;
 BEGIN
+	-- TODO: Add exception handling
 	SET NOCOUNT ON;
+	BEGIN TRANSACTION;
 	SET @assemblyId = 0;
 
 	SELECT
@@ -249,11 +260,11 @@ BEGIN
 	FROM
 		[Pelorus.Core].[tblAssembly]
 	WHERE
-		[AssemblyFullName] = @inAssemblyFullName AND
-		[VersionMajor] = @inAssemblyVersionMajor AND
-		[VersionMinor] = @inAssemblyVersionMinor AND
-		[VersionBuild] = @inAssemblyVersionBuild AND
-		[VersionRevision] = @inAssemblyVersionRevision;
+		[AssemblyFullName]	= @inAssemblyFullName		AND
+		[VersionMajor]		= @inAssemblyVersionMajor	AND
+		[VersionMinor]		= @inAssemblyVersionMinor	AND
+		[VersionBuild]		= @inAssemblyVersionBuild	AND
+		[VersionRevision]	= @inAssemblyVersionRevision;
 
 	IF 0 = @assemblyId
 	BEGIN
@@ -317,5 +328,7 @@ BEGIN
 		 @inTraceListenerName);
 
 	SET @outMessageLogId = @@IDENTITY;
+
+	COMMIT TRANSACTION;
 END
 GO
