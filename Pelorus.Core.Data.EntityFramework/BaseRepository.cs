@@ -694,6 +694,7 @@ namespace Pelorus.Core.Data.EntityFramework
             var context = this._contextFactory.Create();
             context.Configuration.LazyLoadingEnabled = false;
             context.Configuration.ProxyCreationEnabled = false;
+            context.Configuration.AutoDetectChangesEnabled = false;
 
             return context;
         }
