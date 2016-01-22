@@ -26,15 +26,7 @@ namespace Pelorus.Core.Data.EntityFramework
         where TEntity : EntityDao<TKey>
         where TKey : struct
     {
-        private readonly DbContext _context;
-        private readonly DbSet<TEntity> _dataSet;
-
-        /// <summary>
-        /// Expose the data set for the repository to the inheriting class.
-        /// </summary>
-        // ReSharper disable ConvertToAutoProperty
-        protected virtual DbSet<TEntity> DataSet => this._dataSet;
-        // ReSharper restore ConvertToAutoProperty
+        private readonly IContextFactory _contextFactory;
 
         /// <summary>
         /// Expression for including child entities in the base queries.
@@ -52,27 +44,15 @@ namespace Pelorus.Core.Data.EntityFramework
                 throw new ArgumentNullException(nameof(contextFactory));
             }
 
-            this._context = contextFactory.Create();
-            this._context.Configuration.LazyLoadingEnabled = false;
-            this._context.Configuration.ProxyCreationEnabled = false;
-            this._dataSet = this._context.Set<TEntity>();
+            this._contextFactory = contextFactory;
         }
 
         /// <summary>
-        /// Initialize the base properties of the repository class.
+        /// Disposes of resources that are only referenced internally.
         /// </summary>
-        /// <param name="context">Context to use for the repository.</param>
-        protected BaseReadOnlyRepository(DbContext context)
+        ~BaseReadOnlyRepository()
         {
-            if (null == context)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            this._context = context;
-            this._context.Configuration.LazyLoadingEnabled = false;
-            this._context.Configuration.ProxyCreationEnabled = false;
-            this._dataSet = this._context.Set<TEntity>();
+            this.Dispose(false);
         }
 
         /// <summary>
@@ -82,11 +62,15 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Entity with the given Id or null if the entity does not exist.</returns>
         public virtual TEntity GetById(TKey entityId)
         {
-            var predicate = this.GetKeyEqualityExpression(entityId);
-            var query = this.DataSet.Where(predicate);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var predicate = this.GetKeyEqualityExpression(entityId);
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate);
+                var includeQuery = this.IncludeChildren(query);
 
-            return includeQuery.SingleOrDefault();
+                return includeQuery.SingleOrDefault();
+            }
         }
 
         /// <summary>
@@ -97,12 +81,16 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Entity with the given Id or null if the entity does not exist.</returns>
         public virtual async Task<TEntity> GetByIdAsync(TKey entityId, CancellationToken cancellationToken)
         {
-            var predicate = this.GetKeyEqualityExpression(entityId);
-            var query = this.DataSet.Where(predicate);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var predicate = this.GetKeyEqualityExpression(entityId);
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate);
+                var includeQuery = this.IncludeChildren(query);
 
-            return await includeQuery.SingleOrDefaultAsync(cancellationToken)
-                                     .ConfigureAwait(false);
+                return await includeQuery.SingleOrDefaultAsync(cancellationToken)
+                                         .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -112,10 +100,14 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Entity that match the search predicate.</returns>
         public virtual TEntity Get(Expression<Func<TEntity, bool>> predicate)
         {
-            var query = this.DataSet.Where(predicate);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate);
+                var includeQuery = this.IncludeChildren(query);
 
-            return includeQuery.SingleOrDefault();
+                return includeQuery.SingleOrDefault();
+            }
         }
 
         /// <summary>
@@ -126,11 +118,15 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Entity that match the search predicate.</returns>
         public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
-            var query = this.DataSet.Where(predicate);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate);
+                var includeQuery = this.IncludeChildren(query);
 
-            return await includeQuery.SingleOrDefaultAsync(cancellationToken)
-                                     .ConfigureAwait(false);
+                return await includeQuery.SingleOrDefaultAsync(cancellationToken)
+                                         .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -140,12 +136,16 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities.</returns>
         public virtual IEnumerable<TEntity> GetCount(int length)
         {
-            var query = this.DataSet.AsQueryable()
-                            .OrderBy(e => e.Id)
-                            .Take(length);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.AsQueryable()
+                                 .OrderBy(e => e.Id)
+                                 .Take(length);
+                var includeQuery = this.IncludeChildren(query);
 
-            return includeQuery.ToList();
+                return includeQuery.ToList();
+            }
         }
 
         /// <summary>
@@ -156,13 +156,17 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities.</returns>
         public virtual IEnumerable<TEntity> GetCount(int startIndex, int length)
         {
-            var query = this.DataSet.AsQueryable()
-                            .OrderBy(e => e.Id)
-                            .Skip(startIndex)
-                            .Take(length);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.AsQueryable()
+                                 .OrderBy(e => e.Id)
+                                 .Skip(startIndex)
+                                 .Take(length);
+                var includeQuery = this.IncludeChildren(query);
 
-            return includeQuery.ToList();
+                return includeQuery.ToList();
+            }
         }
 
         /// <summary>
@@ -173,12 +177,16 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities that match the search predicate.</returns>
         public virtual IEnumerable<TEntity> GetCount(int length, Expression<Func<TEntity, bool>> predicate)
         {
-            var query = this.DataSet.Where(predicate)
-                            .OrderBy(e => e.Id)
-                            .Take(length);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate)
+                                 .OrderBy(e => e.Id)
+                                 .Take(length);
+                var includeQuery = this.IncludeChildren(query);
 
-            return includeQuery.ToList();
+                return includeQuery.ToList();
+            }
         }
 
         /// <summary>
@@ -190,13 +198,17 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities that match the search predicate.</returns>
         public virtual IEnumerable<TEntity> GetCount(int startIndex, int length, Expression<Func<TEntity, bool>> predicate)
         {
-            var query = this.DataSet.Where(predicate)
-                            .OrderBy(e => e.Id)
-                            .Skip(startIndex)
-                            .Take(length);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate)
+                                 .OrderBy(e => e.Id)
+                                 .Skip(startIndex)
+                                 .Take(length);
+                var includeQuery = this.IncludeChildren(query);
 
-            return includeQuery.ToList();
+                return includeQuery.ToList();
+            }
         }
 
         /// <summary>
@@ -207,13 +219,17 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities.</returns>
         public virtual async Task<IEnumerable<TEntity>> GetCountAsync(int length, CancellationToken cancellationToken)
         {
-            var query = this.DataSet.AsQueryable()
-                            .OrderBy(e => e.Id)
-                            .Take(length);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.AsQueryable()
+                                 .OrderBy(e => e.Id)
+                                 .Take(length);
+                var includeQuery = this.IncludeChildren(query);
 
-            return await includeQuery.ToListAsync(cancellationToken)
-                                     .ConfigureAwait(false);
+                return await includeQuery.ToListAsync(cancellationToken)
+                                         .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -225,14 +241,18 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities.</returns>
         public virtual async Task<IEnumerable<TEntity>> GetCountAsync(int startIndex, int length, CancellationToken cancellationToken)
         {
-            var query = this.DataSet.AsQueryable()
-                            .OrderBy(e => e.Id)
-                            .Skip(startIndex)
-                            .Take(length);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.AsQueryable()
+                                 .OrderBy(e => e.Id)
+                                 .Skip(startIndex)
+                                 .Take(length);
+                var includeQuery = this.IncludeChildren(query);
 
-            return await includeQuery.ToListAsync(cancellationToken)
-                                     .ConfigureAwait(false);
+                return await includeQuery.ToListAsync(cancellationToken)
+                                         .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -244,13 +264,17 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities that match the search predicate.</returns>
         public virtual async Task<IEnumerable<TEntity>> GetCountAsync(int length, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
-            var query = this.DataSet.Where(predicate)
-                            .OrderBy(e => e.Id)
-                            .Take(length);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate)
+                                 .OrderBy(e => e.Id)
+                                 .Take(length);
+                var includeQuery = this.IncludeChildren(query);
 
-            return await includeQuery.ToListAsync(cancellationToken)
-                                     .ConfigureAwait(false);
+                return await includeQuery.ToListAsync(cancellationToken)
+                                         .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -263,14 +287,18 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities that match the search predicate.</returns>
         public virtual async Task<IEnumerable<TEntity>> GetCountAsync(int startIndex, int length, Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
-            var query = this.DataSet.Where(predicate)
-                            .OrderBy(e => e.Id)
-                            .Skip(startIndex)
-                            .Take(length);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate)
+                                 .OrderBy(e => e.Id)
+                                 .Skip(startIndex)
+                                 .Take(length);
+                var includeQuery = this.IncludeChildren(query);
 
-            return await includeQuery.ToListAsync(cancellationToken)
-                                     .ConfigureAwait(false);
+                return await includeQuery.ToListAsync(cancellationToken)
+                                         .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -279,10 +307,14 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities.</returns>
         public virtual IEnumerable<TEntity> GetAll()
         {
-            var query = this.DataSet.AsQueryable();
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.AsQueryable();
+                var includeQuery = this.IncludeChildren(query);
 
-            return includeQuery.ToList();
+                return includeQuery.ToList();
+            }
         }
 
         /// <summary>
@@ -292,10 +324,14 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities that match the search predicate.</returns>
         public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
         {
-            var query = this.DataSet.Where(predicate);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate);
+                var includeQuery = this.IncludeChildren(query);
 
-            return includeQuery.ToList();
+                return includeQuery.ToList();
+            }
         }
 
         /// <summary>
@@ -305,11 +341,15 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities.</returns>
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken)
         {
-            var query = this.DataSet.AsQueryable();
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.AsQueryable();
+                var includeQuery = this.IncludeChildren(query);
 
-            return await includeQuery.ToListAsync(cancellationToken)
-                                     .ConfigureAwait(false);
+                return await includeQuery.ToListAsync(cancellationToken)
+                                         .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -320,11 +360,15 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Collection of entities that match the search predicate.</returns>
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
         {
-            var query = this.DataSet.Where(predicate);
-            var includeQuery = this.IncludeChildren(query);
+            using (var context = this.GetContextInstance())
+            {
+                var dbSet = context.Set<TEntity>();
+                var query = dbSet.Where(predicate);
+                var includeQuery = this.IncludeChildren(query);
 
-            return await includeQuery.ToListAsync(cancellationToken)
-                                     .ConfigureAwait(false);
+                return await includeQuery.ToListAsync(cancellationToken)
+                                         .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -337,58 +381,61 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <returns>Binary stream of the file content.</returns>
         protected Stream GetContentStream<TResult>(Expression<Func<TEntity, TResult>> property, string fileStreamColumnName, TResult primaryKey)
         {
-            var propertyInfo = PropertyInfoExtensions.Property<TEntity, TResult>(property);
-            var propertyMappings = this.GetPropertyMapping();
-            string columnName = propertyMappings[propertyInfo.Name];
-            const string sqlQueryFormat = "SELECT {0}.PathName() AS [Path], GET_FILESTREAM_TRANSACTION_CONTEXT() AS [Transaction] FROM {1} WHERE [{2}] = @rowId;";
-            string tableName = this.GetSchemaAndTablename();
-            string connectionString = this._context.Database.Connection.ConnectionString;
-
-            using (var connection = new SqlConnection(connectionString))
-            using (var cmd = connection.CreateCommand())
+            using (var context = this.GetContextInstance())
             {
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = string.Format(CultureInfo.InvariantCulture, sqlQueryFormat, fileStreamColumnName, tableName, columnName);
-                cmd.Parameters.Add(new SqlParameter("rowId", primaryKey));
+                var propertyInfo = PropertyInfoExtensions.Property<TEntity, TResult>(property);
+                var propertyMappings = this.GetPropertyMapping(context);
+                string columnName = propertyMappings[propertyInfo.Name];
+                const string sqlQueryFormat = "SELECT {0}.PathName() AS [Path], GET_FILESTREAM_TRANSACTION_CONTEXT() AS [Transaction] FROM {1} WHERE [{2}] = @rowId;";
+                string tableName = this.GetSchemaAndTablename(context);
+                string connectionString = context.Database.Connection.ConnectionString;
 
-                if (ConnectionState.Open != connection.State)
+                using (var connection = new SqlConnection(connectionString))
+                using (var cmd = connection.CreateCommand())
                 {
-                    connection.Open();
-                }
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = string.Format(CultureInfo.InvariantCulture, sqlQueryFormat, fileStreamColumnName, tableName, columnName);
+                    cmd.Parameters.Add(new SqlParameter("rowId", primaryKey));
 
-                using (var transaction = connection.BeginTransaction())
-                {
-                    cmd.Transaction = transaction;
-                    string logicalPath = null;
-                    byte[] transactionId = null;
-
-                    using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
+                    if (ConnectionState.Open != connection.State)
                     {
-                        bool hasRows = reader.Read();
+                        connection.Open();
+                    }
 
-                        if (false == hasRows)
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        cmd.Transaction = transaction;
+                        string logicalPath = null;
+                        byte[] transactionId = null;
+
+                        using (var reader = cmd.ExecuteReader(CommandBehavior.SingleRow))
                         {
-                            return Stream.Null;
+                            bool hasRows = reader.Read();
+
+                            if (false == hasRows)
+                            {
+                                return Stream.Null;
+                            }
+
+                            int pathOrdinal = reader.GetOrdinal("Path");
+                            int transactionOrdinal = reader.GetOrdinal("Transaction");
+                            logicalPath = reader.GetString(pathOrdinal);
+                            var sqlBytes = reader.GetSqlBytes(transactionOrdinal);
+                            transactionId = sqlBytes.Value;
                         }
 
-                        int pathOrdinal = reader.GetOrdinal("Path");
-                        int transactionOrdinal = reader.GetOrdinal("Transaction");
-                        logicalPath = reader.GetString(pathOrdinal);
-                        var sqlBytes = reader.GetSqlBytes(transactionOrdinal);
-                        transactionId = sqlBytes.Value;
+                        var contents = new MemoryStream();
+
+                        using (var stream = new SqlFileStream(logicalPath, transactionId, FileAccess.Read))
+                        {
+                            stream.CopyTo(contents);
+                        }
+
+                        contents.Seek(0, SeekOrigin.Begin);
+                        transaction.Commit();
+
+                        return contents;
                     }
-
-                    var contents = new MemoryStream();
-
-                    using (var stream = new SqlFileStream(logicalPath, transactionId, FileAccess.Read))
-                    {
-                        stream.CopyTo(contents);
-                    }
-
-                    contents.Seek(0, SeekOrigin.Begin);
-                    transaction.Commit();
-
-                    return contents;
                 }
             }
         }
@@ -444,7 +491,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             if (disposing)
             {
-                this._context.Dispose();
+                this._contextFactory.Dispose();
             }
         }
 
@@ -466,12 +513,26 @@ namespace Pelorus.Core.Data.EntityFramework
         }
 
         /// <summary>
+        /// Gets a new instance of the DbContext.
+        /// </summary>
+        /// <returns>new instance of the context from the context factory.</returns>
+        private DbContext GetContextInstance()
+        {
+            var context = this._contextFactory.Create();
+            context.Configuration.LazyLoadingEnabled = false;
+            context.Configuration.ProxyCreationEnabled = false;
+
+            return context;
+        }
+
+        /// <summary>
         /// Gets the schema and name the table that that TEntity is mapped to.
         /// </summary>
+        /// <param name="context">Data instance to get the schema and table name from.</param>
         /// <returns>Schema and table name that TEntity is mapped to.</returns>
-        private string GetSchemaAndTablename()
+        private string GetSchemaAndTablename(DbContext context)
         {
-            var metadataWorkspace = ((IObjectContextAdapter) this._context).ObjectContext.MetadataWorkspace;
+            var metadataWorkspace = ((IObjectContextAdapter) context).ObjectContext.MetadataWorkspace;
             var objectSpaceMetadata = metadataWorkspace.GetItems<EntityType>(DataSpace.OSpace);
             var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
 
@@ -504,10 +565,11 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Gets a dictionary that maps entity properties to database column names for the current DbContext.
         /// </summary>
+        /// <param name="context">Data context to get the property mapping from.</param>
         /// <returns>Dictionary of entity properties to database column name mapping.</returns>
-        private IDictionary<string, string> GetPropertyMapping()
+        private IDictionary<string, string> GetPropertyMapping(DbContext context)
         {
-            var metadataWorkspace = ((IObjectContextAdapter) this._context).ObjectContext.MetadataWorkspace;
+            var metadataWorkspace = ((IObjectContextAdapter) context).ObjectContext.MetadataWorkspace;
             var objectSpaceMetadata = metadataWorkspace.GetItems<EntityType>(DataSpace.OSpace);
             var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
 
@@ -567,14 +629,6 @@ namespace Pelorus.Core.Data.EntityFramework
         /// </summary>
         /// <param name="contextFactory">Context factory to create the data context.</param>
         protected BaseReadOnlyRepository(IContextFactory contextFactory) : base(contextFactory)
-        {
-        }
-
-        /// <summary>
-        /// Initialize the base properties of the repository class.
-        /// </summary>
-        /// <param name="context">Context to use for the repository.</param>
-        protected BaseReadOnlyRepository(DbContext context) : base(context)
         {
         }
     }

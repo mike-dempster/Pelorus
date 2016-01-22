@@ -51,6 +51,8 @@
     <Compile Include="BaseRepository.cs" />
     <Compile Include="DbContextExtensions.cs" />
     <Compile Include="EntityNavigationExpressionBuilder.cs" />
+    <Compile Include="ContextFactory.cs" />
+    <Compile Include="EntityTypeConfigurationExtenssions.cs" />
     <Compile Include="IContextFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
