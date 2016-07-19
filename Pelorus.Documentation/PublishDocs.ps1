@@ -1,6 +1,6 @@
 ﻿$wikiRepository = 'https://github.com/mike-dempster/Pelorus.wiki.git'
 $gitPath = 'Pelorus.wiki'
-$projectPath = '.\Pelorus.Core.Documentation'
+$projectPath = '.\Pelorus.Documentation'
 $accessToken = $env:github_token
 
 try {
