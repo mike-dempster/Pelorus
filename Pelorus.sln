@@ -5,19 +5,19 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core", "Pelorus.Core\Pelorus.Core.csproj", "{9915F15D-7A6B-481D-9960-1ECF3FFEC771}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Data.EntityFramework", "Pelorus.Core.Data.EntityFramework\Pelorus.Core.Data.EntityFramework.csproj", "{9CFBF809-4668-4849-B3C8-15B2DFF4C41D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Data.EntityFramework", "Pelorus.Data.EntityFramework\Pelorus.Data.EntityFramework.csproj", "{9CFBF809-4668-4849-B3C8-15B2DFF4C41D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Web", "Pelorus.Core.Web\Pelorus.Core.Web.csproj", "{F021EB22-1BD2-49D4-A0B3-F0617FC68381}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Web", "Pelorus.Web\Pelorus.Web.csproj", "{F021EB22-1BD2-49D4-A0B3-F0617FC68381}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Test.Integration", "Pelorus.Core.Test.Integration\Pelorus.Core.Test.Integration.csproj", "{2B81B169-2D5C-462F-9AA9-CDFFFF23B116}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Web.Test.Integration", "Pelorus.Core.Web.Test.Integration\Pelorus.Core.Web.Test.Integration.csproj", "{D1ABE0CD-900C-4A97-90E6-FF295A6B9990}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Web.Test.Integration", "Pelorus.Web.Test.Integration\Pelorus.Web.Test.Integration.csproj", "{D1ABE0CD-900C-4A97-90E6-FF295A6B9990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.ServiceModel", "Pelorus.Core.ServiceModel\Pelorus.Core.ServiceModel.csproj", "{11039BDA-E628-4DBA-9A74-ED16BCC2E84E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.ServiceModel", "Pelorus.ServiceModel\Pelorus.ServiceModel.csproj", "{11039BDA-E628-4DBA-9A74-ED16BCC2E84E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Core.Unity", "Pelorus.Core.Unity\Pelorus.Core.Unity.csproj", "{D31B7EB8-E619-4709-9BFF-B4BCE2D058BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pelorus.Unity", "Pelorus.Unity\Pelorus.Unity.csproj", "{D31B7EB8-E619-4709-9BFF-B4BCE2D058BF}"
 EndProject
-Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Pelorus.Core.Documentation", "Pelorus.Core.Documentation\Pelorus.Core.Documentation.shfbproj", "{0DB93010-E95B-4DF9-A3FB-AE326E37C992}"
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Pelorus.Documentation", "Pelorus.Documentation\Pelorus.Documentation.shfbproj", "{0DB93010-E95B-4DF9-A3FB-AE326E37C992}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0BE42208-8587-473D-BA7A-C60FDD732D39}"
 	ProjectSection(SolutionItems) = preProject

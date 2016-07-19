@@ -94,7 +94,7 @@ namespace Pelorus.Core.Diagnostics.Repositories
             {
                 ParameterName = "eventType",
                 DbType = DbType.Int32,
-                Value = (int)eventType
+                Value = (int) eventType
             };
             var results = this.ExecuteSelect(SqlQueries.GetApplicationLogsByEventType, eventTypeParameter);
 
@@ -115,7 +115,7 @@ namespace Pelorus.Core.Diagnostics.Repositories
                 {
                     ParameterName = "eventType",
                     DbType = DbType.Int32,
-                    Value = (int)eventType
+                    Value = (int) eventType
                 },
                 new SqlParameter
                 {
@@ -264,7 +264,7 @@ namespace Pelorus.Core.Diagnostics.Repositories
                 {
                     ParameterName = "inTraceEventType",
                     DbType = DbType.Int32,
-                    Value = (int)applicationLog.TraceEventType
+                    Value = (int) applicationLog.TraceEventType
                 });
                 command.Parameters.Add(new SqlParameter
                 {
@@ -286,7 +286,7 @@ namespace Pelorus.Core.Diagnostics.Repositories
                 }
 
                 command.ExecuteNonQuery();
-                long messageId = (long)recordId.Value;
+                long messageId = (long) recordId.Value;
 
                 return messageId;
             }
@@ -393,7 +393,7 @@ namespace Pelorus.Core.Diagnostics.Repositories
                 Source = record.GetString("Source"),
                 StackTrace = record.GetNullableString("StackTrace"),
                 ThreadId = record.GetString("ThreadId"),
-                TraceEventType = (TraceEventType)record.GetInt32("TraceEventType"),
+                TraceEventType = (TraceEventType) record.GetInt32("TraceEventType"),
                 TraceId = record.GetInt32("TraceId"),
                 TraceListenerName = record.GetNullableString("TraceListenerName")
             };

@@ -1,0 +1,49 @@
+# IBaseReadOnlyRepository.GetCount(*TEntity*) Method (Int32)
+ 
+
+Get a collection of 'length' entities.
+
+**Namespace:**&nbsp;<a href="E27DB326">Pelorus.Core.Data</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+
+## Syntax
+
+**C#**<br />
+``` C#
+IEnumerable<TEntity> GetCount<TEntity>(
+	int length
+)
+where TEntity : class
+
+```
+
+**VB**<br />
+``` VB
+Function GetCount(Of TEntity As Class) ( 
+	length As Integer
+) As IEnumerable(Of TEntity)
+```
+
+**C++**<br />
+``` C++
+generic<typename TEntity>
+where TEntity : ref class
+IEnumerable<TEntity>^ GetCount(
+	int length
+)
+```
+
+
+#### Parameters
+&nbsp;<dl><dt>length</dt><dd>Type: <a href="http://msdn2.microsoft.com/en-us/library/td2s409d" target="_blank">System.Int32</a><br />Number of items to return.</dd></dl>
+
+#### Type Parameters
+&nbsp;<dl><dt>TEntity</dt><dd>Type of the entity to query.</dd></dl>
+
+#### Return Value
+Type: <a href="http://msdn2.microsoft.com/en-us/library/9eekhta0" target="_blank">IEnumerable</a>(*TEntity*)<br />Collection of entities.
+
+## See Also
+
+
+#### Reference
+<a href="E4B31551">IBaseReadOnlyRepository Interface</a><br /><a href="F6AD8877">GetCount Overload</a><br /><a href="E27DB326">Pelorus.Core.Data Namespace</a><br />

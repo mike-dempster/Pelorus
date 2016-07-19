@@ -1,5 +1,5 @@
 ﻿using Microsoft.Practices.Unity;
-using Pelorus.Core.Unity;
+using Pelorus.Unity;
 
 namespace Pelorus.Core.Test.Integration.UnityTestClasses
 {

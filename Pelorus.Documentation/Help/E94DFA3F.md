@@ -1,0 +1,131 @@
+# BaseTraceListener Class
+ 
+
+Base class for trace listeners formats the message data into a strongly typed object and invokes an abstract method with the message data for writing to the target media.
+
+
+## Inheritance Hierarchy
+<a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">System.Object</a><br />&nbsp;&nbsp;<a href="http://msdn2.microsoft.com/en-us/library/w4302s1f" target="_blank">System.MarshalByRefObject</a><br />&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">System.Diagnostics.TraceListener</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pelorus.Core.Diagnostics.BaseTraceListener<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="2FC09E89">Pelorus.Core.Diagnostics.SqlServerTraceListener</a><br />
+**Namespace:**&nbsp;<a href="9C794B0B">Pelorus.Core.Diagnostics</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+
+## Syntax
+
+**C#**<br />
+``` C#
+public abstract class BaseTraceListener : TraceListener
+```
+
+**VB**<br />
+``` VB
+Public MustInherit Class BaseTraceListener
+	Inherits TraceListener
+```
+
+**C++**<br />
+``` C++
+public ref class BaseTraceListener abstract : public TraceListener
+```
+
+The BaseTraceListener type exposes the following members.
+
+
+## Constructors
+&nbsp;<table><tr><th></th><th>Name</th><th>Description</th></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="2B740393">BaseTraceListener</a></td><td>
+Initializes a new instance of the BaseTraceListener class</td></tr></table>&nbsp;
+<a href="#basetracelistener-class">Back to Top</a>
+
+## Properties
+&nbsp;<table><tr><th></th><th>Name</th><th>Description</th></tr><tr><td>![Public property](media/pubproperty.gif "Public property")</td><td><a href="http://msdn2.microsoft.com/en-us/library/hyftkb3x" target="_blank">Attributes</a></td><td>
+Gets the custom trace listener attributes defined in the application configuration file.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public property](media/pubproperty.gif "Public property")</td><td><a href="http://msdn2.microsoft.com/en-us/library/sh6fh73h" target="_blank">Filter</a></td><td>
+Gets and sets the trace filter for the trace listener.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public property](media/pubproperty.gif "Public property")</td><td><a href="http://msdn2.microsoft.com/en-us/library/f2kbd603" target="_blank">IndentLevel</a></td><td>
+Gets or sets the indent level.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public property](media/pubproperty.gif "Public property")</td><td><a href="http://msdn2.microsoft.com/en-us/library/354sb8xk" target="_blank">IndentSize</a></td><td>
+Gets or sets the number of spaces in an indent.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public property](media/pubproperty.gif "Public property")</td><td><a href="http://msdn2.microsoft.com/en-us/library/ms141033" target="_blank">IsThreadSafe</a></td><td>
+Gets a value indicating whether the trace listener is thread safe.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public property](media/pubproperty.gif "Public property")</td><td><a href="http://msdn2.microsoft.com/en-us/library/fh6tsh4s" target="_blank">Name</a></td><td>
+Gets or sets a name for this <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Protected property](media/protproperty.gif "Protected property")</td><td><a href="http://msdn2.microsoft.com/en-us/library/c2ex2a1e" target="_blank">NeedIndent</a></td><td>
+Gets or sets a value indicating whether to indent the output.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public property](media/pubproperty.gif "Public property")</td><td><a href="http://msdn2.microsoft.com/en-us/library/zze62s09" target="_blank">TraceOutputOptions</a></td><td>
+Gets or sets the trace output options.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr></table>&nbsp;
+<a href="#basetracelistener-class">Back to Top</a>
+
+## Methods
+&nbsp;<table><tr><th></th><th>Name</th><th>Description</th></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/ccz8hwx6" target="_blank">Close</a></td><td>
+When overridden in a derived class, closes the output stream so it no longer receives tracing or debugging output.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/2ch65xad" target="_blank">CreateObjRef</a></td><td>
+Creates an object that contains all the relevant information required to generate a proxy used to communicate with a remote object.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/w4302s1f" target="_blank">MarshalByRefObject</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/w7hwe4xd" target="_blank">Dispose()</a></td><td>
+Releases all resources used by the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/ty1k57tz" target="_blank">Dispose(Boolean)</a></td><td>
+Releases the unmanaged resources used by the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a> and optionally releases the managed resources.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/bsc2ak47" target="_blank">Equals</a></td><td>
+Determines whether the specified object is equal to the current object.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">Object</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/0kyffesz" target="_blank">Fail(String)</a></td><td>
+Emits an error message to the listener you create when you implement the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a> class.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/t9h55cex" target="_blank">Fail(String, String)</a></td><td>
+Emits an error message and a detailed error message to the listener you create when you implement the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a> class.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/4k87zsw7" target="_blank">Finalize</a></td><td>
+Allows an object to try to free resources and perform other cleanup operations before it is reclaimed by garbage collection.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">Object</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/5s538a20" target="_blank">Flush</a></td><td>
+When overridden in a derived class, flushes the output buffer.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/zdee4b3y" target="_blank">GetHashCode</a></td><td>
+Serves as the default hash function.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">Object</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/c6y7316f" target="_blank">GetLifetimeService</a></td><td>
+Retrieves the current lifetime service object that controls the lifetime policy for this instance.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/w4302s1f" target="_blank">MarshalByRefObject</a>.)</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/ms141027" target="_blank">GetSupportedAttributes</a></td><td>
+Gets the custom attributes supported by the trace listener.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/dfwy45w9" target="_blank">GetType</a></td><td>
+Gets the <a href="http://msdn2.microsoft.com/en-us/library/42892f65" target="_blank">Type</a> of the current instance.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">Object</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/zwt5tzck" target="_blank">InitializeLifetimeService</a></td><td>
+Obtains a lifetime service object to control the lifetime policy for this instance.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/w4302s1f" target="_blank">MarshalByRefObject</a>.)</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="45B4BC48">LogMessage</a></td><td>
+When implemented in a derived class, writes the trace data to the target media.</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/57ctke0a" target="_blank">MemberwiseClone()</a></td><td>
+Creates a shallow copy of the current <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">Object</a>.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">Object</a>.)</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/ms131262" target="_blank">MemberwiseClone(Boolean)</a></td><td>
+Creates a shallow copy of the current <a href="http://msdn2.microsoft.com/en-us/library/w4302s1f" target="_blank">MarshalByRefObject</a> object.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/w4302s1f" target="_blank">MarshalByRefObject</a>.)</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="6776E86C">SerializeData</a></td><td>
+Serializes an object that is received by on of the TraceData methods. This method can be overridden in a derived class to allow customization of the serializing process.</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/7bxwbwt2" target="_blank">ToString</a></td><td>
+Returns a string that represents the current object.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">Object</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="17769BB4">TraceData(TraceEventCache, String, TraceEventType, Int32, Object)</a></td><td>
+Writes trace information, a data object and event information to the listener specific output.
+ (Overrides <a href="http://msdn2.microsoft.com/en-us/library/6w7c542z" target="_blank">TraceListener.TraceData(TraceEventCache, String, TraceEventType, Int32, Object)</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="9C581399">TraceData(TraceEventCache, String, TraceEventType, Int32, Object[])</a></td><td>
+Writes trace information, an array of data objects and event information to the listener specific output.
+ (Overrides <a href="http://msdn2.microsoft.com/en-us/library/42h9s564" target="_blank">TraceListener.TraceData(TraceEventCache, String, TraceEventType, Int32, Object[])</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="568C5808">TraceEvent(TraceEventCache, String, TraceEventType, Int32)</a></td><td>
+Writes trace and event information to the listener specific output.
+ (Overrides <a href="http://msdn2.microsoft.com/en-us/library/dz2kace8" target="_blank">TraceListener.TraceEvent(TraceEventCache, String, TraceEventType, Int32)</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="F020B26">TraceEvent(TraceEventCache, String, TraceEventType, Int32, String)</a></td><td>
+Writes trace information, a message, and event information to the listener specific output.
+ (Overrides <a href="http://msdn2.microsoft.com/en-us/library/xa710ybd" target="_blank">TraceListener.TraceEvent(TraceEventCache, String, TraceEventType, Int32, String)</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="F020B27">TraceEvent(TraceEventCache, String, TraceEventType, Int32, String, Object[])</a></td><td>
+Writes trace information, a formatted array of objects and event information to the listener specific output.
+ (Overrides <a href="http://msdn2.microsoft.com/en-us/library/d193webf" target="_blank">TraceListener.TraceEvent(TraceEventCache, String, TraceEventType, Int32, String, Object[])</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="92094CFC">TraceTransfer</a></td><td>
+Writes trace information, a message, a related activity identity and event information to the listener specific output.
+ (Overrides <a href="http://msdn2.microsoft.com/en-us/library/y0ca5td5" target="_blank">TraceListener.TraceTransfer(TraceEventCache, String, Int32, String, Guid)</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/885f0f1d" target="_blank">Write(Object)</a></td><td>
+Writes the value of the object's <a href="http://msdn2.microsoft.com/en-us/library/7bxwbwt2" target="_blank">ToString()</a> method to the listener you create when you implement the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a> class.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="71F0C1D9">Write(String)</a></td><td>
+This method is not used.
+ (Overrides <a href="http://msdn2.microsoft.com/en-us/library/fxzs3wwx" target="_blank">TraceListener.Write(String)</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/sawdbchb" target="_blank">Write(String, String)</a></td><td>
+Writes a category name and a message to the listener you create when you implement the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a> class.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/zzbey6hz" target="_blank">Write(Object, String)</a></td><td>
+Writes a category name and the value of the object's <a href="http://msdn2.microsoft.com/en-us/library/7bxwbwt2" target="_blank">ToString()</a> method to the listener you create when you implement the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a> class.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Protected method](media/protmethod.gif "Protected method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/3ba0z4s7" target="_blank">WriteIndent</a></td><td>
+Writes the indent to the listener you create when you implement this class, and resets the <a href="http://msdn2.microsoft.com/en-us/library/c2ex2a1e" target="_blank">NeedIndent</a> property to false.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/8yy4fcee" target="_blank">WriteLine(Object)</a></td><td>
+Writes the value of the object's <a href="http://msdn2.microsoft.com/en-us/library/7bxwbwt2" target="_blank">ToString()</a> method to the listener you create when you implement the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a> class, followed by a line terminator.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="20C1F5FD">WriteLine(String)</a></td><td>
+This method is not used.
+ (Overrides <a href="http://msdn2.microsoft.com/en-us/library/3h418ytb" target="_blank">TraceListener.WriteLine(String)</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/85zkh89a" target="_blank">WriteLine(String, String)</a></td><td>
+Writes a category name and a message to the listener you create when you implement the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a> class, followed by a line terminator.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr><tr><td>![Public method](media/pubmethod.gif "Public method")</td><td><a href="http://msdn2.microsoft.com/en-us/library/dxs933dt" target="_blank">WriteLine(Object, String)</a></td><td>
+Writes a category name and the value of the object's <a href="http://msdn2.microsoft.com/en-us/library/7bxwbwt2" target="_blank">ToString()</a> method to the listener you create when you implement the <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a> class, followed by a line terminator.
+ (Inherited from <a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">TraceListener</a>.)</td></tr></table>&nbsp;
+<a href="#basetracelistener-class">Back to Top</a>
+
+## See Also
+
+
+#### Reference
+<a href="9C794B0B">Pelorus.Core.Diagnostics Namespace</a><br />

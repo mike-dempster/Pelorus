@@ -36,4 +36,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: InternalsVisibleTo("Pelorus.Core.Test.Integration")]
-[assembly: InternalsVisibleTo("Pelorus.Core.Web")]
+[assembly: InternalsVisibleTo("Pelorus.Web")]
