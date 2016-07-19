@@ -6,7 +6,7 @@ Base class for trace listeners formats the message data into a strongly typed ob
 
 ## Inheritance Hierarchy
 <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">System.Object</a><br />&nbsp;&nbsp;<a href="http://msdn2.microsoft.com/en-us/library/w4302s1f" target="_blank">System.MarshalByRefObject</a><br />&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://msdn2.microsoft.com/en-us/library/hy72797k" target="_blank">System.Diagnostics.TraceListener</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pelorus.Core.Diagnostics.BaseTraceListener<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="2FC09E89">Pelorus.Core.Diagnostics.SqlServerTraceListener</a><br />
-**Namespace:**&nbsp;<a href="9C794B0B">Pelorus.Core.Diagnostics</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="9C794B0B">Pelorus.Core.Diagnostics</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

@@ -3,7 +3,7 @@
 
 Serialize an RSS feed to an XML document.
 
-**Namespace:**&nbsp;<a href="683C06D0">Pelorus.Core.Rss</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="683C06D0">Pelorus.Core.Rss</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

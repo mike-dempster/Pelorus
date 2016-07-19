@@ -6,7 +6,7 @@ Configuration element for distributed mutual exclusions.
 
 ## Inheritance Hierarchy
 <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">System.Object</a><br />&nbsp;&nbsp;<a href="http://msdn2.microsoft.com/en-us/library/kyx77cz3" target="_blank">System.Configuration.ConfigurationElement</a><br />&nbsp;&nbsp;&nbsp;&nbsp;Pelorus.Core.Configuration.DistributedMutualExclusionConfigurationElement<br />
-**Namespace:**&nbsp;<a href="74405DDA">Pelorus.Core.Configuration</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="74405DDA">Pelorus.Core.Configuration</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

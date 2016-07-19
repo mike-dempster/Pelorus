@@ -6,7 +6,7 @@ Helper methods for working with enums.
 
 ## Inheritance Hierarchy
 <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">System.Object</a><br />&nbsp;&nbsp;Pelorus.Core.Enums<br />
-**Namespace:**&nbsp;<a href="CB7C5302">Pelorus.Core</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="CB7C5302">Pelorus.Core</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

@@ -3,7 +3,7 @@
 
 Convert the given object to type targetType. If the object cannot be cast to type targetType then return null.
 
-**Namespace:**&nbsp;<a href="CB7C5302">Pelorus.Core</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="CB7C5302">Pelorus.Core</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

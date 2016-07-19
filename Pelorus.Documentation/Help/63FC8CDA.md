@@ -6,7 +6,7 @@ Implements the configuration element for the WCF exception logging behavior.
 
 ## Inheritance Hierarchy
 <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">System.Object</a><br />&nbsp;&nbsp;Pelorus.ServiceModel.ExceptionLogging.ExceptionLoggingBehavior<br />
-**Namespace:**&nbsp;<a href="ABA79858">Pelorus.ServiceModel.ExceptionLogging</a><br />**Assembly:**&nbsp;Pelorus.ServiceModel (in Pelorus.ServiceModel.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="ABA79858">Pelorus.ServiceModel.ExceptionLogging</a><br />**Assembly:**&nbsp;Pelorus.ServiceModel (in Pelorus.ServiceModel.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

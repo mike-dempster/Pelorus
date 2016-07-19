@@ -3,7 +3,7 @@
 
 Identifier of the user ro service account that created the record.
 
-**Namespace:**&nbsp;<a href="20086FC9">Pelorus.Core.Entities</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="20086FC9">Pelorus.Core.Entities</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

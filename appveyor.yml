@@ -8,4 +8,4 @@ before_build:
     - cmd: nuget restore
 
 on_success:
-    - ps: .\Pelorus.Core.Documentation\PublishDocs.ps1
+    - ps: .\Pelorus.Documentation\PublishDocs.ps1

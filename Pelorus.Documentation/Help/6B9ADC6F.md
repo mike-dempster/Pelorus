@@ -3,7 +3,7 @@
 
 When overridden in a derived class, disposes of the exclusive lock.
 
-**Namespace:**&nbsp;<a href="3DF715C2">Pelorus.Core.Synchronization</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="3DF715C2">Pelorus.Core.Synchronization</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

@@ -3,7 +3,7 @@
 
 Initializes a new instance of the <a href="3F8BB7E1">EmptyConfigurationElement</a> class
 
-**Namespace:**&nbsp;<a href="74405DDA">Pelorus.Core.Configuration</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="74405DDA">Pelorus.Core.Configuration</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

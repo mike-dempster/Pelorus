@@ -6,7 +6,7 @@ Provides methods for serializing and deserializing RSS feeds.
 
 ## Inheritance Hierarchy
 <a href="http://msdn2.microsoft.com/en-us/library/e5kfa45b" target="_blank">System.Object</a><br />&nbsp;&nbsp;Pelorus.Core.Rss.RssSerializer<br />
-**Namespace:**&nbsp;<a href="683C06D0">Pelorus.Core.Rss</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="683C06D0">Pelorus.Core.Rss</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

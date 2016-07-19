@@ -3,7 +3,7 @@
 
 The property represents an XML array item.
 
-**Namespace:**&nbsp;<a href="9052B9D6">Pelorus.Core.Xml.Serialization</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="9052B9D6">Pelorus.Core.Xml.Serialization</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

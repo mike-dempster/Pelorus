@@ -3,7 +3,7 @@
 
 Create a new instance of the localize proxy and return a transparent proxy to the given instance.
 
-**Namespace:**&nbsp;<a href="99F211A">Pelorus.Core.Localization</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="99F211A">Pelorus.Core.Localization</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 

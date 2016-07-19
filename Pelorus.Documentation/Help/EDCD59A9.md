@@ -3,7 +3,7 @@
 
 Integer indexer of the collection.
 
-**Namespace:**&nbsp;<a href="74405DDA">Pelorus.Core.Configuration</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.0 (1.0.0.0)
+**Namespace:**&nbsp;<a href="74405DDA">Pelorus.Core.Configuration</a><br />**Assembly:**&nbsp;Pelorus.Core (in Pelorus.Core.dll) Version: 1.0.0.1 (1.0.0.0)
 
 ## Syntax
 
