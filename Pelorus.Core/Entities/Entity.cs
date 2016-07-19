@@ -1,7 +1,7 @@
 ﻿namespace Pelorus.Core.Entities
 {
     /// <summary>
-    /// Base class for all business objects.
+    /// Base class for all objects.
     /// </summary>
     /// <typeparam name="TKey">Type of the key for this entity.</typeparam>
     public abstract class Entity<TKey>
@@ -14,7 +14,7 @@
     }
 
     /// <summary>
-    /// Base class for all business objects with key type of long.
+    /// Base class for all objects with key type of long.
     /// </summary>
     public abstract class Entity : Entity<long>
     {

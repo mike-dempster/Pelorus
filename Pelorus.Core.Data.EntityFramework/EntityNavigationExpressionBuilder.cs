@@ -17,11 +17,9 @@ namespace Pelorus.Core.Data.EntityFramework
         /// Build an expression for the given entity type.
         /// </summary>
         /// <typeparam name="TEntity">Type of the entity to build the expression tree for.</typeparam>
-        /// <typeparam name="TKey">Type of the entity's key.</typeparam>
         /// <returns>Expression that when compiled and invoked will null out the navigation properties on the entity.</returns>
-        public static Expression<Action<TEntity>> BuildExpression<TEntity, TKey>()
-            where TEntity : EntityDao<TKey>
-            where TKey : struct
+        public static Expression<Action<TEntity>> BuildExpression<TEntity>()
+            where TEntity : class
         {
             var entityType = typeof(TEntity);
             var properties = entityType.GetProperties();
@@ -86,7 +84,7 @@ namespace Pelorus.Core.Data.EntityFramework
                 return false;
             }
 
-            if (typeof (IEnumerable).IsAssignableFrom(propertyType))
+            if (typeof(IEnumerable).IsAssignableFrom(propertyType))
             {
                 if (false == propertyType.IsGenericType)
                 {
@@ -100,7 +98,7 @@ namespace Pelorus.Core.Data.EntityFramework
 
             while (null != baseType)
             {
-                if (typeof(EntityDao<>) == baseType)
+                if (typeof(Entity<>) == baseType)
                 {
                     return true;
                 }

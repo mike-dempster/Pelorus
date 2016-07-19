@@ -10,113 +10,128 @@ namespace Pelorus.Core.Data
     /// <summary>
     /// Defines the base functionality of all data repositories.
     /// </summary>
-    /// <typeparam name="TEntity">Type of the repository's entity.</typeparam>
-    /// <typeparam name="TKey">Type of the repository's entity's key.</typeparam>
-    public interface IBaseRepository<TEntity, in TKey> : IBaseReadOnlyRepository<TEntity, TKey>
-        where TEntity : EntityDao<TKey>
-        where TKey : struct
+    public interface IBaseRepository : IBaseReadOnlyRepository
     {
         /// <summary>
         /// Create a new entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being created.</typeparam>
         /// <param name="entity">New entity to create in the data store.</param>
         /// <returns>The new entity with any generated properties.</returns>
-        TEntity Create(TEntity entity);
+        TEntity Create<TEntity>(TEntity entity)
+            where TEntity : class;
 
         /// <summary>
         /// Create a new entity asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being created.</typeparam>
         /// <param name="entity">New entity to create in the data store.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>The new entity with any generated properties.</returns>
-        Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken);
+        Task<TEntity> CreateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
+            where TEntity : class;
 
         /// <summary>
         /// Delete an entity from the data store.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being deleted.</typeparam>
         /// <param name="entity">Entity to delete from the data store.</param>
         /// <returns>Deleted entity.</returns>
-        TEntity Delete(TEntity entity);
+        TEntity Delete<TEntity>(TEntity entity)
+            where TEntity : class;
 
         /// <summary>
         /// Delete an entity from the data store asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being deleted.</typeparam>
         /// <param name="entity">Entity to delete from the data store.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Deleted entity.</returns>
-        Task<TEntity> DeleteAsync(TEntity entity, CancellationToken cancellationToken);
+        Task<TEntity> DeleteAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
+            where TEntity : class;
 
         /// <summary>
         /// Delete an entity from the data store by Id.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being deleted.</typeparam>
+        /// <typeparam name="TKey">Type of the key of the entity being deleted.</typeparam>
         /// <param name="entityId">Id of the entity to delete from the data store.</param>
         /// <returns>True if the entity was found and deleted.</returns>
-        bool DeleteById(TKey entityId);
+        bool DeleteById<TEntity, TKey>(TKey entityId)
+            where TEntity : Entity<TKey>
+            where TKey : struct;
 
         /// <summary>
         /// Delete an entity from the data store by Id asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being deleted.</typeparam>
+        /// <typeparam name="TKey">Type of the key of the entity being deleted.</typeparam>
         /// <param name="entityId">Id of the entity to delete from the data store.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>True if the entity was found and deleted.</returns>
-        Task<bool> DeleteByIdAsync(TKey entityId, CancellationToken cancellationToken);
+        Task<bool> DeleteByIdAsync<TEntity, TKey>(TKey entityId, CancellationToken cancellationToken)
+            where TEntity : Entity<TKey>
+            where TKey : struct;
 
         /// <summary>
         /// Update an existing entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updaterd entity to update in the data store.</param>
         /// <returns>The updated entity.</returns>
-        TEntity Update(TEntity entity);
+        TEntity Update<TEntity>(TEntity entity)
+            where TEntity : class;
 
         /// <summary>
         /// Update the identified properties on an existing entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updated entity to save.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <returns>Updated entity.</returns>
-        TEntity Update(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties);
+        TEntity Update<TEntity>(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties)
+            where TEntity : class;
 
         /// <summary>
         /// Update the identified properties on an existing entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updated entity to save.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <returns>Updated entity.</returns>
-        TEntity Update(TEntity entity, params Expression<Func<TEntity, object>>[] modifiedProperties);
+        TEntity Update<TEntity>(TEntity entity, params Expression<Func<TEntity, object>>[] modifiedProperties)
+            where TEntity : class;
 
         /// <summary>
         /// Update an existing entity asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updated entity to update in the data store.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>The updated entity.</returns>
-        Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken);
+        Task<TEntity> UpdateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
+            where TEntity : class;
 
         /// <summary>
         /// Update the identified properties on an existing entity asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updated entity to save.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Updated entity.</returns>
-        Task<TEntity> UpdateAsync(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties, CancellationToken cancellationToken);
+        Task<TEntity> UpdateAsync<TEntity>(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties, CancellationToken cancellationToken)
+            where TEntity : class;
 
         /// <summary>
         /// Update the identified properties on an existing entity asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updated entity to save.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <returns>Updated entity.</returns>
-        Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken, params Expression<Func<TEntity, object>>[] modifiedProperties);
-    }
-
-    /// <summary>
-    /// Defines the base functionality of all data repositories that have an entity with a key of type long.
-    /// </summary>
-    /// <typeparam name="TEntity">Type of the repository's entity.</typeparam>
-    public interface IBaseRepository<TEntity> : IBaseRepository<TEntity, long>
-        where TEntity : EntityDao<long>
-    {
+        Task<TEntity> UpdateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken, params Expression<Func<TEntity, object>>[] modifiedProperties)
+            where TEntity : class;
     }
 }

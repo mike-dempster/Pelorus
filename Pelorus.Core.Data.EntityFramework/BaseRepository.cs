@@ -20,20 +20,9 @@ namespace Pelorus.Core.Data.EntityFramework
     /// <summary>
     /// Base functionality for repository classes.
     /// </summary>
-    /// <typeparam name="TEntity">The repository's entity type.</typeparam>
-    /// <typeparam name="TKey">Type of the Id property on TEntity.</typeparam>
-    public abstract class BaseRepository<TEntity, TKey> : BaseReadOnlyRepository<TEntity, TKey>, IBaseRepository<TEntity, TKey>
-        where TEntity : EntityDao<TKey>
-        where TKey : struct
+    public abstract class BaseRepository : BaseReadOnlyRepository, IBaseRepository
     {
         private readonly IContextFactory _contextFactory;
-
-        // ReSharper restore ConvertToAutoProperty
-
-        /// <summary>
-        /// Expression for including child entities in the base queries.
-        /// </summary>
-        protected override Func<IQueryable<TEntity>, IQueryable<TEntity>> IncludeExpression { get; set; }
 
         /// <summary>
         /// Initialize the base properties of the repository class.
@@ -60,13 +49,15 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Create a new entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being created.</typeparam>
         /// <param name="entity">New entity to create.</param>
         /// <returns>The new entity with the generated Id.</returns>
-        public virtual TEntity Create(TEntity entity)
+        public virtual TEntity Create<TEntity>(TEntity entity)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
-                var expression = EntityNavigationExpressionBuilder.BuildExpression<TEntity, TKey>();
+                var expression = EntityNavigationExpressionBuilder.BuildExpression<TEntity>();
                 var func = expression.Compile();
                 func(entity);
                 var dbSet = context.Set<TEntity>();
@@ -80,14 +71,16 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Create a new entity asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being created.</typeparam>
         /// <param name="entity">New entity to create.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>The new entity with the generated Id.</returns>
-        public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task<TEntity> CreateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
-                var expression = EntityNavigationExpressionBuilder.BuildExpression<TEntity, TKey>();
+                var expression = EntityNavigationExpressionBuilder.BuildExpression<TEntity>();
                 var func = expression.Compile();
                 func(entity);
                 var dbSet = context.Set<TEntity>();
@@ -102,13 +95,15 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Delete an existing entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being deleted.</typeparam>
         /// <param name="entity">Entity to delete.</param>
         /// <returns>Deleted entity.</returns>
-        public virtual TEntity Delete(TEntity entity)
+        public virtual TEntity Delete<TEntity>(TEntity entity)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
-                var expression = EntityNavigationExpressionBuilder.BuildExpression<TEntity, TKey>();
+                var expression = EntityNavigationExpressionBuilder.BuildExpression<TEntity>();
                 var func = expression.Compile();
                 func(entity);
                 var deletedEntity = context.Set<TEntity>()
@@ -122,14 +117,16 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Delete an existing entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being deleted.</typeparam>
         /// <param name="entity">Entity to delete.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Deleted entity.</returns>
-        public virtual async Task<TEntity> DeleteAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task<TEntity> DeleteAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
-                var expression = EntityNavigationExpressionBuilder.BuildExpression<TEntity, TKey>();
+                var expression = EntityNavigationExpressionBuilder.BuildExpression<TEntity>();
                 var func = expression.Compile();
                 func(entity);
                 var deletedEntity = context.Set<TEntity>()
@@ -144,9 +141,13 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Delete entity by Id.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being deleted.</typeparam>
+        /// <typeparam name="TKey">Type of the key of the entity being deleted.</typeparam>
         /// <param name="entityId">Id of the entity to delete.</param>
         /// <returns>True if the entity was found and deleted or false if the entity was not found.</returns>
-        public virtual bool DeleteById(TKey entityId)
+        public virtual bool DeleteById<TEntity, TKey>(TKey entityId)
+            where TEntity : Entity<TKey>
+            where TKey : struct
         {
             using (var context = this.GetContextInstance())
             {
@@ -169,10 +170,14 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Delete entity by Id.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being deleted.</typeparam>
+        /// <typeparam name="TKey">Type of the key of the entity being deleted.</typeparam>
         /// <param name="entityId">Id of the entity to delete.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>True if the entity was found and deleted or false if the entity was not found.</returns>
-        public virtual async Task<bool> DeleteByIdAsync(TKey entityId, CancellationToken cancellationToken)
+        public virtual async Task<bool> DeleteByIdAsync<TEntity, TKey>(TKey entityId, CancellationToken cancellationToken)
+            where TEntity : Entity<TKey>
+            where TKey : struct
         {
             using (var context = this.GetContextInstance())
             {
@@ -197,18 +202,24 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Update an existing entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Entity with update to save.</param>
         /// <returns>Updated entity.</returns>
-        public virtual TEntity Update(TEntity entity)
+        public virtual TEntity Update<TEntity>(TEntity entity)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
+                var keyValues = this.GetKeyValues(context, entity)
+                                    .ToArray();
                 var dbSet = context.Set<TEntity>();
-                var contextEntity = dbSet.Find(entity.Id);
+                var contextEntity = dbSet.Find(keyValues.ToArray());
 
                 if (null == contextEntity)
                 {
-                    return null;
+                    string delimitedKeyValues = string.Join(", ", keyValues);
+                    string exMsg = $"Entity with Id ({delimitedKeyValues}) does not exist.";
+                    throw new DataException(exMsg);
                 }
 
                 var entry = context.Entry(contextEntity);
@@ -223,33 +234,39 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Update the identified properties on an existing entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updated entity to save.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <returns>Updated entity.</returns>
-        public virtual TEntity Update(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties)
+        public virtual TEntity Update<TEntity>(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
+                var keyValues = this.GetKeyValues(context, entity)
+                                    .ToArray();
                 var dbSet = context.Set<TEntity>();
-                var contextEntity = dbSet.Find(entity.Id);
+                var contextEntity = dbSet.Find(keyValues.ToArray());
 
                 if (null == contextEntity)
                 {
-                    string exMsg = string.Format(CultureInfo.CurrentCulture, "Entity with Id '{0}' does not exist.", entity.Id);
+                    string delimitedKeyValues = string.Join(", ", keyValues);
+                    string exMsg = $"Entity with Id ({delimitedKeyValues}) does not exist.";
                     throw new DataException(exMsg);
                 }
 
                 var entry = context.Entry(contextEntity);
                 entry.CurrentValues.SetValues(entity);
                 entry.State = EntityState.Modified;
-                string idPropertyName = this.GetPropertyName(e => e.Id);
+                var idPropertyNames = context.GetEntityIds<TEntity>()
+                                             .ToArray();
                 var modifiedPropertyNames = modifiedProperties.Select(this.GetPropertyName)
                                                               .Where(e => null != e)
                                                               .ToList();
 
                 foreach (var p in entry.CurrentValues.PropertyNames)
                 {
-                    if (p == idPropertyName)
+                    if (idPropertyNames.Any(e => e.Name == p))
                     {
                         continue;
                     }
@@ -266,10 +283,12 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Update the identified properties on an existing entity.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updated entity to save.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <returns>Updated entity.</returns>
-        public virtual TEntity Update(TEntity entity, params Expression<Func<TEntity, object>>[] modifiedProperties)
+        public virtual TEntity Update<TEntity>(TEntity entity, params Expression<Func<TEntity, object>>[] modifiedProperties)
+            where TEntity : class
         {
             var properties = modifiedProperties as IEnumerable<Expression<Func<TEntity, object>>>;
             return this.Update(entity, properties);
@@ -278,15 +297,19 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Update an existing entity asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Entity with update to save.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Updated entity.</returns>
-        public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken)
+        public virtual async Task<TEntity> UpdateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
+                var keyValues = this.GetKeyValues(context, entity)
+                                    .ToArray();
                 var dbSet = context.Set<TEntity>();
-                var contextEntity = await dbSet.FindAsync(cancellationToken, entity.Id)
+                var contextEntity = await dbSet.FindAsync(cancellationToken, keyValues.ToArray())
                                                .ConfigureAwait(false);
                 var entry = context.Entry(contextEntity);
                 entry.CurrentValues.SetValues(entity);
@@ -301,28 +324,33 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Update the identified properties on an existing entity asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updated entity to save.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Updated entity.</returns>
-        public virtual async Task<TEntity> UpdateAsync(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties, CancellationToken cancellationToken)
+        public virtual async Task<TEntity> UpdateAsync<TEntity>(TEntity entity, IEnumerable<Expression<Func<TEntity, object>>> modifiedProperties, CancellationToken cancellationToken)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
+                var keyValues = this.GetKeyValues(context, entity)
+                                    .ToArray();
                 var dbSet = context.Set<TEntity>();
-                var contextEntity = await dbSet.FindAsync(cancellationToken, entity.Id)
+                var contextEntity = await dbSet.FindAsync(cancellationToken, keyValues)
                                                .ConfigureAwait(false);
                 var entry = context.Entry(contextEntity);
                 entry.CurrentValues.SetValues(entity);
                 entry.State = EntityState.Modified;
-                string idPropertyName = this.GetPropertyName(e => e.Id);
+                var idPropertyNames = context.GetEntityIds<TEntity>()
+                                             .ToArray();
                 var modifiedPropertyNames = modifiedProperties.Select(this.GetPropertyName)
                                                               .Where(e => null != e)
                                                               .ToList();
 
                 foreach (var p in entry.CurrentValues.PropertyNames)
                 {
-                    if (p == idPropertyName)
+                    if (idPropertyNames.Any(e => e.Name == p))
                     {
                         continue;
                     }
@@ -340,11 +368,13 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Update the identified properties on an existing entity asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity being updated.</typeparam>
         /// <param name="entity">Updated entity to save.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <param name="modifiedProperties">Properties to update on the entity.</param>
         /// <returns>Updated entity.</returns>
-        public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken, params Expression<Func<TEntity, object>>[] modifiedProperties)
+        public virtual async Task<TEntity> UpdateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken, params Expression<Func<TEntity, object>>[] modifiedProperties)
+            where TEntity : class
         {
             var properties = modifiedProperties as IEnumerable<Expression<Func<TEntity, object>>>;
             return await this.UpdateAsync(entity, properties, cancellationToken);
@@ -353,18 +383,20 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Creates the relationship between parent/child entities.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the parent entity to add the child to.</typeparam>
         /// <typeparam name="TChild">Type of the child entity.</typeparam>
         /// <param name="entity">Parent object of the relationship.</param>
         /// <param name="child">Child object of the relationship.</param>
         /// <param name="expression">Expression identifying the associated navigation property on the parent object.</param>
-        protected virtual void AddChild<TChild>(TEntity entity, TChild child, Expression<Func<TEntity, ICollection<TChild>>> expression)
+        protected virtual void AddChild<TEntity, TChild>(TEntity entity, TChild child, Expression<Func<TEntity, ICollection<TChild>>> expression)
+            where TEntity : class
             where TChild : class
         {
             using (var context = this.GetContextInstance())
             {
                 // Convert the strongly typed expression to a Func<TEntity, object> expression that the ChangeRelationshipState method will accept.
-                var convertExpression = Expression.Convert(expression.Body, typeof (object));
-                var parameter = Expression.Parameter(typeof (TEntity));
+                var convertExpression = Expression.Convert(expression.Body, typeof(object));
+                var parameter = Expression.Parameter(typeof(TEntity));
                 var objectExpression = Expression.Lambda<Func<TEntity, object>>(convertExpression, parameter);
 
                 ((IObjectContextAdapter) context).ObjectContext.ObjectStateManager.ChangeRelationshipState(entity, child, objectExpression, EntityState.Added);
@@ -374,18 +406,20 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Removes the relationship between parent/child entities.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the parent entity to remove the child from.</typeparam>
         /// <typeparam name="TChild">Type of the child entity.</typeparam>
         /// <param name="entity">Parent object of the relationship.</param>
         /// <param name="child">Child object of the relationship.</param>
         /// <param name="expression">Expression identifying the associated navigation property on the parent object.</param>
-        protected virtual void RemoveChild<TChild>(TEntity entity, TChild child, Expression<Func<TEntity, ICollection<TChild>>> expression)
+        protected virtual void RemoveChild<TEntity, TChild>(TEntity entity, TChild child, Expression<Func<TEntity, ICollection<TChild>>> expression)
+            where TEntity : class
             where TChild : class
         {
             using (var context = this.GetContextInstance())
             {
                 // Convert the strongly typed expression to a Func<TEntity, object> expression that the ChangeRelationshipState method will accept.
-                var convertExpression = Expression.Convert(expression.Body, typeof (object));
-                var parameter = Expression.Parameter(typeof (TEntity));
+                var convertExpression = Expression.Convert(expression.Body, typeof(object));
+                var parameter = Expression.Parameter(typeof(TEntity));
                 var objectExpression = Expression.Lambda<Func<TEntity, object>>(convertExpression, parameter);
 
                 ((IObjectContextAdapter) context).ObjectContext.ObjectStateManager.ChangeRelationshipState(entity, child, objectExpression, EntityState.Deleted);
@@ -395,20 +429,22 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Writes the content of a stream to a FILESTREAM file on SQL Server using a pending transaction.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity that the file stream is associated with.</typeparam>
         /// <typeparam name="TResult">Type of the primary key of the table to write the content stream to.</typeparam>
         /// <param name="property">Key property used to select a single record for file streaming.</param>
         /// <param name="fileStreamColumnName">Name of the FILESTREAM column.</param>
         /// <param name="primaryKey">Primary key of the record to write the file to.</param>
         /// <param name="contents">File content to write to the database.</param>
-        protected void WriteContentStream<TResult>(
+        protected void WriteContentStream<TEntity, TResult>(
             Expression<Func<TEntity, TResult>> property,
             string fileStreamColumnName,
             TResult primaryKey,
             Stream contents)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
-                var propertyInfo = PropertyInfoExtensions.Property<TEntity, TResult>(property);
+                var propertyInfo = PropertyInfoExtensions.Property(property);
                 var propertyMappings = context.GetPropertyMapping<TEntity>();
                 string columnName = propertyMappings[propertyInfo];
                 const string sqlQueryFormat = "SELECT {0}.PathName() AS [Path], GET_FILESTREAM_TRANSACTION_CONTEXT() AS [Transaction] FROM {1} WHERE [{2}] = @rowId;";
@@ -471,6 +507,7 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <summary>
         /// Writes the content of a stream to a FILESTREAM file on SQL Server using a pending transaction asynchronously.
         /// </summary>
+        /// <typeparam name="TEntity">Type of the entity that the file stream is associated with.</typeparam>
         /// <typeparam name="TResult">Type of the primary key of the table to write the content stream to.</typeparam>
         /// <param name="property">Key property used to select a single record for file streaming.</param>
         /// <param name="fileStreamColumnName">Name of the FILESTREAM column.</param>
@@ -478,12 +515,13 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <param name="contents">File content to write to the database.</param>
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <returns>Handle to the async task.</returns>
-        protected async Task WriteContentStreamAsync<TResult>(
+        protected async Task WriteContentStreamAsync<TEntity, TResult>(
             Expression<Func<TEntity, TResult>> property,
             string fileStreamColumnName,
             TResult primaryKey,
             Stream contents,
             CancellationToken cancellationToken)
+            where TEntity : class
         {
             await Task.Run(() => this.WriteContentStream(property, fileStreamColumnName, primaryKey, contents), cancellationToken)
                       .ConfigureAwait(false);
@@ -540,9 +578,10 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <param name="storedProcedureName">Name of the stored procedure to execute.</param>
         /// <param name="args">Arguments to pass to the stored procedure.</param>
         /// <returns>Results of the stored procedure.</returns>
-        public IEnumerable<TEntity> ExecuteStoredProcedure(string storedProcedureName, IDictionary<string, object> args)
+        public IEnumerable<TEntity> ExecuteStoredProcedure<TEntity>(string storedProcedureName, IDictionary<string, object> args)
+            where TEntity : class
         {
-            return this.ExecuteStoredProcedure(storedProcedureName, "dbo", args);
+            return this.ExecuteStoredProcedure<TEntity>(storedProcedureName, "dbo", args);
         }
 
         /// <summary>
@@ -552,12 +591,13 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <param name="args">Arguments to pass to the stored procedure.</param>
         /// <returns>Results of the stored procedure.</returns>
-        public async Task<IEnumerable<TEntity>> ExecuteStoredProcedureAsync(
+        public async Task<IEnumerable<TEntity>> ExecuteStoredProcedureAsync<TEntity>(
             string storedProcedureName,
             CancellationToken cancellationToken,
             IDictionary<string, object> args)
+            where TEntity : class
         {
-            return await Task.Run(() => this.ExecuteStoredProcedure(storedProcedureName, args), cancellationToken)
+            return await Task.Run(() => this.ExecuteStoredProcedure<TEntity>(storedProcedureName, args), cancellationToken)
                              .ConfigureAwait(false);
         }
 
@@ -568,7 +608,8 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <param name="schemaName">Schema name of the stored procedure.</param>
         /// <param name="args">Arguments to pass to the stored procedure.</param>
         /// <returns>Results of the stored procedure.</returns>
-        public IEnumerable<TEntity> ExecuteStoredProcedure(string storedProcedureName, string schemaName, IDictionary<string, object> args)
+        public IEnumerable<TEntity> ExecuteStoredProcedure<TEntity>(string storedProcedureName, string schemaName, IDictionary<string, object> args)
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
@@ -601,7 +642,7 @@ namespace Pelorus.Core.Data.EntityFramework
 
                     while (reader.Read())
                     {
-                        var instance = this.CreateEntityInstance();
+                        var instance = this.CreateEntityInstance<TEntity>();
 
                         foreach (var property in resultMapping)
                         {
@@ -644,13 +685,14 @@ namespace Pelorus.Core.Data.EntityFramework
         /// <param name="cancellationToken">Cancellation token for the asynchronous operation.</param>
         /// <param name="args">Arguments to pass to the stored procedure.</param>
         /// <returns>Results of the stored procedure.</returns>
-        public async Task<IEnumerable<TEntity>> ExecuteStoredProcedureAsync(
+        public async Task<IEnumerable<TEntity>> ExecuteStoredProcedureAsync<TEntity>(
             string storedProcedureName,
             string schemaName,
             CancellationToken cancellationToken,
             IDictionary<string, object> args)
+            where TEntity : class
         {
-            return await Task.Run(() => this.ExecuteStoredProcedure(storedProcedureName, schemaName, args), cancellationToken)
+            return await Task.Run(() => this.ExecuteStoredProcedure<TEntity>(storedProcedureName, schemaName, args), cancellationToken)
                              .ConfigureAwait(false);
         }
 
@@ -675,7 +717,8 @@ namespace Pelorus.Core.Data.EntityFramework
         /// Creates a new instance of the entity type.
         /// </summary>
         /// <returns>New instance of type TEntity.</returns>
-        private TEntity CreateEntityInstance()
+        private TEntity CreateEntityInstance<TEntity>()
+            where TEntity : class
         {
             using (var context = this.GetContextInstance())
             {
@@ -704,7 +747,8 @@ namespace Pelorus.Core.Data.EntityFramework
         /// </summary>
         /// <param name="propertyExpression">Expression identifying the property to get the name of.</param>
         /// <returns>Name of the property or null if the expression is null or the property expression type is not supported.</returns>
-        private string GetPropertyName(Expression<Func<TEntity, object>> propertyExpression)
+        private string GetPropertyName<TEntity>(Expression<Func<TEntity, object>> propertyExpression)
+            where TEntity : class
         {
             if (null == propertyExpression)
             {
@@ -720,21 +764,36 @@ namespace Pelorus.Core.Data.EntityFramework
 
             return propertyInfo.Name;
         }
-    }
 
-    /// <summary>
-    /// Short hand base repository for TEntity types that have an int Id property.
-    /// </summary>
-    /// <typeparam name="TEntity">The repository's entity type.</typeparam>
-    public abstract class BaseRepository<TEntity> : BaseRepository<TEntity, long>
-        where TEntity : EntityDao<long>
-    {
         /// <summary>
-        /// Create a new instance of the base repository class with a context factory.
+        /// Gets the key values from an instance of an entity.
         /// </summary>
-        /// <param name="contextFactory">Context factory to create the data context.</param>
-        protected BaseRepository(IContextFactory contextFactory) : base(contextFactory)
+        /// <param name="context">Instance of a data context that has the given entity type configured.</param>
+        /// <param name="instance">Instance of the entity to get the key values from.</param>
+        /// <returns>Collection of the key values from the given entity instance.</returns>
+        private IEnumerable<object> GetKeyValues<TEntity>(DbContext context, TEntity instance)
+            where TEntity : class
         {
+            if (null == context)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            if (null == instance)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+
+            var properties = context.GetEntityIds<TEntity>();
+            var keyValues = new Collection<object>();
+
+            foreach (var p in properties)
+            {
+                var val = p.GetValue(instance);
+                keyValues.Add(val);
+            }
+
+            return keyValues;
         }
     }
 }

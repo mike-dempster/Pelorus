@@ -9,7 +9,7 @@ namespace Pelorus.Core.Data.EntityFramework
     /// <typeparam name="TEntity">Type of the entity that is being configured.</typeparam>
     /// <typeparam name="TKey">Type of the entity's key.</typeparam>
     public abstract class ModelConfigurationBase<TEntity, TKey> : EntityTypeConfiguration<TEntity>
-        where TEntity : EntityDao<TKey>
+        where TEntity : Entity<TKey>
         where TKey : struct
     {
         /// <summary>

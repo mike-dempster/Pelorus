@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Pelorus.Core.Reflection;
 
 namespace Pelorus.Core.Data.EntityFramework
 {
@@ -25,7 +27,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             var metadataWorkspace = ((IObjectContextAdapter) context).ObjectContext.MetadataWorkspace;
             var objectSpaceMetadata = metadataWorkspace.GetItems<EntityType>(DataSpace.OSpace);
-            var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+            var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof(TEntity).Name);
 
             if (null == entityMetadata)
             {
@@ -41,7 +43,7 @@ namespace Pelorus.Core.Data.EntityFramework
             }
 
             var dbEntitySets = database.BaseEntitySets.OfType<EntitySet>();
-            var tableMetadata = dbEntitySets.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+            var tableMetadata = dbEntitySets.SingleOrDefault(e => e.Name == typeof(TEntity).Name);
 
             if (null == tableMetadata)
             {
@@ -69,7 +71,7 @@ namespace Pelorus.Core.Data.EntityFramework
 
             var metadataWorkspace = ((IObjectContextAdapter) context).ObjectContext.MetadataWorkspace;
             var objectSpaceMetadata = metadataWorkspace.GetItems<EntityType>(DataSpace.OSpace);
-            var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+            var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof(TEntity).Name);
 
             if (null == entityMetadata)
             {
@@ -86,7 +88,7 @@ namespace Pelorus.Core.Data.EntityFramework
             }
 
             var dbEntitySets = database.BaseEntitySets.OfType<EntitySet>();
-            var tableMetadata = dbEntitySets.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+            var tableMetadata = dbEntitySets.SingleOrDefault(e => e.Name == typeof(TEntity).Name);
 
             if (null == tableMetadata)
             {
@@ -105,7 +107,7 @@ namespace Pelorus.Core.Data.EntityFramework
                     columnName = propertyName;
                 }
 
-                var propertyInfo = typeof (TEntity).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
+                var propertyInfo = typeof(TEntity).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
 
                 return new KeyValuePair<PropertyInfo, string>(propertyInfo, columnName);
             };
@@ -127,7 +129,7 @@ namespace Pelorus.Core.Data.EntityFramework
         {
             var metadataWorkspace = ((IObjectContextAdapter) context).ObjectContext.MetadataWorkspace;
             var objectSpaceMetadata = metadataWorkspace.GetItems<EntityType>(DataSpace.OSpace);
-            var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+            var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof(TEntity).Name);
 
             if (null == entityMetadata)
             {
@@ -144,7 +146,7 @@ namespace Pelorus.Core.Data.EntityFramework
             }
 
             var dbEntitySets = database.BaseEntitySets.OfType<EntitySet>();
-            var tableMetadata = dbEntitySets.SingleOrDefault(e => e.Name == typeof (TEntity).Name);
+            var tableMetadata = dbEntitySets.SingleOrDefault(e => e.Name == typeof(TEntity).Name);
 
             if (null == tableMetadata)
             {
@@ -163,7 +165,7 @@ namespace Pelorus.Core.Data.EntityFramework
                     columnName = propertyName;
                 }
 
-                var propertyInfo = typeof (TEntity).GetProperty(propertyName);
+                var propertyInfo = typeof(TEntity).GetProperty(propertyName);
 
                 return new KeyValuePair<string, PropertyInfo>(columnName, propertyInfo);
             };
@@ -172,6 +174,35 @@ namespace Pelorus.Core.Data.EntityFramework
                                                .ToDictionary(e => e.Key, e => e.Value);
 
             return mappingDictionary;
+        }
+
+        /// <summary>
+        /// Gets the properties that are defined as the keys for the given entity.
+        /// </summary>
+        /// <typeparam name="TEntity">Type of the entity to get the key properties for.</typeparam>
+        /// <param name="context">Instance of a context that has <typeparamref name="TEntity"/> configured</param>
+        /// <returns>Collection of key properties on the given entity type.</returns>
+        public static IEnumerable<PropertyInfo> GetEntityIds<TEntity>(this DbContext context)
+            where TEntity : class
+        {
+            var metadataWorkspace = ((IObjectContextAdapter) context).ObjectContext.MetadataWorkspace;
+            var objectSpaceMetadata = metadataWorkspace.GetItems<EntityType>(DataSpace.OSpace);
+            var entityMetadata = objectSpaceMetadata.SingleOrDefault(e => e.Name == typeof(TEntity).Name);
+
+            if (null == entityMetadata)
+            {
+                return null;
+            }
+
+            var keyProperties = new Collection<PropertyInfo>();
+
+            foreach (var p in entityMetadata.KeyProperties)
+            {
+                var pInfo = PropertyInfoExtensions.GetProperty<TEntity>(p.Name);
+                keyProperties.Add(pInfo);
+            }
+
+            return keyProperties;
         }
     }
 }

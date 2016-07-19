@@ -98,5 +98,24 @@ namespace Pelorus.Core.Reflection
 
             return property;
         }
+
+        /// <summary>
+        /// Gets the property info for a property by name.
+        /// </summary>
+        /// <typeparam name="T">Type that defines the property to get.</typeparam>
+        /// <param name="propertyName">Name of the property to get.</param>
+        /// <returns>Property info for the given property name on the given type.</returns>
+        public static PropertyInfo GetProperty<T>(string propertyName)
+        {
+            if (string.IsNullOrWhiteSpace(propertyName))
+            {
+                throw new ArgumentNullException(nameof(propertyName));
+            }
+
+            var property = typeof(T).GetProperties()
+                                    .SingleOrDefault(e => propertyName == e.Name);
+
+            return property;
+        }
     }
 }

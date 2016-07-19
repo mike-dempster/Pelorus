@@ -69,10 +69,9 @@
     </Compile>
     <Compile Include="Diagnostics\SqlServerTraceListener.cs" />
     <Compile Include="Diagnostics\TraceEventData.cs" />
-    <Compile Include="Entities\AuditedEntityDao.cs" />
+    <Compile Include="Entities\AuditedEntity.cs" />
     <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\EntityDao.cs" />
-    <Compile Include="Entities\EntityDto.cs" />
+    <Compile Include="Entities\IAuditedEntity.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IoC\BaseInitializer.cs" />
     <Compile Include="IoC\BaseMapper.cs" />
