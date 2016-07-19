@@ -156,5 +156,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 # Ignore the Sandcastle generated files
-Pelorus.Core.Documentation/Help/*
-Pelorus.Core.Documentation/obj/*
+Pelorus.Documentation/Help/*
+Pelorus.Documentation/obj/*
