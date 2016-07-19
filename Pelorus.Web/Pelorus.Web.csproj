@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Pelorus.Core.Web.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Robusto.1.0.1\build\Robusto.targets" Condition="Exists('..\packages\Robusto.1.0.1\build\Robusto.targets')" />

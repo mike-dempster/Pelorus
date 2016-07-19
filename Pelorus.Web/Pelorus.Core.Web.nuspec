@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>Pelorus Web</title>
+    <authors>Mike Dempster</authors>
+    <owners>Mike Dempster</owners>
+    <projectUrl>https://github.com/mike-dempster/Pelorus</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Pelorus web components of the Pelorus library.</description>
+    <summary>Pelorus core web library</summary>
+    <copyright>Copyright © Mike Dempster</copyright>
+    <tags>Pelorus Pelorus.Core Pelorus.Web</tags>
+  </metadata>
+</package>
