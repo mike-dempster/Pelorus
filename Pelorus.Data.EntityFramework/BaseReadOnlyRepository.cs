@@ -63,7 +63,7 @@ namespace Pelorus.Data.EntityFramework
                 var predicate = this.GetKeyEqualityExpression<TEntity, TKey>(entityId);
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.Where(predicate);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return includeQuery.SingleOrDefault();
             }
@@ -86,7 +86,7 @@ namespace Pelorus.Data.EntityFramework
                 var predicate = this.GetKeyEqualityExpression<TEntity, TKey>(entityId);
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.Where(predicate);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return await includeQuery.SingleOrDefaultAsync(cancellationToken)
                                          .ConfigureAwait(false);
@@ -106,7 +106,7 @@ namespace Pelorus.Data.EntityFramework
             {
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.Where(predicate);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return includeQuery.SingleOrDefault();
             }
@@ -126,10 +126,29 @@ namespace Pelorus.Data.EntityFramework
             {
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.Where(predicate);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return await includeQuery.SingleOrDefaultAsync(cancellationToken)
                                          .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Query the data context for a single entity.
+        /// </summary>
+        /// <typeparam name="TEntity">Type of the entity that is being queried.</typeparam>
+        /// <param name="query">Query delegate to perform the query.</param>
+        /// <returns>Result from the query.</returns>
+        public virtual TEntity Query<TEntity>(Func<IQueryable<TEntity>, TEntity> query)
+            where TEntity : class
+        {
+            using (var context = this.GetContextInstance())
+            {
+                var queryable = context.Set<TEntity>()
+                                       .AsQueryable();
+                var result = query.Invoke(queryable);
+
+                return result;
             }
         }
 
@@ -147,7 +166,7 @@ namespace Pelorus.Data.EntityFramework
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.AsQueryable()
                                  .Take(length);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return includeQuery.ToList();
             }
@@ -169,7 +188,7 @@ namespace Pelorus.Data.EntityFramework
                 var query = dbSet.AsQueryable()
                                  .Skip(startIndex)
                                  .Take(length);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return includeQuery.ToList();
             }
@@ -190,7 +209,7 @@ namespace Pelorus.Data.EntityFramework
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.Where(predicate)
                                  .Take(length);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return includeQuery.ToList();
             }
@@ -213,7 +232,7 @@ namespace Pelorus.Data.EntityFramework
                 var query = dbSet.Where(predicate)
                                  .Skip(startIndex)
                                  .Take(length);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return includeQuery.ToList();
             }
@@ -234,7 +253,7 @@ namespace Pelorus.Data.EntityFramework
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.AsQueryable()
                                  .Take(length);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return await includeQuery.ToListAsync(cancellationToken)
                                          .ConfigureAwait(false);
@@ -258,7 +277,7 @@ namespace Pelorus.Data.EntityFramework
                 var query = dbSet.AsQueryable()
                                  .Skip(startIndex)
                                  .Take(length);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return await includeQuery.ToListAsync(cancellationToken)
                                          .ConfigureAwait(false);
@@ -281,7 +300,7 @@ namespace Pelorus.Data.EntityFramework
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.Where(predicate)
                                  .Take(length);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return await includeQuery.ToListAsync(cancellationToken)
                                          .ConfigureAwait(false);
@@ -306,7 +325,7 @@ namespace Pelorus.Data.EntityFramework
                 var query = dbSet.Where(predicate)
                                  .Skip(startIndex)
                                  .Take(length);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return await includeQuery.ToListAsync(cancellationToken)
                                          .ConfigureAwait(false);
@@ -325,7 +344,7 @@ namespace Pelorus.Data.EntityFramework
             {
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.AsQueryable();
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return includeQuery.ToList();
             }
@@ -344,7 +363,7 @@ namespace Pelorus.Data.EntityFramework
             {
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.Where(predicate);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return includeQuery.ToList();
             }
@@ -363,7 +382,7 @@ namespace Pelorus.Data.EntityFramework
             {
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.AsQueryable();
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return await includeQuery.ToListAsync(cancellationToken)
                                          .ConfigureAwait(false);
@@ -384,10 +403,29 @@ namespace Pelorus.Data.EntityFramework
             {
                 var dbSet = context.Set<TEntity>();
                 var query = dbSet.Where(predicate);
-                var includeQuery = this.PreProcessQuery(query);
+                var includeQuery = this.PreRunQuery(query);
 
                 return await includeQuery.ToListAsync(cancellationToken)
                                          .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Query the data context for a collection of entities.
+        /// </summary>
+        /// <typeparam name="TEntity">Type of the entity that is being queried.</typeparam>
+        /// <param name="query">Query delegate to perform the query.</param>
+        /// <returns>Results from the query.</returns> 
+        public virtual IEnumerable<TEntity> QueryAll<TEntity>(Func<IQueryable<TEntity>, IEnumerable<TEntity>> query)
+            where TEntity : class
+        {
+            using (var context = this.GetContextInstance())
+            {
+                var queryable = context.Set<TEntity>()
+                                       .AsQueryable();
+                var result = query.Invoke(queryable);
+
+                return result;
             }
         }
 
@@ -488,7 +526,7 @@ namespace Pelorus.Data.EntityFramework
         /// </summary>
         /// <param name="query">Query to include the child items with.</param>
         /// <returns>Query including the child entities.</returns>
-        protected IQueryable<TEntity> PreProcessQuery<TEntity>(IQueryable<TEntity> query)
+        protected IQueryable<TEntity> PreRunQuery<TEntity>(IQueryable<TEntity> query)
             where TEntity : class
         {
             return query;
